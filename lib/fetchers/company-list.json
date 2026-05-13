@@ -78,11 +78,21 @@
     },
     {
       "slug": "andurilindustries",
-      "name": "Anduril"
+      "name": "Anduril",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 37 gens. Defense tech \u2014 RF product techs, teleop operators, wire bonding techs, connectivity engineers (1), PLM engineers (1). 5% general rate (37/734). \"Connectivity Engineer\" and \"PLM Engineer\" are borderline HW/SW. Mostly structural (technicians, ops)."
+      }
     },
     {
       "slug": "anthropic",
-      "name": "Anthropic"
+      "name": "Anthropic",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 10 gens. Trust & safety analysts, security investigators, policy managers. 'Field Services Engineer' is IT ops. All security/compliance at AI company."
+      }
     },
     {
       "slug": "appian",
@@ -134,7 +144,12 @@
     },
     {
       "slug": "axon",
-      "name": "Axon"
+      "name": "Axon",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 18 gens. 14x 'Software Technical Account Manager' (customer-facing TAMs, not engineers). Technical support, Salesforce admin. All customer ops."
+      }
     },
     {
       "slug": "babelstreet",
@@ -312,7 +327,12 @@
     },
     {
       "slug": "doordashusa",
-      "name": "DoorDash"
+      "name": "DoorDash",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 29 gens. Strategy & ops associates, account development execs, merchant success managers. All business ops at tech company."
+      }
     },
     {
       "slug": "dropbox",
@@ -434,7 +454,12 @@
     },
     {
       "slug": "gleanwork",
-      "name": "Glean"
+      "name": "Glean",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 13 gens. All 'AI Outcomes Manager' and 'AI Success Manager' \u2014 customer success/account management for AI product."
+      }
     },
     {
       "slug": "grafanalabs",
@@ -511,7 +536,12 @@
     },
     {
       "slug": "ixllearning",
-      "name": "IXL Learning"
+      "name": "IXL Learning",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 41 gens. Education \u2014 math curriculum designers, district partnership specialists, professional learning specialists. 100% structural education (domain not in taxonomy)."
+      }
     },
     {
       "slug": "janestreet",
@@ -669,7 +699,12 @@
     },
     {
       "slug": "olsson",
-      "name": "Olsson"
+      "name": "Olsson",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 74 gens. Engineering consulting \u2014 surveyors, construction techs, environmental geologists, admin coordinators. Water Resources engineers correctly blocked by civil guard. 100% structural civil/consulting."
+      }
     },
     {
       "slug": "openeye",
@@ -860,7 +895,12 @@
     },
     {
       "slug": "spacex",
-      "name": "SpaceX"
+      "name": "SpaceX",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 53 gens. Facilities (porters, cooks, HVAC techs), Starlink market access managers, construction PMs. 100% structural ops/facilities."
+      }
     },
     {
       "slug": "speechify",
@@ -940,7 +980,12 @@
     },
     {
       "slug": "trace3",
-      "name": "Trace3"
+      "name": "Trace3",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 11 gens. IT consulting \u2014 'Engineer: Tier 1/2' is helpdesk. Project managers, consulting associates."
+      }
     },
     {
       "slug": "transmarketgroup",
@@ -1389,7 +1434,12 @@
     },
     {
       "slug": "crusoe",
-      "name": "Crusoe"
+      "name": "Crusoe",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 16 gens. Construction managers, category managers, executive assistants. Data center buildout, not tech."
+      }
     },
     {
       "slug": "cursor",
@@ -1545,7 +1595,12 @@
     },
     {
       "slug": "openai",
-      "name": "OpenAI"
+      "name": "OpenAI",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 16 gens. Trust & safety (abuse investigators, safeguards analysts), policy managers, ops managers. All security/compliance at AI company."
+      }
     },
     {
       "slug": "parafin",
@@ -1748,7 +1803,12 @@
     {
       "url": "https://aes.wd1.myworkdayjobs.com",
       "site": "AES_US",
-      "name": "AES Corporation"
+      "name": "AES Corporation",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 14 gens. Energy \u2014 transmission planning modeling engineer (1, could be HW), rest are ops/project management. Mostly structural."
+      }
     },
     {
       "name": "AIG",
@@ -1770,7 +1830,12 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 17 gens. Manufacturing \u2014 design technicians, control point coordinators, service technicians. 68% manufacturing. Correctly general."
+      }
     },
     {
       "url": "https://abglobal.wd1.myworkdayjobs.com",
@@ -1791,7 +1856,12 @@
       "domains": [
         "finance",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 14 gens. Financial services \u2014 client engagement managers, financial advisors. Correctly general (finance)."
+      }
     },
     {
       "name": "Analog Devices",
@@ -1916,7 +1986,12 @@
       "domains": [
         "hardware",
         "defense"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B38: 91 gens. Aerospace \u2014 technicians, program managers, configurators. Notable: System Engineer III (3, borderline HW), Electrical Integration Tech (2, HW). ~85% structural, ~15% potentially HW."
+      }
     },
     {
       "name": "Boeing",
@@ -1941,6 +2016,11 @@
             "reason": "Boeing senior-associate/analyst roles are admin/support, not senior engineering"
           }
         ]
+      },
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 133 gens. Trades (NDT tech, HVAC tech, locksmith, tube bender), ops managers. 1x Research Electro-Mechanical Tech borderline HW. 98% structural."
       }
     },
     {
@@ -1952,7 +2032,12 @@
       "domains": [
         "software",
         "defense"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B38: 111 gens. Mostly defense ops (exercise planners, equipment specialists). Notable: Back-End Developer (fixed PRECISION-20), M&S System Engineer (borderline SW), UI and UX Strategist (borderline SW). ~95% structural, ~5% potentially classifiable."
+      }
     },
     {
       "name": "Boston Dynamics",
@@ -1990,7 +2075,12 @@
       "domains": [
         "software",
         "defense"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B38: 100 gens. Defense ops \u2014 planners, team leads, data validators. Notable: AWS Engineer (fixed PRECISION-20), BeyondTrust Engineer (fixed PRECISION-20), WordPress Full-Stack Developer (fixed PRECISION-20). ~90% structural, ~10% keyword gaps (now fixed)."
+      }
     },
     {
       "name": "Cadence",
@@ -2024,12 +2114,22 @@
       "domains": [
         "software",
         "finance"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 77 gens. Banking \u2014 product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
+      }
     },
     {
       "url": "https://carrier.wd5.myworkdayjobs.com",
       "site": "jobs",
-      "name": "Carrier Global"
+      "name": "Carrier Global",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 77 gens. HVAC service/rental techs and managers (4x Commercial HVAC Service Manager). Automated Logic project managers (building automation). 100% structural HVAC/building ops."
+      }
     },
     {
       "name": "Caterpillar",
@@ -2081,7 +2181,12 @@
         "healthcare",
         "software",
         "operations"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 38 gens. Healthcare \u2014 enrollment reps, sales ops analysts, workforce management, medical records. 100% structural healthcare/ops."
+      }
     },
     {
       "name": "Cisco",
@@ -2092,7 +2197,12 @@
       "domains": [
         "software",
         "hardware"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 51 gens. Project managers (7x), change management (5x), sales talent managers. 2x Component Engineer fixed by PRECISION-19. ~95% structural ops/sales."
+      }
     },
     {
       "name": "Citi",
@@ -2134,7 +2244,12 @@
     {
       "url": "https://copart.wd12.myworkdayjobs.com",
       "site": "Copart",
-      "name": "Copart"
+      "name": "Copart",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 22 gens. Auto salvage \u2014 management trainees, cosmetic inspectors, general managers. 36% operations, 18% logistics. Correctly general."
+      }
     },
     {
       "name": "CrowdStrike",
@@ -2150,7 +2265,12 @@
     {
       "url": "https://curtisswright.wd1.myworkdayjobs.com",
       "site": "CW_External_Career_Site",
-      "name": "Curtiss-Wright"
+      "name": "Curtiss-Wright",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 25 gens. Defense manufacturing \u2014 PC interns, facilities supervisors, project managers, purchasing supervisors. 66% manufacturing. Correctly general."
+      }
     },
     {
       "name": "Disney",
@@ -2290,7 +2410,12 @@
     {
       "url": "https://gevernova.wd5.myworkdayjobs.com",
       "site": "Vernova_ExternalSite",
-      "name": "GE Vernova"
+      "name": "GE Vernova",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 20 gens. Energy \u2014 lean administrators, mechanical engineers, system engineers. \"System Engineer\" title is ambiguous (could be SW or systems). Mostly structural manufacturing/ops."
+      }
     },
     {
       "url": "https://gen.wd1.myworkdayjobs.com",
@@ -2306,7 +2431,12 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 17 gens. Manufacturing \u2014 regional development managers. Correctly general."
+      }
     },
     {
       "name": "General Motors",
@@ -2366,7 +2496,12 @@
         "hardware",
         "software",
         "general"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 35 gens. Maintenance techs, project managers, sales managers, admin support. 100% structural ops/sales."
+      }
     },
     {
       "name": "HP Inc",
@@ -2377,7 +2512,12 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 19 gens. Partner sales reps. Correctly general (sales)."
+      }
     },
     {
       "name": "HPE",
@@ -2388,7 +2528,12 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 37 gens. Account managers, presales engineers, sales specialists, project managers. All customer-facing sales/ops."
+      }
     },
     {
       "name": "HPE (University)",
@@ -2400,7 +2545,12 @@
         "hardware",
         "software"
       ],
-      "notes": "University/early-career portal. Separate from HPE acjobsite entry."
+      "notes": "University/early-career portal. Separate from HPE acjobsite entry.",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 17 gens. Same profile as HPE \u2014 courseware developers, commodity managers. Customer-facing."
+      }
     },
     {
       "url": "https://ibotta.wd1.myworkdayjobs.com",
@@ -2426,7 +2576,12 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B38: 33 gens. IT support (3x), TEM techs, equipment techs, module engineers. Image Processing Engineer (1, C++/Linux) borderline SW keyword gap. ~95% structural, ~5% potentially classifiable."
+      }
     },
     {
       "name": "InterDigital",
@@ -2452,7 +2607,12 @@
     {
       "url": "https://jabil.wd5.myworkdayjobs.com",
       "site": "Jabil_Careers",
-      "name": "Jabil"
+      "name": "Jabil",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 60 gens. Manufacturing \u2014 electronic technicians, receiving inspectors, work cell managers, diagnostic techs. 59% of classified jobs are manufacturing. All correctly general."
+      }
     },
     {
       "name": "Johnson & Johnson",
@@ -2495,7 +2655,12 @@
       "domains": [
         "software",
         "defense"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 92 gens. Defense ops \u2014 engineering SMEs, knowledge managers, admin. Civil/Structural Designer (2) borderline HW. 97% structural."
+      }
     },
     {
       "name": "KeyBank",
@@ -2507,7 +2672,12 @@
         "software",
         "finance",
         "operations"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 33 gens. Banking \u2014 relationship officers, cash management advisors, ops specialists. 87% finance. Correctly general."
+      }
     },
     {
       "name": "KLA",
@@ -2529,7 +2699,12 @@
       "domains": [
         "software",
         "defense"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 126 gens. Defense ops \u2014 task order managers, capture managers, security specialists. Business Systems Analyst (2) blocked by BSA guard (correct). 100% structural."
+      }
     },
     {
       "name": "Logitech",
@@ -2554,6 +2729,11 @@
             "reason": "Lowe's retail floor supervisors and store associates, not senior roles"
           }
         ]
+      },
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 80 gens. Retail ops \u2014 operations managers, BDC support supervisors, MST ASM. 100% structural retail."
       }
     },
     {
@@ -2639,12 +2819,22 @@
       "verified_date": "2026-03-16",
       "domains": [
         "general"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 43 gens. Pharma \u2014 ops specialists, scientists (molecular/biology discovery), animal techs, IT AV support. 100% structural pharma/ops."
+      }
     },
     {
       "url": "https://microchiphr.wd5.myworkdayjobs.com",
       "site": "External",
-      "name": "Microchip Technology"
+      "name": "Microchip Technology",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 22 gens. Semiconductor \u2014 associate fellows, interns, \"Engineer I - IT Systems\" (1, borderline). Mostly manufacturing/ops. \"Associate Fellow - Architecture\" is chip architecture (HW-adjacent but too ambiguous for keyword)."
+      }
     },
     {
       "name": "Micron",
@@ -2693,7 +2883,12 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 41 gens. Technical support, ALPR techs, account managers. AI Application Specialist (1) borderline SW but too low volume. ~98% structural ops/support."
+      }
     },
     {
       "name": "nCino",
@@ -2762,6 +2957,11 @@
             "reason": "NVIDIA Solutions/Business/Sales/Pre-sales Architect = pre-sales/consulting role, not senior IC engineering"
           }
         ]
+      },
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B39: 19 gens. Mostly business dev, account management, program management. Edge cases: 'Developer Technology Intern' (1 SW), 'NCX Engineer AI Accelerator' (1 HW). ~17 structural, ~2 classifiable."
       }
     },
     {
@@ -2778,7 +2978,12 @@
     {
       "url": "https://oshkoshcorporation.wd5.myworkdayjobs.com",
       "site": "Oshkosh",
-      "name": "Oshkosh Corporation"
+      "name": "Oshkosh Corporation",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 27 gens. Defense manufacturing \u2014 business development, paint technicians, welders. Correctly general."
+      }
     },
     {
       "name": "PayPal",
@@ -2816,7 +3021,12 @@
       "domains": [
         "software",
         "security"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 21 gens. Cybersecurity \u2014 domain consultants (3x), MDR analysts (2x), SAP admin. \"Domain Consultant\" is pre-sales cybersecurity, not SWE. 69% sales. \"MDR Shift Analyst\" is SOC monitoring. Correctly general \u2014 these are security operations, not software engineering."
+      }
     },
     {
       "url": "https://pimco.wd1.myworkdayjobs.com",
@@ -2826,7 +3036,12 @@
     {
       "url": "https://polaris.wd5.myworkdayjobs.com",
       "site": "PolarisJobs",
-      "name": "Polaris"
+      "name": "Polaris",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 12 gens. Manufacturing \u2014 quality auditors, maintenance, shipping, CAE engineer, robot operator."
+      }
     },
     {
       "name": "PricewaterhouseCoopers",
@@ -2912,6 +3127,11 @@
             "reason": "RTX Team Lead = manufacturing/project coordination, not senior engineering"
           }
         ]
+      },
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 249 gens. Ops managers (6x Material Program Manager), contracts managers, admin. 2x Associate Engineer \u2014 ambiguous but volume too low for keyword. 95%+ structural general."
       }
     },
     {
@@ -2945,12 +3165,22 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B38: 45 gens. Engineering/manufacturing \u2014 Associate Engineers, Associate Project Engineers (automation/commissioning). Associate Trend Insight Analyst borderline DS. ~80% structural manufacturing, ~20% potentially HW."
+      }
     },
     {
       "url": "https://snc.wd1.myworkdayjobs.com",
       "site": "SNC_External_Career_Site",
-      "name": "Sierra Nevada Corporation"
+      "name": "Sierra Nevada Corporation",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 16 gens. Defense \u2014 program managers. Correctly general."
+      }
     },
     {
       "name": "Silicon Labs",
@@ -3013,7 +3243,12 @@
       "domains": [
         "software",
         "finance"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 41 gens. Financial services \u2014 alternative investment ops, expense services, client analysts, compliance. 100% structural finance ops."
+      }
     },
     {
       "url": "https://synchronyfinancial.wd5.myworkdayjobs.com",
@@ -3027,7 +3262,12 @@
       "domains": [
         "software",
         "general"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 27 gens. Service delivery managers, mobile experts, chat support. Telecom retail/ops."
+      }
     },
     {
       "name": "Target",
@@ -3039,7 +3279,12 @@
         "retail",
         "software",
         "operations"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 206 gens. 124x Security Specialist (retail), 50+ food/beverage/sales associates. 100% structural retail."
+      }
     },
     {
       "name": "T. Rowe Price",
@@ -3071,7 +3316,12 @@
       "domains": [
         "finance",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 121 gens. Banking \u2014 assistant store managers, customer experience associates, marketing targeting. 100% structural retail/banking."
+      }
     },
     {
       "url": "https://thehartford.wd5.myworkdayjobs.com",
@@ -3087,7 +3337,12 @@
       "domains": [
         "healthcare",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 110 gens. Lab/manufacturing \u2014 operators, formulation techs, business dev, procurement. Assistant Scientist (25) borderline DS. 95% structural."
+      }
     },
     {
       "name": "TransUnion",
@@ -3109,7 +3364,12 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 25 gens. Sales, event strategy, support specialists, executive assistant, implementation consulting. 'SQL Support Specialist' is IT support."
+      }
     },
     {
       "name": "Unisys",
@@ -3131,12 +3391,22 @@
       "domains": [
         "software",
         "finance"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 24 gens. Insurance/banking \u2014 claims adjusters, property specialists, executive assistants, partnership managers. 65% classified as finance. Correctly general."
+      }
     },
     {
       "url": "https://vanguard.wd5.myworkdayjobs.com",
       "site": "vanguard_external",
-      "name": "Vanguard"
+      "name": "Vanguard",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 26 gens. Mostly finance/investment \u2014 CMDB admin, comms consultant, go-to-market strategist. 1 \"Application Security Pentester\" is genuine SW but not caught by keywords (24 gens structural, 1-2 borderline). Correctly general for most."
+      }
     },
     {
       "name": "Visa",
@@ -3147,7 +3417,12 @@
       "domains": [
         "software",
         "finance"
-      ]
+      ],
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B39: 17 gens. Mostly finance/product strategy. KEYWORD GAP: 'SW Engineer' (2 jobs) \u2014 abbreviated SW not in keywords. 'Analyst - Cloud FinOps' is ambiguous."
+      }
     },
     {
       "name": "Walmart",
@@ -3238,7 +3513,12 @@
     {
       "url": "https://magna.wd3.myworkdayjobs.com",
       "site": "Magna",
-      "name": "Magna"
+      "name": "Magna",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 84 gens. Automotive manufacturing \u2014 robotic technicians, operators, EHS, electricians, quality auditors. German postings included."
+      }
     },
     {
       "url": "https://tencent.wd1.myworkdayjobs.com",
@@ -3252,7 +3532,12 @@
       "name": "AbbVie",
       "verified_us_jobs": 904,
       "verified_interns": 33,
-      "verified_date": "2026-03-11"
+      "verified_date": "2026-03-11",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 123 gens (SmartRecruiters). Pharma \u2014 aesthetic sales reps, manufacturing techs, patient care coordinators, procurement managers. Analyst, Data Systems (1) borderline DS. 99% structural pharma/ops."
+      }
     },
     {
       "slug": "VeoliaEnvironnementSA",
@@ -3280,7 +3565,12 @@
       "name": "NBCUniversal",
       "verified_us_jobs": 389,
       "verified_interns": 21,
-      "verified_date": "2026-03-11"
+      "verified_date": "2026-03-11",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 56 gens. Media \u2014 streaming managers, photojournalists, page coordinators. Entertainment/media ops."
+      }
     },
     {
       "slug": "Intuitive",
@@ -3294,7 +3584,12 @@
       "name": "Bosch Group",
       "verified_us_jobs": 248,
       "verified_interns": 42,
-      "verified_date": "2026-03-11"
+      "verified_date": "2026-03-11",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 34 gens. Controlling analysts, talent scouts, sales development managers. Industrial conglomerate ops."
+      }
     },
     {
       "slug": "LinkedIn3",
