@@ -1033,7 +1033,12 @@
     },
     {
       "slug": "verkada",
-      "name": "Verkada"
+      "name": "Verkada",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B40: 18 gens. Sales \u2014 regional sales managers, channel managers. Correctly general (sales)."
+      }
     },
     {
       "slug": "vikingglobalinvestors",
@@ -1073,7 +1078,12 @@
     },
     {
       "slug": "xai",
-      "name": "xAI"
+      "name": "xAI",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 22 gens. Data center \u2014 gas pipeline engineers, construction managers. \"Gas Pipeline Engineer\" is infrastructure, not SWE. Mostly structural (facilities, construction)."
+      }
     },
     {
       "slug": "xometry",
