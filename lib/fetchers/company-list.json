@@ -741,6 +741,10 @@
       "name": "PagerDuty"
     },
     {
+      "slug": "pathai",
+      "name": "PathAI"
+    },
+    {
       "slug": "pdtpartners",
       "name": "PDT Partners"
     },
@@ -1122,6 +1126,10 @@
     {
       "slug": "actian",
       "name": "Actian"
+    },
+    {
+      "slug": "certik",
+      "name": "CertiK"
     },
     {
       "slug": "spotify",
