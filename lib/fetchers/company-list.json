@@ -2151,6 +2151,18 @@
       "default_domain": "hardware"
     },
     {
+      "name": "Bose",
+      "url": "https://boseallaboutme.wd503.myworkdayjobs.com",
+      "site": "Bose_Careers",
+      "verified_jobs": 109,
+      "verified_date": "2026-05-15",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
+    },
+    {
       "name": "Boston Dynamics",
       "url": "https://bostondynamics.wd1.myworkdayjobs.com",
       "site": "Boston_Dynamics",
@@ -2231,6 +2243,19 @@
         "decision": "structural",
         "note": "B38: 77 gens. Banking \u2014 product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
       }
+    },
+    {
+      "name": "Carnegie Mellon University",
+      "url": "https://cmu.wd5.myworkdayjobs.com",
+      "site": "cmu",
+      "verified_jobs": 177,
+      "verified_date": "2026-05-15",
+      "domains": [
+        "software",
+        "data_science",
+        "general"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://carrier.wd5.myworkdayjobs.com",
@@ -2964,6 +2989,18 @@
         "decision": "structural",
         "note": "B34: Domains [software]. Supply chain software. Ambiguous jobs likely software/ops. Borderline safe for software default but deferred."
       }
+    },
+    {
+      "name": "Marmon Holdings",
+      "url": "https://marmon.wd501.myworkdayjobs.com",
+      "site": "Marmon_MSIP_Internships",
+      "verified_jobs": 16,
+      "verified_date": "2026-05-15",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Marvell",
