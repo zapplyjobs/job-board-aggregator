@@ -1883,6 +1883,20 @@
       "name": "Allison Transmission"
     },
     {
+      "name": "Amentum",
+      "url": "https://pae.wd1.myworkdayjobs.com",
+      "site": "amentum_careers",
+      "verified_jobs": 2898,
+      "verified_date": "2026-05-15",
+      "domains": [
+        "hardware",
+        "software",
+        "data_science",
+        "general"
+      ],
+      "default_domain": "hardware"
+    },
+    {
       "name": "Ameriprise Financial",
       "url": "https://ameriprise.wd5.myworkdayjobs.com",
       "site": "Ameriprise",
@@ -1973,6 +1987,18 @@
         "software"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Avnet",
+      "url": "https://avnet.wd1.myworkdayjobs.com",
+      "site": "external",
+      "verified_jobs": 312,
+      "verified_date": "2026-05-15",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
     },
     {
       "name": "Baker Hughes",
@@ -2464,6 +2490,20 @@
         "finance",
         "software"
       ]
+    },
+    {
+      "name": "GDIT",
+      "url": "https://gdit.wd5.myworkdayjobs.com",
+      "site": "external_career_site",
+      "verified_jobs": 1028,
+      "verified_date": "2026-05-15",
+      "domains": [
+        "software",
+        "data_science",
+        "hardware",
+        "security"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://geaerospace.wd5.myworkdayjobs.com",
