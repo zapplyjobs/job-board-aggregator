@@ -2326,6 +2326,19 @@
       }
     },
     {
+      "name": "Draper",
+      "url": "https://draper.wd5.myworkdayjobs.com",
+      "site": "Draper_Careers",
+      "verified_jobs": 186,
+      "verified_date": "2026-05-14",
+      "domains": [
+        "hardware",
+        "software",
+        "data_science"
+      ],
+      "default_domain": "hardware"
+    },
+    {
       "url": "https://elanco.wd5.myworkdayjobs.com",
       "site": "External_Career",
       "name": "Elanco"
