@@ -17,7 +17,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 12;
+const TAG_ENGINE_VERSION = 19;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -362,6 +362,8 @@ function tagDomains(job, options) {
     'servicenow',                   // ServiceNow — guarded: only developer/engineer roles (TAG-KEYWORD-10)
     'software quality assurance',   // SW QA — explicit software testing roles
     'sw qa',                        // abbreviated form
+    'software test',                // 21 G1 — SW test/QA roles (covers Software Test Engineer, Tester, Test Manager)
+    'software designer',            // 6 G1 — SW design roles (co-op/intern/senior)
     'information systems security', // ISSO — infosec role, distinct from physical 'security officer'
  // FRESHNESS-3: GH general-tagged misclassification fixes (Auditor data audit — 14 confirmed misses)
     'perception engineer',          // Robotics/AI perception (Anduril) — software domain
@@ -398,6 +400,10 @@ function tagDomains(job, options) {
     'desktop support',              // 11 hits — IT desktop support
     'security analyst',             // 13 hits — infosec analyst (guard: not physical security)
     'customer engineer',            // 21 hits — technical customer-facing (Google, etc.)
+    // B48 Phase 1: architect/scrum/PM keywords
+    'solutions architect',           // 198 US — SA roles (guarded: isTamNotSales blocks AE/SA at sales companies)
+    'solution architect',            // singular form
+    'scrum master',                  // agile scrum master (software process role)
     'engineering intern',           // 76 hits — general eng interns at tech cos (guard: not mech/civil/chem)
     'network admin',                // 6 hits — network administration
     'devsecops',                    // 6 hits — DevSecOps engineer (defense/gov)
@@ -648,6 +654,27 @@ function tagDomains(job, options) {
     'developer technology intern',             // 1 gen — NVIDIA Developer Technology Intern
     'developer advocacy intern',               // 1 gen — Twilio Developer Advocacy Intern
     'developer ecosystem intern',              // 1 gen — Twilio Dev Ecosystem intern
+    // TAG-INTERN-1 cycle 2 (B52): software keyword gaps
+    'codec',                                   // 1 gen — multimedia codec dev (Tencent)
+    'wireless network lab',                    // 1 gen — wireless networking research (Cisco)
+    'powertrain software',                     // 1 gen — automotive SW validation (Bosch)
+    'game research',                           // 4 gen — game engine R&D (Tencent)
+    'robot learning',                          // 2 gen — robotics ML (Boston Dynamics)
+    'phishing analyst',                        // 1 gen — security phishing analyst (Zscaler)
+    'techstop',                                // 1 gen — Google IT support program (Cadence)
+    'developer gtm',                           // 2 gen — developer go-to-market (Cloudflare)
+    'multimedia codec',                        // 1 gen — multimedia development (Tencent)
+    'security research intern',                // 4 gen — security research (CertiK, Microsoft, Intel)
+    'digital solutions co-op',                 // 1 gen — digital solutions (J&J)
+    'comcast finance technology',              // 1 gen — FinTech automation (Comcast)
+    'comcast global audit technology',         // 1 gen — audit tech (Comcast)
+    'comcast information systems',             // 1 gen — information systems (Comcast)
+    // TAG-INTERN-1 cycle 3 (B52/F86): software keyword gaps
+    'blockchain',                              // 1 gen — blockchain security (CertiK)
+    'software quality',                        // 7 gen — software quality engineering (CACI, NG, RTX)
+    // TAG-INTERN-1 cycle 4 (B53): software keyword gaps
+    'enterprise architecture',                 // 1 G1 — enterprise architecture intern
+    'software/electrical',                     // 1 G1 — compound SW/EE title
   ];
   const isSalesRole = /\b(sales|account executive|pre-sales|presales)\b/i.test(title);
  // Guard: retail "Back End Clerk" is not a backend engineer (Lowe's — 6 FPs,
@@ -670,7 +697,9 @@ function tagDomains(job, options) {
   // are all non-SWE coordination roles. Guard fires when 'project engineer' is sole sw match.
   const isCivilProjectEngineer = /\b(structural|water resources|water treatment|geotechnical|wastewater|mechanical|civil|electrical|hvac|controls|automation|power|generation|weapons|infrastructure|fire protection|commissioning|construction|piping)\b/i.test(title);
   // TAG-18: 'systems engineer' — HVAC controls, physical security, warehouse systems are not software
-  const isNonSwSystemsEngineer = /\b(hvac|physical security|warehouse|building controls|facilities)\b/i.test(title);
+  // B50: "IT Systems *" titles are IT infrastructure (admin/engineer/analyst), not SWE.
+  const isItSystemsRole = /\bit systems\b/i.test(title);
+  const isNonSwSystemsEngineer = /\b(hvac|physical security|warehouse|building controls|facilities)\b/i.test(title) || isItSystemsRole;
   // TAG-18: ISSO compliance officers (not engineers) — "information system security officer" is ops/compliance
   const isIssComplianceOfficer = (/\binformation systems? security\b/i.test(title) && /\bofficer\b/i.test(title)) || /\bISSO\b/i.test(title);
   // TAG-PRECISION-5: 'program manager' — bare PM titles (Training PM, People PM, Supply Chain PM) are not SWE.
@@ -680,7 +709,7 @@ function tagDomains(job, options) {
   // TAG-PRECISION-8: 'systems analyst' — business/HRIS/financial/people systems are not SWE.
   // "Business Systems Analyst" configures SAP/Workday, not writes code. "AI Systems Analyst" writes code.
   // Guard fires when sole match AND title contains non-SW context.
-  const isNonSwSystemsAnalyst = /\b(business systems|hris|workday|people systems|financial systems|finance systems|legal systems|nuclear|logistic|pgim|payroll|investment systems|erp|sap |peoplesoft)\b/i.test(title);
+  const isNonSwSystemsAnalyst = /\b(business systems|hris|workday|people systems|financial systems|finance systems|legal systems|nuclear|logistic|pgim|payroll|investment systems|erp|sap |peoplesoft)\b/i.test(title) || isItSystemsRole;
   // TAG-KEYWORD-10: 'servicenow' — ServiceNow admin/analyst/manager/support is not SWE.
   // "ServiceNow Developer" and "ServiceNow Engineer" build software. Everything else configures/administers it.
   // Guard fires when sole match AND title lacks developer/engineer context.
@@ -706,6 +735,8 @@ function tagDomains(job, options) {
     if (sole === 'systems analyst' && isNonSwSystemsAnalyst) return true;
     if (sole === 'servicenow' && isNonSwServiceNow) return true;
     if (sole === 'network engineer' && isHwNetworkEngineer) return true;
+    if ((sole === 'systems administrator' || sole === 'system administrator') && isItSystemsRole) return true;
+    if (sole === 'it project manager') return true;
     return false;
   };
  // TAG-MISROUTE-1 Issue 3b: software domain is now TITLE-ONLY.
@@ -722,7 +753,7 @@ function tagDomains(job, options) {
       (/\btechnicians?\b/i.test(title) || (/\btech\b/i.test(title) && !/\btechnology\b/i.test(title))) &&
       !/\bengineer/i.test(title);
   })();
-  if (!isSalesRole && !isRetailClerk && !isIssComplianceOfficer && !isSwTechnicianOnly && matchesSoftware(title) && !isGuardedSwOnly(title)) {
+  if (!isSalesRole && !isRetailClerk && !isIssComplianceOfficer && !isSwTechnicianOnly && !isItSystemsRole && matchesSoftware(title) && !isGuardedSwOnly(title)) {
     pushTag('software', findMatch(softwareKeywords, title) || (softwareShortKeywords.test(title) ? 'swe/sre regex' : null), 'title');
   }
 
@@ -779,6 +810,20 @@ function tagDomains(job, options) {
     'quantum information science intern',       // 1 gen — Leidos Quantum Info Science Intern
     'intern bachelors ai',                     // 1 gen — Honeywell AI Intern (bachelor-level)
     'emerging technologies co-op',             // 1 gen — J&J Emerging Technologies Co-op (AI/tech)
+    // TAG-INTERN-1 cycle 2 (B52): AI keyword gaps
+    'hunyuan',                                 // 4 gen — Tencent Hunyuan ML research
+    'video world model',                       // 1 gen — ML video research (Tencent)
+    'reinforcement learning for large foundation', // 1 gen — ML research (Tencent)
+    'intern - perception',                     // 1 gen — perception ML (Kodiak Robotics)
+    // TAG-INTERN-1 cycle 3 (B52/F86): AI keyword gaps
+    'ai agent',                                // 5 gen — AI agent development (TikTok, Microsoft, GM, Logitech)
+    'foundation model',                        // 5 gen — foundation model research (ByteDance)
+    'multimodal ai',                           // 1 gen — multimodal ML (Reality Defender)
+    'world model',                             // 2 gen — world model research (Tencent, ByteDance)
+    // TAG-INTERN-1 cycle 4 (B53): AI keyword gaps
+    'ai outcomes',                             // 16 G1 — AI outcomes mgmt (consulting AI implementation)
+    'ai coe',                                  // 2 G1 — AI Center of Excellence roles
+    'ai scenario',                             // 1 G1 — AI scenario analysis
   ];
   const aiShortKeywords = /\b(llm|nlp)\b/i;
   if (aiKeywords.some(kw => title.includes(kw)) || aiShortKeywords.test(job.title || '')) {
@@ -842,6 +887,16 @@ function tagDomains(job, options) {
     'data and analytics intern',               // 1 gen — BeOne Data and Analytics Intern
     'automation analyst intern',               // 1 gen — Axos Bank Automation Analyst Intern
     'data processing support intern',          // 1 gen — UT Austin Data Processing Intern
+    // TAG-INTERN-1 cycle 2 (B52): data science keyword gaps
+    'cmc quantitative',                        // 1 gen — pharma quantitative (Moderna)
+    'pricing and market analytics',            // 1 gen — pricing analytics (ASSA ABLOY)
+    'reporting analytics',                     // 2 gen — reporting analytics (Kaiser)
+    'customer data and insights',              // 1 gen — customer analytics (Biogen)
+    'product data analysis',                   // 1 gen — product analytics (Accuray)
+    'revenue science',                         // 1 gen — revenue analytics (Comcast)
+    'comcast data products',                   // 1 gen — data governance (Comcast)
+    // TAG-INTERN-1 cycle 4 (B53): data science keyword gaps
+    'imaging and algorithms',                  // 1 G1 — imaging+algorithms intern (data science / ML)
   ];
   if (dataScienceKeywords.some(kw => title.includes(kw))) {
     pushTag('data_science', findMatch(dataScienceKeywords, title), 'title');
@@ -868,6 +923,10 @@ function tagDomains(job, options) {
     'ground systems', 'radiation effects', 'harness manufacturing',
     'electrical integration', 'cad engineer', 'industrial engineering',
     'quality engineer', 'hardware development engineer', 'electrical design',
+    // B48 Phase 1: data center / infrastructure keywords
+    'data center technician',        // DC technician (infrastructure/hardware)
+    'cable integration',             // cable/wiring integration (hardware)
+    'critical environment technician', // CE tech (data center critical env)
     'package engineering', 'signal integrity', 'asic',
     'process integration', 'process safety', 'optical engineer',
     'structural engineer', 'aerospace engineer', 'lidar engineer',
@@ -1120,6 +1179,20 @@ function tagDomains(job, options) {
     'hw design verification',                  // 1 gen — d-Matrix HW Design Verification Intern
     'power and thermal management',            // 1 gen — Intel Power & Thermal Management Intern (EE)
     'construction management intern',          // 1 gen — SEL Construction Management Intern (civil/hw)
+    // TAG-INTERN-1 cycle 2 (B52): hardware keyword gaps
+    'antenna intern',                          // 1 gen — antenna engineering (Qualcomm)
+    'vehicle electronics',                     // 1 gen — automotive electronics (Rolls Royce)
+    'adas hardware',                           // 3 gen — ADAS hardware dev (Bosch)
+    'r&d electrical',                          // 1 gen — electrical R&D (Boston Dynamics)
+    'electronics co-op',                       // 1 gen — electronics engineering (Regal Rexnord)
+    'dfm intern',                              // 1 gen — design for manufacturing (Xometry)
+    'optics development intern',               // 1 gen — optics engineering (Bosch)
+    'intern - asi/psi',                        // 1 gen — ASI/PSI defense hardware (Northrop Grumman)
+    // TAG-INTERN-1 cycle 4 (B53): hardware keyword gaps
+    'hardware development',                    // 1 G1 — HW dev intern/co-op
+    'system test',                             // 1 G1 intern + 21 total — system test engineering
+    'automation & test',                       // 1 G1 — test automation intern
+    'electrical sourcing',                     // 1 G1 — EE sourcing intern
   ];
   // ENR-8: Intuitive Surgical clinical/QC FP detection (declared here — used in both
   // hardware guard below and pre-O*NET guard above line ~2640).
@@ -1264,7 +1337,16 @@ function tagDomains(job, options) {
     const isAutomatedLogicSales = hwMatches.length === 1 && hwMatches[0] === 'automated logic' &&
       /\b(sales|representative|manager)\b/i.test(title) &&
       !/\bengineer/i.test(title);
-    if (!isOnlyServiceTech && !isCloudOpsEng && !isWaterUtilityFSR && !isVeoliaFieldOps && !isIntuitiveClinicalFP && !isNCRFieldOps && !isBakerFieldOps && !isTradesOnly && !isSoftwarePrimaryRole && !isSupplyChainEng && !isTechnicianOnly && !isEmbeddedNonTech && !isAutomatedLogicSales) {
+    // TAG-WD-NONTECH-1: Sales roles are not hardware engineering.
+    // "Account Sales (Semiconductor EQ)", "Japan OEM Sales" at Applied Materials etc.
+    // Guarded globally — sales representative/manager is never a HW engineering role.
+    const isHwSalesFP = isSalesRole &&
+      !/\bengineer/i.test(title) && !/\bscientist\b/i.test(title);
+    // TAG-WD-NONTECH-1: Medtronic EP Mapping Specialists are clinical support roles
+    // (cardiac electrophysiology mapping), not hardware engineering.
+    const isMedtronic = /medtronic/i.test(job.company_name || '');
+    const isMedtronicMappingFP = isMedtronic && /\bmapping specialist\b/i.test(title);
+    if (!isOnlyServiceTech && !isCloudOpsEng && !isWaterUtilityFSR && !isVeoliaFieldOps && !isIntuitiveClinicalFP && !isNCRFieldOps && !isBakerFieldOps && !isTradesOnly && !isSoftwarePrimaryRole && !isSupplyChainEng && !isTechnicianOnly && !isEmbeddedNonTech && !isAutomatedLogicSales && !isHwSalesFP && !isMedtronicMappingFP) {
       pushTag('hardware', findMatch(hardwareKeywords, title), 'title');
     }
   }
@@ -1454,6 +1536,12 @@ function tagDomains(job, options) {
     'intern bachelor pharmacy',      // 1 gen — pharmacy intern
     'palmm immunology',              // 1 gen — J&J PALM Immunology
     'clinical development',          // 1 gen — J&J Clinical Development
+    // TAG-INTERN-1 cycle 2 (B52): healthcare keyword gaps
+    'cell therapy',                            // 1 gen — cell therapy co-op (J&J)
+    'device lifecycle',                        // 1 gen — medical device lifecycle (J&J)
+    'health informatics',                      // 1 gen — health IT (Harris Computer)
+    'health account',                          // 2 gen — health accounts (Booz Allen)
+    'in vitro translational',                  // 1 gen — in vitro pharmacology (Merck)
   ];
   // \bnurse\b catches bare 'nurse' titles (charge nurse, nurse educator, etc.)
   // without matching 'nursery'. Short credentials use word-boundary to avoid false positives.
@@ -1486,24 +1574,33 @@ function tagDomains(job, options) {
       !healthcareCredentials.test(title) &&
       !healthcareOther.some(kw => title.includes(kw)) &&
       !mentalHealthRegex.test(title);
-    // TAG-PRECISION-9: 'research associate' — finance/strategy/program RAs are not healthcare.
-    // "Equity Research Associate" (KeyBank) = finance, not clinical. "Strategy Research Associate"
-    // (Rockstar Games) = product/strategy, not clinical. Guard fires when sole HC keyword match
-    // AND title contains non-HC context (equity, investment, crypto, strategy, creator, program, client).
-    // Genuines preserved: Clinical RA (Personalis, Neuralink), genomics/biotech RA (CZ Biohub, Arc Institute).
-    const isNonHcResearchAssoc = /\b(equity|equities|investment|crypto|strategy|creator|program|client)\b/i.test(title);
+    // TAG-PRECISION-9: 'research associate' — RAs without clinical context are not healthcare.
+    // Bare "Research Associate" at non-HC companies (Eight Sleep, Entegris, Bridgewater) = FP.
+    // Guard fires when sole HC keyword is 'research associate' AND title lacks clinical context.
+    // Genuines preserved: Clinical RA, genomics/biotech RA (CZ Biohub, Arc Institute), Oncology RA.
+    const raHcContext = /\b(clinical|medical|healthcare|health\s|pharma|biotech|biology|drug|oncology|biochemist|molecular|cell|genetic|immunolog|lab\b|assay|genomic|synthetic|epidem|real-world science)\b/i.test(title);
     const onlyRaMatch = title.includes('research associate') &&
       !healthcareExact.some(kw => kw !== 'research associate' && title.includes(kw)) &&
       !healthcareCredentials.test(title) &&
       !healthcareOther.some(kw => title.includes(kw)) &&
       !mentalHealthRegex.test(title);
+    // TAG-PRECISION-15: 'lab technician' matching construction materials testing (Olsson: 4 FPs).
+    // "Construction Materials Testing Lab Technician" = civil engineering QA, not clinical lab.
+    const isConstructionLab = /lab(oratory)? technician/i.test(title) &&
+      /\b(construction|materials testing|soil|concrete|asphalt|aggregate)\b/i.test(title);
     if (onlyDiseaseMatch && isSalesTitle) {
       pushTag('sales', hcMatch, 'title');
     } else if (onlyDiseaseMatch && isOpsTitle) {
       pushTag('operations', hcMatch, 'title');
-    } else if (onlyRaMatch && isNonHcResearchAssoc) {
-      // Skip healthcare — these are finance/strategy/program roles.
-      // Finance RAs may match finance keywords below, otherwise correctly fall to general.
+    } else if (onlyRaMatch && !raHcContext) {
+      // Skip healthcare — bare RA with no clinical/biotech context.
+    } else if (isConstructionLab) {
+      // Skip healthcare — construction materials testing, not clinical lab.
+    } else if (isSalesRole && !/\b(clinical|nurse|doctor|physician|pharma|therapist|dentist)\b/i.test(title)) {
+      // TAG-WD-NONTECH-1: Sales roles routed to healthcare are device/pharma sales reps,
+      // not clinical practitioners. "Sales Support, Clinical Specialist" kept (clinical context).
+      // "Area Sales Manager" at Abbott selling nutrition products blocked.
+      pushTag('sales', hcMatch, 'title');
     } else {
       pushTag('healthcare', hcMatch, 'title');
     }
@@ -1676,6 +1773,11 @@ function tagDomains(job, options) {
     'pricing & revenue management intern',     // 1 gen — Disney Pricing & Revenue Management Intern
     'internship - markets',                    // 1 gen — JP Morgan Markets Internship
     'ratings analytical',                      // 1 gen — S&P Global Ratings Analytical Intern
+    // TAG-INTERN-1 cycle 2 (B52): finance keyword gaps
+    'investor operations',                     // 2 gen — investment operations (Audax)
+    'comcast financial application',           // 1 gen — financial app analyst (Comcast)
+    'comcast state and local tax',             // 1 gen — tax controversy (Comcast)
+    'comcast global accounting',               // 1 gen — accounting product support (Comcast)
   ];
   if (financeKeywords.some(kw => title.includes(kw))) {
     pushTag('finance', findMatch(financeKeywords, title), 'title');
@@ -1738,6 +1840,9 @@ function tagDomains(job, options) {
     'aftermarket solutions',    // 1 gen, 0 FP — aftermarket solutions (Caterpillar)
     'clean energy solution',    // 1 gen, 0 FP — clean energy solution specialist (Generac)
     'emergency medicine executive', // 1 gen, 0 FP — emergency medicine executive (Abbott)
+    // B48 Phase 1: sales management
+    'sales manager',                 // sales management roles
+    'strategic account executive',   // SAE is always sales (AE exempted from TAM guard below)
     'partner solution specialist', // 2 gen, 0 FP — partner solution specialist (Autodesk)
     'renewals representative',   // 4 gen, 0 FP — renewals rep (Autodesk)
     'expansion account',         // 1 gen, 0 FP — expansion account rep
@@ -1762,10 +1867,13 @@ function tagDomains(job, options) {
     'agentic sales',                           // 1 gen — Comcast Agentic Sales Co-op (AI-powered sales)
   ];
   const isSalesEngineer = /\b(sales engineer|solutions engineer|pre-sales engineer)\b/i.test(title);
-  // TAG-PRECISION-14: Technical/Software/Enterprise Account Managers are tech-adjacent, not sales.
+  // TAG-PRECISION-14: Technical/Software Account Managers are tech-adjacent, not sales.
   // "Software Technical Account Manager" (Axon), "Technical Account Manager" (Adobe, Stripe) —
   // these manage technical relationships, not sales quotas.
-  const isTamNotSales = /\b(technical account|software.*account|strategic account|enterprise.*account)\b/i.test(title) &&
+  // Exception: "Account Executive" is ALWAYS sales (TAM guard should not block AE).
+  const isAccountExec = /\baccount executive\b/i.test(title);
+  const isTamNotSales = !isAccountExec &&
+    /\b(technical account|software.*account|strategic account|enterprise.*account)\b/i.test(title) &&
     /\b(software|technical|strategic|enterprise)\b/i.test(title);
   if (!isSalesEngineer && !isTamNotSales && salesKeywords.some(kw => title.includes(kw))) {
     pushTag('sales', findMatch(salesKeywords, title), 'title');
@@ -1861,6 +1969,14 @@ function tagDomains(job, options) {
     // TAG-INTERN-1 (B45): marketing internship keyword gaps
     'employer brand intern',                   // 1 gen — SharkNinja Employer Brand Intern
     'marketing events and campaigns intern',   // 1 gen — Cloudflare Marketing Events Intern
+    // TAG-INTERN-1 cycle 2 (B52): marketing keyword gaps
+    'comcast digital internal comms',          // 1 gen — digital communications (Comcast)
+    'comcast integrated marcom',               // 1 gen — integrated marketing (Comcast)
+    'comcast brand strategy',                  // 1 gen — brand strategy (Comcast)
+    'comcast market & competitive',            // 1 gen — market insights (Comcast)
+    'comcast campus events',                   // 1 gen — campus events marketing (Comcast)
+    'comcast sponsorships',                    // 1 gen — sponsorships marketing (Comcast)
+    'comcast town hall',                       // 2 gen — events production (Comcast)
   ];
   // TAG-9: 'producer' and 'reporter' added as guarded keywords for media/content roles
   const isInsuranceProducer = /\b(licensed|insurance|enrollment)\b/i.test(title);
@@ -2018,6 +2134,10 @@ function tagDomains(job, options) {
     'commodity supplier',            // 1 gen, 0 FP — commodity supplier assurance
     'combat systems planning',       // 1 gen, 0 FP — combat systems planning
     'customs operations',            // 1 gen, 0 FP — customs operations import
+    // B48 Phase 1: operations management keywords
+    'change management',             // organizational change management (consulting)
+    'material program manager',      // MPM — defense/materials program management
+    'escalation manager',            // customer/ops escalation management
     'supplier commodity',            // 1 gen, 0 FP — supplier commodity assurance
     'small business advocate',       // 1 gen, 0 FP — small business advocacy
     'oem support',                   // 1 gen, 0 FP — OEM support specialist
@@ -2252,6 +2372,17 @@ function tagDomains(job, options) {
     'product certifications and marking',      // 1 gen — Bose Product Certifications Co-op (quality/ops)
     'intern (technician)',                     // 1 gen — Microchip Intern (Technician)
     'rls intern - technical information',      // 1 gen — KION RLS Intern - Technical Info & Documentation
+    // TAG-INTERN-1 cycle 2 (B52): operations keyword gaps
+    'procurement intern',                      // 4 gen — procurement (KION, SEL)
+    'purchasing intern',                       // 3 gen — purchasing (SEL)
+    'packaging science',                       // 1 gen — packaging (Bosch)
+    'facilities management intern',            // 1 gen — facilities (Bosch)
+    'comcast data management',                 // 1 gen — data management ops (Comcast)
+    'comcast strategic planning',              // 1 gen — strategic planning (Comcast)
+    'comcast campus planning',                 // 1 gen — campus planning (Comcast)
+    'comcast program management',              // 1 gen — program management (Comcast)
+    'wind development',                        // 1 gen — wind energy (AES)
+    'intern - defense & security',             // 1 gen — defense segment (Guidehouse)
   ];
   if (operationsKeywords.some(kw => title.includes(kw))) {
     pushTag('operations', findMatch(operationsKeywords, title), 'title');
@@ -2303,6 +2434,11 @@ function tagDomains(job, options) {
     'intern – gas compliance',                 // 1 gen — BHE Gas Compliance Intern
     'legal & compliance summer intern',        // 1 gen — Blockchain.com Legal & Compliance Intern
     'intern - revenue cycle, payer provider',  // 1 gen — Guidehouse Revenue Cycle Intern (legal/compliance)
+    // TAG-INTERN-1 cycle 2 (B52): legal keyword gaps
+    'contracts management',                    // 3 gen — contract management (Comcast)
+    'political compliance',                    // 1 gen — political compliance (Comcast)
+    'legal team',                              // 1 gen — legal team (State Street)
+    'trade compliance',                        // 10 gen — trade compliance (Biogen, etc.)
   ];
   // TAG-9: bare 'counsel' uses word-boundary — 'counselor' is a healthcare keyword,
   // includes('counsel') would match it. \bcounsel\b does not match 'counselor'.
@@ -2348,6 +2484,8 @@ function tagDomains(job, options) {
     'talent strategy',              // 1 gen, 0 FP — ABC News Talent Strategy & Dev Intern (Disney)
     'recruitment coordinator',      // 1 gen, 0 FP — Recruitment Coordinator Disney Cruise Line
     'restrictions & accommodations', // 1 gen, 0 FP — Case Advocate Restrictions & Accommodations (Disney)
+    // B48 Phase 1: talent sourcing
+    'talent sourcer',                // talent sourcing specialist (recruiting function)
     'hr communications',            // 1 gen, 0 FP — AD HR Communications (AbbVie)
     'bhr operations',               // 1 gen, 0 FP — AD BHR Operations Acquisitions & Integration (AbbVie business HR)
     'benefits coordinator',         // 1 gen, 0 FP — Benefits Coordinator (SpaceX)
@@ -2365,6 +2503,13 @@ function tagDomains(job, options) {
     'people team intern',                      // 1 gen — Cloudflare People Team Intern
     'hr intern',                               // 1 gen — Generac HR Intern
     'intern sourcing',                         // 1 gen — Generac Intern Sourcing (HR/talent)
+    // TAG-INTERN-1 cycle 2 (B52): HR keyword gaps
+    'hr systems',                              // 2 gen — HR IT systems (Astera Labs)
+    'hr comms',                                // 1 gen — HR communications (Comcast)
+    // NOTE: 'learning specialist' NOT added — IXL "Professional Learning Specialist" is edtech product training, not HR (2 FP)
+    'employee engagement',                     // 3 gen — HR engagement (Comcast)
+    'campus tour ambassador',                  // 1 gen — campus ambassador (Comcast)
+    'comcast communications - impact',         // 1 gen — impact & inclusion HR (Comcast)
   ];
   if (hrKeywords.some(kw => title.includes(kw))) {
     pushTag('hr', findMatch(hrKeywords, title), 'title');
@@ -2396,6 +2541,10 @@ function tagDomains(job, options) {
     'product strategist project intern',       // 1 gen — TikTok Product Strategist Project Intern
     'product development internship',          // 1 gen — Globus Medical Product Development Internship
     'offering management intern',              // 1 gen — Honeywell Offering Management Intern
+    // TAG-INTERN-1 cycle 2 (B52): product keyword gaps
+    'technology product analyst',              // 3 gen — product analyst (Copart)
+    'commercialization product',               // 1 gen — product commercialization (Trane)
+    'product operations project',              // 3 gen — product ops (TikTok)
   ];
   if (productKeywords.some(kw => title.includes(kw))) {
     pushTag('product', findMatch(productKeywords, title), 'title');
@@ -2468,6 +2617,10 @@ function tagDomains(job, options) {
     'cnc programmer',            // 5 hits — CNC machine programming
     'mold designer',             // 1 hit — injection mold design
     'metrologist',               // 2 hits — precision measurement roles
+    // B48 Phase 1: manufacturing intern/support keywords
+    'technician student intern',     // manufacturing technician intern roles
+    'mfg ops support',               // mfg operations support (abbreviation)
+    'logistics teardown',            // logistics teardown technician (defense mfg)
     'industrial maintenance',    // 3 hits — industrial maintenance technicians
     'cycle counter',             // 3 hits — inventory cycle counting (manufacturing floor)
     'quality technician',        // 5 hits — QC/QA floor technicians
@@ -2595,6 +2748,15 @@ function tagDomains(job, options) {
     'digitalization co-op',                    // 1 gen — Rolls Royce Digitalization Co-op
     'intern – engineer operations',            // 1 gen — BHE Engineer Operations Intern (mfg ops)
     'intern – enterprise analytics',           // 1 gen — BHE Enterprise Analytics Intern (mfg analytics)
+    // TAG-INTERN-1 cycle 2 (B52): manufacturing keyword gaps
+    'quality internship',                      // 1 gen — quality internship (Generac)
+    'product quality intern',                  // 1 gen — product quality (Bosch)
+    'vehicle motion manufacturing',            // 1 gen — vehicle mfg (Bosch)
+    'manufacturing intern',                    // 5 gen — manufacturing interns (Curtiss-Wright, etc.)
+    'student engineering intern',              // 3 gen — student engineering (RE/SPEC)
+    'student mine reclamation',                // 1 gen — mine reclamation engineering (RE/SPEC)
+    'comcast construction tools',              // 1 gen — construction tools (Comcast)
+    'co-op: system test',                      // 1 gen — system test (iRhythm)
   ];
   // EHS uses word-boundary regex — 'ehs' substring appears in 'FranceHS', 'EHSS'
   const ehsRegex = /\behs\b/i;
@@ -2637,6 +2799,8 @@ function tagDomains(job, options) {
     'dispatching clerk',             // 1 gen, 0 FP — dispatching clerk
     'logistics administration',      // 1 gen, 0 FP — logistics administration
     'material transfer driver',     // 1 gen, 0 FP — material transfer driver
+    // B48 Phase 1: logistics operative
+    'logistics operative',           // logistics operative (warehouse/freight)
 
     'packaging & shipping',          // 1 gen, 0 FP — packaging/shipping planner
     'logistics integration cell',    // 1 gen, 0 FP — logistics integration cell (RTX)
@@ -3314,6 +3478,13 @@ function tagSpecial(job) {
     tags.push('fortune500');
   }
 
+  // University/research institutions (TAG-UNIVERSITY-1)
+  // Matches: PennState University, Pennsylvania State University, University of Texas at Austin, Carnegie Mellon University
+  // Excludes: WD sub-board suffixes like "Cadence (University)", "HPE (University)"
+  if (companyName.includes('university') && !/\(university\)$/.test(companyName)) {
+    tags.push('university');
+  }
+
   return tags;
 }
 
@@ -3336,6 +3507,9 @@ function generateTagStats(jobs) {
   // G1 metric counters: US non-senior general rate
   let usNonSeniorTotal = 0, usNonSeniorGeneral = 0, usNonSeniorTech = 0;
 
+  // TAG-DRIFT-3: G1 by source — disentangle classification quality from pool composition
+  const g1BySource = {};
+
   jobs.forEach(job => {
     if (!job.tags) return;
 
@@ -3350,6 +3524,12 @@ function generateTagStats(jobs) {
       usNonSeniorTotal++;
       if (isGeneral) usNonSeniorGeneral++;
       if (hasTech) usNonSeniorTech++;
+
+      // TAG-DRIFT-3: G1 by source
+      const source = job.source || 'unknown';
+      if (!g1BySource[source]) g1BySource[source] = { total: 0, general: 0 };
+      g1BySource[source].total++;
+      if (isGeneral) g1BySource[source].general++;
     }
 
     // Count employment tags (mutually exclusive)
@@ -3392,6 +3572,7 @@ function generateTagStats(jobs) {
     us_general_rate_pct: Math.round((usNonSeniorGeneral / usNonSeniorTotal) * 1000) / 10,
     tech_us_total: usNonSeniorTech,
     tech_us_general_rate_pct: techPool > 0 ? Math.round((usNonSeniorGeneral / techPool) * 1000) / 10 : null,
+    g1_by_source: Object.fromEntries(Object.entries(g1BySource).map(([s, d]) => [s, { total: d.total, general: d.general, rate_pct: Math.round((d.general / d.total) * 1000) / 10 }])),
   } : null;
 
   return stats;
