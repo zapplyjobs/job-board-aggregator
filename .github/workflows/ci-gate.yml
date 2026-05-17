@@ -1,0 +1,108 @@
+name: CI Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Run tag-engine tests
+        run: node lib/__tests__/tag-engine.test.js
+
+      - name: Check critical files exist and have content
+        run: |
+          ERRORS=0
+          MIN_SIZE=100
+          for FILE in \
+            package.json \
+            lib/fetchers/ats-fetcher.js \
+            lib/fetchers/company-list.json \
+            lib/fetchers/http-client.js \
+            lib/processors/tag-engine.js \
+            lib/processors/deduplicator.js \
+            lib/processors/senior-filter.js \
+            lib/processors/validator.js \
+            lib/utils/helpers.js \
+            lib/utils/file-writer.js \
+            lib/utils/sidecar-writer.js \
+            lib/src/data/global-dedupe-manager.js \
+            lib/src/data/posted-jobs-manager-v2.js
+          do
+            if [ ! -f "$FILE" ]; then
+              echo "::error file=$FILE::Critical file missing: $FILE"
+              ERRORS=$((ERRORS + 1))
+              continue
+            fi
+            SIZE=$(wc -c < "$FILE")
+            if [ "$SIZE" -lt "$MIN_SIZE" ]; then
+              echo "::error file=$FILE::$FILE is ${SIZE} bytes (minimum: ${MIN_SIZE}). Possible blob corruption."
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "FAIL: $ERRORS check(s) failed"
+            exit 1
+          fi
+          echo "PASS: All critical files present and non-trivial"
+
+      - name: Validate JSON files are parseable
+        run: |
+          ERRORS=0
+          for FILE in \
+            package.json \
+            lib/processors/onet-unified-lookup.json
+          do
+            if [ -f "$FILE" ]; then
+              if ! node -e "JSON.parse(require('fs').readFileSync('$FILE','utf8'))" 2>/dev/null; then
+                echo "::error file=$FILE::$FILE is not valid JSON"
+                ERRORS=$((ERRORS + 1))
+              fi
+            fi
+          done
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "FAIL: $ERRORS JSON file(s) corrupted or invalid"
+            exit 1
+          fi
+          echo "PASS: All JSON files valid"
+
+      - name: Syntax check all JS files
+        run: |
+          ERRORS=0
+          while IFS= read -r -d '' FILE; do
+            if ! node -c "$FILE" 2>/dev/null; then
+              echo "::error file=$FILE::Syntax error in $FILE"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done < <(find . -name '*.js' -not -path './node_modules/*' -print0)
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "FAIL: $ERRORS syntax error(s)"
+            exit 1
+          fi
+          echo "PASS: All JS files valid syntax"
+
+      - name: Deletion threshold check
+        if: github.event_name == 'push'
+        run: |
+          DELETION_THRESHOLD=5
+          DELETED=$(git diff --name-only --diff-filter=D HEAD~1 HEAD 2>/dev/null || echo "")
+          COUNT=$(echo "$DELETED" | grep -c . || true)
+          if [ "$COUNT" -gt "$DELETION_THRESHOLD" ]; then
+            echo "::error::$COUNT files deleted in this commit (threshold: $DELETION_THRESHOLD). Possible mass-deletion."
+            echo "Deleted files:"
+            echo "$DELETED"
+            exit 1
+          fi
+          echo "PASS: Deletion count ($COUNT) within threshold ($DELETION_THRESHOLD)"

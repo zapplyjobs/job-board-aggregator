@@ -1,0 +1,36 @@
+name: Auto Bump Submodule
+
+on:
+  workflow_run:
+    workflows: ["CI Gate"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  auto-bump:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest SHA
+        id: sha
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          SHA=$(gh api repos/zapplyjobs/job-board-aggregator/commits?per_page=1 --jq '.[0].sha')
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Latest job-board-aggregator SHA: $SHA"
+
+      - name: Dispatch bump-submodule
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          gh workflow run bump-submodule.yml \
+            --repo zapplyjobs/jobs-aggregator-private \
+            --field submodule_name=aggregator \
+            --field target_sha="${{ steps.sha.outputs.sha }}"
+          echo "Dispatched bump-submodule.yml (aggregator) with SHA ${{ steps.sha.outputs.sha }}"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Auto-bump dispatch failed for aggregator. Manual bump may be needed."
