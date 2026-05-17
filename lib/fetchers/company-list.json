@@ -2056,6 +2056,16 @@
       "default_domain": "hardware"
     },
     {
+      "name": "BAE Systems",
+      "url": "https://bae-systems.wd1.myworkdayjobs.com",
+      "site": "BAE_Systems",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Baker Hughes",
       "url": "https://bakerhughes.wd5.myworkdayjobs.com",
       "site": "BakerHughes",
@@ -2070,6 +2080,26 @@
         "decision": "structural",
         "note": "B34: Domains [hardware,general]. Oilfield services \u2014 ambiguous jobs are field operations, not hardware engineering."
       }
+    },
+    {
+      "name": "Bank of Montreal",
+      "url": "https://bmo.wd1.myworkdayjobs.com",
+      "site": "BMO",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Berkshire Hathaway Energy",
+      "url": "https://bhe.wd1.myworkdayjobs.com",
+      "site": "BHE",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://biibhr.wd3.myworkdayjobs.com",
@@ -2087,6 +2117,16 @@
         "finance"
       ],
       "default_domain": "finance"
+    },
+    {
+      "name": "Bloom Energy",
+      "url": "https://bloom-energy.wd1.myworkdayjobs.com",
+      "site": "Bloom_Energy",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://bloomberg.wd1.myworkdayjobs.com",
@@ -2672,6 +2712,17 @@
       }
     },
     {
+      "name": "General Dynamics Mission Systems",
+      "url": "https://gd-ms.wd1.myworkdayjobs.com",
+      "site": "GDMS",
+      "domains": [
+        "software",
+        "hardware",
+        "AI"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "General Motors",
       "url": "https://generalmotors.wd5.myworkdayjobs.com",
       "site": "Careers_GM",
@@ -2728,6 +2779,16 @@
       "domains": [
         "software",
         "hardware"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Highmark Health",
+      "url": "https://highmark.wd1.myworkdayjobs.com",
+      "site": "Highmark_Health",
+      "domains": [
+        "software",
+        "data_science"
       ],
       "default_domain": "software"
     },
@@ -2874,6 +2935,17 @@
         "note": "B40: 60 gens. Manufacturing \u2014 electronic technicians, receiving inspectors, work cell managers, diagnostic techs. 59% of classified jobs are manufacturing. All correctly general."
       },
       "default_domain": "manufacturing"
+    },
+    {
+      "name": "John Deere",
+      "url": "https://deere.wd1.myworkdayjobs.com",
+      "site": "Deere",
+      "domains": [
+        "software",
+        "data_science",
+        "hardware"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Johnson & Johnson",
@@ -3138,6 +3210,16 @@
       "default_domain": "hardware"
     },
     {
+      "name": "Monolithic Power Systems",
+      "url": "https://mps.wd1.myworkdayjobs.com",
+      "site": "MPS",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
+    },
+    {
       "name": "Moog",
       "url": "https://moog.wd5.myworkdayjobs.com",
       "site": "moog_external_career_site",
@@ -3277,6 +3359,16 @@
       "verified_date": "2026-03-01",
       "domains": [
         "hardware"
+      ],
+      "default_domain": "hardware"
+    },
+    {
+      "name": "Onto Innovation",
+      "url": "https://onto-innovation.wd1.myworkdayjobs.com",
+      "site": "Onto_Innovation",
+      "domains": [
+        "hardware",
+        "software"
       ],
       "default_domain": "hardware"
     },
@@ -3428,6 +3520,16 @@
       ]
     },
     {
+      "name": "Royal Bank of Canada",
+      "url": "https://rbc.wd1.myworkdayjobs.com",
+      "site": "RBC",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "RTX",
       "url": "https://globalhr.wd5.myworkdayjobs.com",
       "site": "rec_rtx_ext_gateway",
@@ -3478,6 +3580,16 @@
         "software"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Schweitzer Engineering Laboratories",
+      "url": "https://sel.wd1.myworkdayjobs.com",
+      "site": "SEL",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
     },
     {
       "name": "SEL",
