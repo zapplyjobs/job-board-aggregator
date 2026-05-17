@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Curated list of tech companies using Greenhouse, Lever, Ashby, Workday, Eightfold, and SmartRecruiters ATS platforms",
-    "last_updated": "2026-05-15",
+    "last_updated": "2026-05-17",
     "verified": "All slugs verified live with entry-level job counts as of date noted in notes",
     "notes": "Session 57: Added 12 Greenhouse boards. Session 60: Added SpaceX/Anduril/Lucid/Palantir. Session 97: Added Workday section (21 tenants verified 2026-02-28). RTX confirmed on Workday (globalhr.wd5/rec_rtx_ext_gateway, 3745 jobs) \u2014 WD-1 research was wrong about Phenom. WD-4 (2026-02-28 S98): 9 hospital tenants added (CCF, VUMC, Intermountain, MGB, Geisinger, Ochsner, SaintLukes, Montefiore, Sharp). CCF+Montefiore have us_only=true (campus/address-only locations). Kaiser/HCA/Mayo not yet verified (JS-rendered career pages). S107: 4 quant/trading GH tenants added (Jane Street 229, IMC 149, Akuna Capital 33, Jump Trading 67). Finance domain tag added to tag-engine.js. S112 ATS-EXP: +62 GH, +42 Lever, +51 Ashby, +20 Workday (176 companies total, all verified 2026-03-01). S147: +7 GH (Klaviyo, Asana, Squarespace, DoorDash, Pinterest, CockroachLabs, Starburst) \u2014 verified entry-level eng roles exist. 10 others from research batch rejected. S147: +2 Workday (Snap/myworkdaysite.com, Morgan Stanley). +3 Eightfold section (AmEx 493, John Deere 184, Zebra 266) \u2014 new ATS platform. S148: +10 Workday (Fidelity, Analog Devices, Stryker, State Street, KLA, Moog, Entegris, Rolls-Royce, LPL Financial \u2014 all verified live 2026-03-11). Discovered via SimplifyJobs WD tenant analysis. Goldman Sachs/SBD/Comcast/Expedia/Amgen excluded (non-standard domain, wrong site, or non-tech noise). S154: SmartRecruiters section added (17 companies, 256 total interns verified 2026-03-11). Slugs discovered from speedyapply/pittcsc/cvrve competitor repos + API testing. Low-intern slugs (RaytheonTechnologies/EVERSANA1/WellmarkInc) kept for new-grad volume. S167: SUPPLY-NEW-COMPANIES \u2014 removed 9 WD duplicates (ASML/Broadcom/Northrop/Cisco/Disney/HP/Marvell/Proofpoint/Stryker). GH +19 (CoreWeave/Rubrik/OscarHealth/Canonical/Appian/Anaplan/SoFi/Nuro/Formlabs/Qualtrics/IXLLearning/AlphaSights/Figure/SamsungResearchAmerica/LatitudeAI/AlphaFMC/Oklo/UnderdogFantasy/Loop). WD +40 (Microsoft/Rivian/Deloitte/EA/Zipline/Qorvo/Keysight/PGE/Westinghouse/XDev/CadenceUniv/BlackRock/GM/HPEUniv/Abbott/Southwest/SBD/ResMed/Ciena/SiliconLabs/FLIR/Aptiv/BostonDynamics/Expedia/Lumentum/InterDigital/Rockwell/Moderna/ThomsonReuters/Elevance/TMobile/Allstate/Philips/Etsy/PNC/Travelers/USAA/Cox/FactSet/TransUnion). GH: 126\u2192145. WD: 79\u2192110. S192 Phase3b: +12 GH (CLEAR/Arcesium/SharkNinja/CZBiohub/Personalis/TeleTracking/ReachFinancial/Blueprint/Tudor/StevensCap/Freeform/ExtraHop) +6 Lever (AHEAD/MBRDNA/Wolverine/LifeChurch/BHGFinancial/Symmetry) +5 Ashby (Vultr/1Password/Replicant/Genies/Radiant). GH: 169 Lever: 58 Ashby: 80. S293F: +12 GH (Algolia/BeyondTrust/JFrog/KnowBe4/Lattice/NozomiNetworks/OrcaSecurity/PingIdentity/Planet/PlanetScale/RedwoodMaterials/Speechify) \u2014 all verified live with US entry-level tech roles. Discovered via systematic GH API scan. F45: Added AI Fund (Lever), Magna (WD), Tencent (WD). Removed Coinbase (GH board 404). F73: +3 GH (Alo Yoga, XPENG Motors, The New York Times), +1 Lever (Actian). Found via SimplifyJs gap analysis. All verified live with US tech entry-level yield. F76: Oracle HCM section added (2 companies: Oracle Corp + Texas Instruments). Refactored oracle.js from single-company to multi-company.",
     "workday_count": 148
@@ -1950,7 +1950,8 @@
         "date": "2026-05-13",
         "decision": "structural",
         "note": "B40: 14 gens. Financial services \u2014 client engagement managers, financial advisors. Correctly general (finance)."
-      }
+      },
+      "default_domain": "finance"
     },
     {
       "name": "Analog Devices",
@@ -2141,7 +2142,8 @@
         "date": "2026-05-13",
         "decision": "mixed",
         "note": "B38: 111 gens. Mostly defense ops (exercise planners, equipment specialists). Notable: Back-End Developer (fixed PRECISION-20), M&S System Engineer (borderline SW), UI and UX Strategist (borderline SW). ~95% structural, ~5% potentially classifiable."
-      }
+      },
+      "default_domain": "software"
     },
     {
       "name": "BorgWarner",
@@ -2209,7 +2211,8 @@
         "date": "2026-05-13",
         "decision": "mixed",
         "note": "B38: 100 gens. Defense ops \u2014 planners, team leads, data validators. Notable: AWS Engineer (fixed PRECISION-20), BeyondTrust Engineer (fixed PRECISION-20), WordPress Full-Stack Developer (fixed PRECISION-20). ~90% structural, ~10% keyword gaps (now fixed)."
-      }
+      },
+      "default_domain": "software"
     },
     {
       "name": "Cadence",
@@ -2345,7 +2348,8 @@
         "date": "2026-05-13",
         "decision": "structural",
         "note": "B38: 38 gens. Healthcare \u2014 enrollment reps, sales ops analysts, workforce management, medical records. 100% structural healthcare/ops."
-      }
+      },
+      "default_domain": "healthcare"
     },
     {
       "name": "Cisco",
@@ -2398,7 +2402,8 @@
         "date": "2026-05-12",
         "decision": "structural",
         "note": "B33: 40+ gen. Mixed co-ops (marketing, finance, HR, some network eng). Domains [software,general]. Borderline \u2014 ambiguous co-ops are not reliably software."
-      }
+      },
+      "default_domain": "sales"
     },
     {
       "url": "https://copart.wd12.myworkdayjobs.com",
@@ -2491,7 +2496,8 @@
       "domains": [
         "software",
         "general"
-      ]
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Exact Sciences",
@@ -2512,7 +2518,8 @@
       "domains": [
         "software",
         "general"
-      ]
+      ],
+      "default_domain": "software"
     },
     {
       "name": "F5",
@@ -2523,7 +2530,8 @@
       "domains": [
         "software",
         "hardware"
-      ]
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Fidelity Investments",
@@ -2586,7 +2594,8 @@
       "domains": [
         "finance",
         "software"
-      ]
+      ],
+      "default_domain": "finance"
     },
     {
       "name": "GDIT",
@@ -2921,7 +2930,8 @@
         "date": "2026-05-13",
         "decision": "structural",
         "note": "B38: 126 gens. Defense ops \u2014 task order managers, capture managers, security specialists. Business Systems Analyst (2) blocked by BSA guard (correct). 100% structural."
-      }
+      },
+      "default_domain": "software"
     },
     {
       "name": "Logitech",
@@ -2963,7 +2973,8 @@
       "domains": [
         "software",
         "finance"
-      ]
+      ],
+      "default_domain": "finance"
     },
     {
       "name": "Lumentum",
@@ -3000,7 +3011,8 @@
         "date": "2026-05-12",
         "decision": "structural",
         "note": "B34: Domains [software]. Supply chain software. Ambiguous jobs likely software/ops. Borderline safe for software default but deferred."
-      }
+      },
+      "default_domain": "software"
     },
     {
       "name": "Marmon Holdings",
@@ -3152,7 +3164,8 @@
       "domains": [
         "software",
         "finance"
-      ]
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://ncr.wd1.myworkdayjobs.com",
@@ -3255,7 +3268,8 @@
         "date": "2026-05-13",
         "decision": "mixed",
         "note": "B40: 21 gens. Cybersecurity \u2014 domain consultants (3x), MDR analysts (2x), SAP admin. \"Domain Consultant\" is pre-sales cybersecurity, not SWE. 69% sales. \"MDR Shift Analyst\" is SOC monitoring. Correctly general \u2014 these are security operations, not software engineering."
-      }
+      },
+      "default_domain": "software"
     },
     {
       "name": "PayPal",
@@ -3442,7 +3456,8 @@
         "date": "2026-05-13",
         "decision": "mixed",
         "note": "B38: 45 gens. Engineering/manufacturing \u2014 Associate Engineers, Associate Project Engineers (automation/commissioning). Associate Trend Insight Analyst borderline DS. ~80% structural manufacturing, ~20% potentially HW."
-      }
+      },
+      "default_domain": "hardware"
     },
     {
       "url": "https://snc.wd1.myworkdayjobs.com",
@@ -3520,7 +3535,8 @@
         "date": "2026-05-13",
         "decision": "structural",
         "note": "B38: 41 gens. Financial services \u2014 alternative investment ops, expense services, client analysts, compliance. 100% structural finance ops."
-      }
+      },
+      "default_domain": "finance"
     },
     {
       "url": "https://synchronyfinancial.wd5.myworkdayjobs.com",
@@ -3636,7 +3652,8 @@
       "domains": [
         "software",
         "general"
-      ]
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Trimble",
