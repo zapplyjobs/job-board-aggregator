@@ -4590,11 +4590,88 @@
   ],
   "oracle": [
     {
+      "name": "Atlantic Health System",
+      "slug": "atlantic-health",
+      "base_url": "https://erqh.fa.us2.oraclecloud.com",
+      "site_number": "CX_1001",
+      "notes": "Healthcare. Vanshb03: Systems Analyst Intern (Morristown, NJ)."
+    },
+    {
+      "name": "Berkshire Hathaway Energy",
+      "slug": "berkshire-hathaway-energy",
+      "base_url": "https://fa-essf-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Energy. Vanshb03: Data Science Intern (Des Moines, IA)."
+    },
+    {
+      "name": "Citizens Financial Group",
+      "slug": "citizens-financial",
+      "base_url": "https://hcgn.fa.us2.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Bank. Vanshb03: Data Engineer Intern (Providence, RI)."
+    },
+    {
+      "name": "Fortive",
+      "slug": "fortive",
+      "base_url": "https://ejta.fa.us6.oraclecloud.com",
+      "site_number": "CX_2001",
+      "notes": "Industrial tech. Vanshb03: Hardware Engineering Intern (Everett, WA)."
+    },
+    {
+      "name": "GM Financial",
+      "slug": "gm-financial",
+      "base_url": "https://fa-exvu-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Auto finance. Vanshb03: SDE Intern (Irving/Arlington, TX)."
+    },
+    {
+      "name": "Grant Thornton",
+      "slug": "grant-thornton",
+      "base_url": "https://ehzq.fa.us2.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Accounting/advisory. Vanshb03: Technology Modernization Intern (Chicago, IL)."
+    },
+    {
+      "name": "Honeywell",
+      "slug": "honeywell",
+      "base_url": "https://ibqbjb.fa.ocs.oraclecloud.com",
+      "site_number": "Honeywell",
+      "notes": "Conglomerate. Vanshb03: SE & CS Intern (US), Systems Engineering Intern."
+    },
+    {
+      "name": "Hormel Foods",
+      "slug": "hormel-foods",
+      "base_url": "https://ekkh.fa.us2.oraclecloud.com",
+      "site_number": "CX_2002",
+      "notes": "Food. Vanshb03: IT App Dev Analyst Intern (Austin, MN)."
+    },
+    {
+      "name": "ICD",
+      "slug": "icd",
+      "base_url": "https://ecnf.fa.us2.oraclecloud.com",
+      "site_number": "CX",
+      "notes": "Tech. Vanshb03: Software Engineering Intern (Jersey City, NJ). Same host as Tradeweb."
+    },
+    {
+      "name": "JPMorgan Chase",
+      "slug": "jpmorgan-chase",
+      "base_url": "https://jpmc.fa.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
+    },
+    {
       "name": "Oracle",
       "slug": "oracle",
       "base_url": "https://eeho.fa.us2.oraclecloud.com",
       "site_number": "CX_45001",
       "notes": "Oracle Corp HCM Cloud. ~560 US positions. Verified live F21 (2026-04-30)."
+    },
+    {
+      "name": "Sherwin-Williams",
+      "slug": "sherwin-williams",
+      "base_url": "https://ejhp.fa.us6.oraclecloud.com",
+      "site_number": "CX_2",
+      "notes": "Paint/coatings. Vanshb03: R&D Product Engineering Co-Op (Cleveland, OH)."
     },
     {
       "name": "Texas Instruments",
@@ -4604,11 +4681,25 @@
       "notes": "TI HCM Cloud. 461 total, 135 US, 97 US tech entry-level, 6 US internships. Verified live F76 (2026-05-14)."
     },
     {
+      "name": "Tradeweb",
+      "slug": "tradeweb",
+      "base_url": "https://ecnf.fa.us2.oraclecloud.com",
+      "site_number": "CX",
+      "notes": "Financial tech. Vanshb03: Full Stack Java Developer Intern (Jersey City, NJ)."
+    },
+    {
       "name": "Vertiv",
       "slug": "vertiv",
       "base_url": "https://egup.fa.us2.oraclecloud.com",
       "site_number": "CX",
       "notes": "Data center infrastructure. F93: 5 US tech entry-level verified live. Oracle HCM site CX."
+    },
+    {
+      "name": "WSP",
+      "slug": "wsp",
+      "base_url": "https://emit.fa.ca3.oraclecloud.com",
+      "site_number": "CX_2001",
+      "notes": "Engineering consultancy. Vanshb03: Software Developer Intern (Dallas, TX)."
     }
   ]
 }
