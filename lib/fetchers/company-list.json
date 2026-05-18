@@ -1911,6 +1911,18 @@
       "name": "Allison Transmission"
     },
     {
+      "name": "Allstate",
+      "url": "https://allstate.wd5.myworkdayjobs.com",
+      "site": "allstate_careers",
+      "verified_jobs": 10,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "notes": "Insurance/insurtech. F93 Wave 4: SJ 10 US tech EL."
+    },
+    {
       "name": "Altera",
       "url": "https://altera.wd1.myworkdayjobs.com",
       "site": "altera",
@@ -1976,6 +1988,17 @@
         "software"
       ],
       "default_domain": "hardware"
+    },
+    {
+      "name": "Apex Fintech Solutions",
+      "url": "https://peak6group.wd1.myworkdayjobs.com",
+      "site": "apexfintechsolutions",
+      "verified_jobs": 11,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "notes": "Fintech. F93 Wave 4: SJ 11 US tech EL."
     },
     {
       "name": "Applied Materials",
@@ -2375,6 +2398,18 @@
       "default_domain": "finance"
     },
     {
+      "name": "Centene",
+      "url": "https://centene.wd5.myworkdayjobs.com",
+      "site": "Centene_External",
+      "verified_jobs": 8,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "notes": "Health insurance. F93 Wave 4: SJ 8 US tech EL."
+    },
+    {
       "name": "Centific",
       "url": "https://centific.wd1.myworkdayjobs.com",
       "site": "Centific_Global",
@@ -2463,6 +2498,30 @@
       }
     },
     {
+      "name": "Clarios",
+      "url": "https://clarios.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 10,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Battery manufacturer. F93 Wave 4: SJ 10 US tech EL."
+    },
+    {
+      "name": "Coca-Cola",
+      "url": "https://coke.wd1.myworkdayjobs.com",
+      "site": "coca-cola-careers",
+      "verified_jobs": 11,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "notes": "Beverage/tech. F93 Wave 4: SJ 11 US tech EL."
+    },
+    {
       "url": "https://cognex.wd1.myworkdayjobs.com",
       "site": "External_Career_Site",
       "name": "Cognex"
@@ -2513,6 +2572,67 @@
         "note": "B40: 25 gens. Defense manufacturing \u2014 PC interns, facilities supervisors, project managers, purchasing supervisors. 66% manufacturing. Correctly general."
       },
       "default_domain": "manufacturing"
+    },
+    {
+      "name": "CVS Health",
+      "url": "https://cvshealth.wd1.myworkdayjobs.com",
+      "site": "CVS_Health_Careers",
+      "verified_jobs": 11,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science",
+        "general"
+      ],
+      "notes": "Pharmacy/healthcare. F93 Wave 4: SJ 11 US tech EL."
+    },
+    {
+      "name": "Daimler Truck",
+      "url": "https://dtna.wd5.myworkdayjobs.com",
+      "site": "DTNA_external",
+      "verified_jobs": 7,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Commercial vehicles. F93 Wave 4: SJ 7 US tech EL."
+    },
+    {
+      "name": "Danaher",
+      "url": "https://danaher.wd1.myworkdayjobs.com",
+      "site": "danaherjobs",
+      "verified_jobs": 9,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Science/medical devices. F93 Wave 4: SJ 9 US tech EL."
+    },
+    {
+      "name": "Dell Technologies",
+      "url": "https://dell.wd1.myworkdayjobs.com",
+      "site": "External",
+      "verified_jobs": 6,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Computing/tech. F93 Wave 4: SJ 6 US tech EL."
+    },
+    {
+      "name": "Dexcom",
+      "url": "https://dexcom.wd1.myworkdayjobs.com",
+      "site": "Dexcom",
+      "verified_jobs": 10,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Glucose monitoring. F93 Wave 4: SJ 10 US tech EL."
     },
     {
       "name": "Disney",
@@ -2609,6 +2729,18 @@
         "hardware"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Federal Reserve System",
+      "url": "https://rb.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 13,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "notes": "US central banking. F93 Wave 4: SJ 13 US tech EL."
     },
     {
       "name": "Fidelity Investments",
@@ -2763,6 +2895,18 @@
         "decision": "structural",
         "note": "B34: 21 gen (29%). Plant managers, material flow, supervisors. Manufacturing/operations. Domains [HW,SW] \u2014 no safe default."
       }
+    },
+    {
+      "name": "Gilead Sciences",
+      "url": "https://gilead.wd1.myworkdayjobs.com",
+      "site": "gileadcareers",
+      "verified_jobs": 13,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "notes": "Biotech/pharma. F93 Wave 4: SJ 13 US tech EL."
     },
     {
       "name": "GlobalFoundries",
@@ -3335,6 +3479,18 @@
       "default_domain": "retail"
     },
     {
+      "name": "Nissan",
+      "url": "https://alliance.wd3.myworkdayjobs.com",
+      "site": "nissanjobs",
+      "verified_jobs": 7,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Automotive. F93 Wave 4: SJ 7 US tech EL."
+    },
+    {
       "name": "Northrop Grumman",
       "url": "https://ngc.wd1.myworkdayjobs.com",
       "site": "Northrop_Grumman_External_Site",
@@ -3484,6 +3640,18 @@
       "default_domain": "manufacturing"
     },
     {
+      "name": "Premier",
+      "url": "https://premierinc.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 13,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "notes": "Healthcare analytics. F93 Wave 4: SJ 13 US tech EL."
+    },
+    {
       "name": "PricewaterhouseCoopers",
       "url": "https://pwc.wd3.myworkdayjobs.com",
       "site": "Global_Campus_Careers",
@@ -3509,6 +3677,17 @@
       "url": "https://pru.wd5.myworkdayjobs.com",
       "site": "Careers",
       "name": "Prudential Financial"
+    },
+    {
+      "name": "PTC",
+      "url": "https://ptc.wd1.myworkdayjobs.com",
+      "site": "ptc",
+      "verified_jobs": 15,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "notes": "Industrial IoT/CAD. F93 Wave 4: SJ 15 US tech EL."
     },
     {
       "name": "Red Hat",
@@ -3545,6 +3724,18 @@
         "general"
       ],
       "default_domain": "hardware"
+    },
+    {
+      "name": "Revvity",
+      "url": "https://revvity.wd103.myworkdayjobs.com",
+      "site": "External",
+      "verified_jobs": 9,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "notes": "Life sciences/diagnostics. F93 Wave 4: SJ 9 US tech EL."
     },
     {
       "name": "Rockwell Automation",
@@ -3733,6 +3924,18 @@
         "decision": "structural",
         "note": "B34: Domains [software,general]. Airline operations \u2014 ambiguous jobs are operations/admin, not software. No safe default."
       }
+    },
+    {
+      "name": "Stanley Black & Decker",
+      "url": "https://sbdinc.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 7,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Tools/industrial. F93 Wave 4: SJ 7 US tech EL."
     },
     {
       "name": "State Street",
@@ -3994,6 +4197,17 @@
       "url": "https://warnerbros.wd5.myworkdayjobs.com",
       "site": "global",
       "name": "Warner Bros. Discovery"
+    },
+    {
+      "name": "Wex",
+      "url": "https://wexinc.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 9,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "notes": "Fleet/payment tech. F93 Wave 4: SJ 9 US tech EL."
     },
     {
       "name": "Workday Inc",
