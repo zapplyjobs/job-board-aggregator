@@ -2174,6 +2174,18 @@
       "default_domain": "finance"
     },
     {
+      "name": "Blackstone",
+      "url": "https://blackstone.wd1.myworkdayjobs.com",
+      "site": "bx_external_site",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Bloom Energy",
       "url": "https://bloom-energy.wd1.myworkdayjobs.com",
       "site": "Bloom_Energy",
@@ -3563,6 +3575,18 @@
       "name": "NCR Voyix"
     },
     {
+      "name": "Nelnet",
+      "url": "https://nelnet.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "ai"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Netflix",
       "url": "https://netflix.wd1.myworkdayjobs.com",
       "site": "netflix",
@@ -3743,6 +3767,17 @@
       "default_domain": "finance"
     },
     {
+      "name": "Pluralsight",
+      "url": "https://pluralsight.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "url": "https://polaris.wd5.myworkdayjobs.com",
       "site": "PolarisJobs",
       "name": "Polaris",
@@ -3775,6 +3810,18 @@
         "finance",
         "software"
       ]
+    },
+    {
+      "name": "Prologis",
+      "url": "https://prologis.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "ai"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Proofpoint",
