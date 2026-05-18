@@ -228,6 +228,10 @@
       "name": "Chan Zuckerberg Biohub"
     },
     {
+      "slug": "charlesriverassociates",
+      "name": "Charles River Associates"
+    },
+    {
       "slug": "chime",
       "name": "Chime"
     },
@@ -466,6 +470,10 @@
       }
     },
     {
+      "slug": "glossgenius",
+      "name": "GlossGenius"
+    },
+    {
       "slug": "grafanalabs",
       "name": "Grafana Labs"
     },
@@ -492,6 +500,10 @@
     {
       "slug": "hightouch",
       "name": "Hightouch"
+    },
+    {
+      "slug": "horacemannservicecorporation",
+      "name": "Horace Mann"
     },
     {
       "slug": "hubspotjobs",
@@ -1366,14 +1378,6 @@
       "name": "1Password"
     },
     {
-      "slug": "Replicant",
-      "name": "Replicant"
-    },
-    {
-      "slug": "Vultr",
-      "name": "Vultr"
-    },
-    {
       "slug": "abridge",
       "name": "Abridge"
     },
@@ -1480,6 +1484,10 @@
       "name": "Cursor"
     },
     {
+      "slug": "d-matrix",
+      "name": "d-Matrix"
+    },
+    {
       "slug": "dandy",
       "name": "Dandy"
     },
@@ -1520,6 +1528,10 @@
       "name": "Fable"
     },
     {
+      "slug": "flock-safety",
+      "name": "Flock Safety"
+    },
+    {
       "slug": "gecko-robotics",
       "name": "Gecko Robotics"
     },
@@ -1552,6 +1564,10 @@
       "name": "Hinge Health"
     },
     {
+      "slug": "homebase",
+      "name": "Homebase"
+    },
+    {
       "slug": "ideogram",
       "name": "Ideogram"
     },
@@ -1566,6 +1582,10 @@
     {
       "slug": "inductive-automation-llc",
       "name": "Inductive Automation"
+    },
+    {
+      "slug": "ironcladhq",
+      "name": "Ironclad"
     },
     {
       "slug": "keyrock",
@@ -1653,6 +1673,10 @@
       "name": "Persona"
     },
     {
+      "slug": "poshmark",
+      "name": "Poshmark"
+    },
+    {
       "slug": "promise",
       "name": "Promise"
     },
@@ -1696,6 +1720,10 @@
     {
       "slug": "render",
       "name": "Render"
+    },
+    {
+      "slug": "Replicant",
+      "name": "Replicant"
     },
     {
       "slug": "replit",
@@ -1773,6 +1801,10 @@
     {
       "slug": "voyant-photonics",
       "name": "Voyant Photonics"
+    },
+    {
+      "slug": "Vultr",
+      "name": "Vultr"
     },
     {
       "slug": "warp",
@@ -2327,6 +2359,18 @@
       "notes": "Defense/simulation training. F93: 36 US tech entry-level (SW engr co-ops, R&D, radar, data). Sites: Arlington TX, Tampa FL, Orlando."
     },
     {
+      "name": "Calix",
+      "url": "https://calix.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Capital One",
       "url": "https://capitalone.wd12.myworkdayjobs.com",
       "site": "Capital_One",
@@ -2341,6 +2385,18 @@
         "decision": "structural",
         "note": "B38: 77 gens. Banking \u2014 product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
       }
+    },
+    {
+      "name": "Cardinal Health",
+      "url": "https://cardinalhealth.wd1.myworkdayjobs.com",
+      "site": "EXT",
+      "verified_jobs": 100,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Carnegie Mellon University",
@@ -3507,6 +3563,19 @@
       "name": "NCR Voyix"
     },
     {
+      "name": "Netflix",
+      "url": "https://netflix.wd1.myworkdayjobs.com",
+      "site": "netflix",
+      "verified_jobs": 100,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "data_science",
+        "ai"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Nike",
       "url": "https://nike.wd1.myworkdayjobs.com",
       "site": "NKE",
@@ -4010,6 +4079,18 @@
         "note": "B38: 41 gens. Financial services \u2014 alternative investment ops, expense services, client analysts, compliance. 100% structural finance ops."
       },
       "default_domain": "finance"
+    },
+    {
+      "name": "Symbotic",
+      "url": "https://symbotic.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://synchronyfinancial.wd5.myworkdayjobs.com",
