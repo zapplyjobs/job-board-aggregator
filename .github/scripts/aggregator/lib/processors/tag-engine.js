@@ -17,7 +17,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 20;
+const TAG_ENGINE_VERSION = 22;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -677,6 +677,12 @@ function tagDomains(job, options) {
     // TAG-INTERN-1 cycle 4 (B53): software keyword gaps
     'enterprise architecture',                 // 1 G1 — enterprise architecture intern
     'software/electrical',                     // 1 G1 — compound SW/EE title
+    // TAG-INTERN-1 cycle 5 (B61): software keyword gaps
+    'technical architect',                     // 1 G1 — Services Solutions Technical Architect Intern (Guidewire)
+    'IT co-op',                                // 1 G1 — IT Co-Op (Lennox)
+    'IT innovation',                           // 1 G1 — IT Innovation & Research Intern (Rolls Royce)
+    'technical video',                         // 1 G1 — Technical Video Content Intern (Twilio)
+    'network observability',                   // 1 G1 — Intern - Infrastructure & Network Observability (Zayo)
   ];
   const isSalesRole = /\b(sales|account executive|pre-sales|presales)\b/i.test(title);
  // Guard: retail "Back End Clerk" is not a backend engineer (Lowe's — 6 FPs,
@@ -826,6 +832,9 @@ function tagDomains(job, options) {
     'ai outcomes',                             // 16 G1 — AI outcomes mgmt (consulting AI implementation)
     'ai coe',                                  // 2 G1 — AI Center of Excellence roles
     'ai scenario',                             // 1 G1 — AI scenario analysis
+    // TAG-INTERN-1 cycle 5 (B61): AI keyword gaps
+    'AI & IoT',                                // 1 G1 — AI & IoT Solution Advisor Intern (SAS)
+    'fault tolerant',                          // 1 G1 — Fault Tolerant Quantum System Architecture (Microsoft)
   ];
   const aiShortKeywords = /\b(llm|nlp)\b/i;
   if (aiKeywords.some(kw => title.includes(kw)) || aiShortKeywords.test(job.title || '')) {
@@ -1195,6 +1204,10 @@ function tagDomains(job, options) {
     'system test',                             // 1 G1 intern + 21 total — system test engineering
     'automation & test',                       // 1 G1 — test automation intern
     'electrical sourcing',                     // 1 G1 — EE sourcing intern
+    // TAG-INTERN-1 cycle 5 (B61): hardware keyword gaps
+    'engineering application mechanics',       // 2 G1 — Engineering Application Mechanics Intern (Bosch)
+    'battery experimental',                    // 1 G1 — Battery Experimental Intern (Nissan)
+    'engine dynamics',                         // 1 G1 — Intern in Engine Dynamics (RTX)
   ];
   // ENR-8: Intuitive Surgical clinical/QC FP detection (declared here — used in both
   // hardware guard below and pre-O*NET guard above line ~2640).
@@ -2385,6 +2398,11 @@ function tagDomains(job, options) {
     'comcast program management',              // 1 gen — program management (Comcast)
     'wind development',                        // 1 gen — wind energy (AES)
     'intern - defense & security',             // 1 gen — defense segment (Guidehouse)
+    // TAG-INTERN-1 cycle 5 (B61): operations keyword gaps
+    'game operations',                         // 5 G1 — Game Operations Intern (Tencent)
+    'corporate sustainability',               // 2 G1 — Corporate Sustainability Intern (Corning)
+    'biodiversity',                            // 1 G1 — Biodiversity Intern (Veolia)
+    'uptime management',                       // 1 G1 — Uptime Management Center Intern (EquipmentShare)
   ];
   if (operationsKeywords.some(kw => title.includes(kw))) {
     pushTag('operations', findMatch(operationsKeywords, title), 'title');
@@ -2759,6 +2777,10 @@ function tagDomains(job, options) {
     'student mine reclamation',                // 1 gen — mine reclamation engineering (RE/SPEC)
     'comcast construction tools',              // 1 gen — construction tools (Comcast)
     'co-op: system test',                      // 1 gen — system test (iRhythm)
+    // TAG-INTERN-1 cycle 5 (B61): manufacturing keyword gaps
+    'drafting intern',                         // 1 G1 — Drafting Intern (Veolia)
+    'chemical technology',                     // 1 G1 — Intern in Chemical Technology (RTX)
+    'intern - packaging',                      // 1 G1 — Intern - Packaging Development (Elanco)
   ];
   // EHS uses word-boundary regex — 'ehs' substring appears in 'FranceHS', 'EHSS'
   const ehsRegex = /\behs\b/i;
