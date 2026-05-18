@@ -3614,8 +3614,7 @@ function generateTagStats(jobs) {
     g1_by_source: Object.fromEntries(Object.entries(g1BySource).map(([s, d]) => [s, { total: d.total, general: d.general, rate_pct: Math.round((d.general / d.total) * 1000) / 10 }])),
   } : null;
 
-  // TAG-LAYER4-BUG-1: Include Layer 4 diagnostic in stats output.
-  console.log('L4DEBUG: _layer4Stats =', _layer4Stats ? `present (reached=${_layer4Stats.total_reached}, has_desc=${_layer4Stats.has_desc})` : 'null');
+  // Layer 4 stats output (L4DEBUG confirmed working — run 26043352672)
   if (_layer4Stats) {
     stats.layer4 = {
       total_reached: _layer4Stats.total_reached,
