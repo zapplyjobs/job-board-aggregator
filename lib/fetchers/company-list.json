@@ -2314,16 +2314,6 @@
     },
     {
       "name": "Bloom Energy",
-      "url": "https://bloom-energy.wd1.myworkdayjobs.com",
-      "site": "Bloom_Energy",
-      "domains": [
-        "software",
-        "hardware"
-      ],
-      "default_domain": "software"
-    },
-    {
-      "name": "Bloom Energy",
       "url": "https://bloomenergy.wd1.myworkdayjobs.com",
       "site": "bloomenergycareers",
       "verified_jobs": 30,
@@ -2663,18 +2653,6 @@
       ]
     },
     {
-      "name": "Ciena",
-      "url": "https://ciena.wd5.myworkdayjobs.com",
-      "site": "careers",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
       "name": "Cigna",
       "url": "https://cigna.wd5.myworkdayjobs.com",
       "site": "cignacareers",
@@ -2809,17 +2787,6 @@
       "site": "crowdstrikecareers",
       "verified_jobs": 627,
       "verified_date": "2026-02-28",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
-    },
-    {
-      "name": "CrowdStrike",
-      "url": "https://crowdstrike.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 100,
-      "verified_date": "2026-05-18",
       "domains": [
         "software"
       ],
@@ -3571,18 +3538,6 @@
       "default_domain": "hardware"
     },
     {
-      "name": "KLA",
-      "url": "https://kla.wd1.myworkdayjobs.com",
-      "site": "search",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
       "name": "Leidos",
       "url": "https://leidos.wd5.myworkdayjobs.com",
       "site": "External",
@@ -3702,18 +3657,6 @@
         "hardware",
         "software"
       ]
-    },
-    {
-      "name": "Marvell",
-      "url": "https://marvell.wd1.myworkdayjobs.com",
-      "site": "MarvellCareers",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
     },
     {
       "name": "Mastercard",
@@ -3853,18 +3796,6 @@
         "decision": "structural",
         "note": "B38: 41 gens. Technical support, ALPR techs, account managers. AI Application Specialist (1) borderline SW but too low volume. ~98% structural ops/support."
       }
-    },
-    {
-      "name": "Motorola Solutions",
-      "url": "https://motorolasolutions.wd5.myworkdayjobs.com",
-      "site": "Careers",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "hardware"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "National Interstate Insurance",
@@ -4093,19 +4024,6 @@
       }
     },
     {
-      "name": "Philips",
-      "url": "https://philips.wd3.myworkdayjobs.com",
-      "site": "jobs-and-careers",
-      "verified_jobs": 100,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "hardware",
-        "software",
-        "general"
-      ],
-      "default_domain": "hardware"
-    },
-    {
       "url": "https://pimco.wd1.myworkdayjobs.com",
       "site": "pimco-careers",
       "name": "PIMCO",
@@ -4223,17 +4141,6 @@
       "site": "jobs",
       "verified_jobs": 500,
       "verified_date": "2026-03-01",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
-    },
-    {
-      "name": "Red Hat",
-      "url": "https://redhat.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 100,
-      "verified_date": "2026-05-18",
       "domains": [
         "software"
       ],
