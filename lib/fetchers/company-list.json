@@ -2694,6 +2694,19 @@
       "name": "GE Aerospace"
     },
     {
+      "name": "GE Healthcare",
+      "url": "https://gehc.wd5.myworkdayjobs.com",
+      "site": "GEHC_ExternalSite",
+      "verified_jobs": 39,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software",
+        "general"
+      ],
+      "notes": "Medical tech. F93: SJ ~4 US tech EL. LOW yield but SJ underestimates WD."
+    },
+    {
       "url": "https://gevernova.wd5.myworkdayjobs.com",
       "site": "Vernova_ExternalSite",
       "name": "GE Vernova",
@@ -3414,6 +3427,18 @@
       "default_domain": "software"
     },
     {
+      "name": "Parsons",
+      "url": "https://parsons.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "notes": "Defense/digital infrastructure. F93: SJ ~5 US tech EL. WD site from SimplifyJs URLs."
+    },
+    {
       "name": "PayPal",
       "url": "https://paypal.wd1.myworkdayjobs.com",
       "site": "jobs",
@@ -3809,6 +3834,18 @@
       "name": "Tencent"
     },
     {
+      "name": "Thales",
+      "url": "https://thales.wd3.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 34,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "notes": "Defense/aerospace. F93: SJ ~1 US tech EL. LOW yield."
+    },
+    {
       "url": "https://thehartford.wd5.myworkdayjobs.com",
       "site": "Careers_External",
       "name": "The Hartford",
@@ -4166,6 +4203,13 @@
       "base_url": "https://edbz.fa.us2.oraclecloud.com",
       "site_number": "CX",
       "notes": "TI HCM Cloud. 461 total, 135 US, 97 US tech entry-level, 6 US internships. Verified live F76 (2026-05-14)."
+    },
+    {
+      "name": "Vertiv",
+      "slug": "vertiv",
+      "base_url": "https://egup.fa.us2.oraclecloud.com",
+      "site_number": "CX",
+      "notes": "Data center infrastructure. F93: 5 US tech entry-level verified live. Oracle HCM site CX."
     }
   ]
 }
