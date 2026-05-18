@@ -17,7 +17,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 19;
+const TAG_ENGINE_VERSION = 20;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -123,6 +123,8 @@ function tagJobs(jobs) {
     return [];
   }
 
+  // TAG-LAYER4-BUG-1: Reset Layer 4 diagnostic counters for this run.
+  _layer4Stats = { total_reached: 0, has_desc: 0, hp_hits: 0, std_hits: 0, no_match: 0, short_desc: 0, by_source: {} };
   return jobs.map(job => tagJob(job));
 }
 
@@ -2838,6 +2840,9 @@ function tagDomains(job, options) {
     };
   }
 
+  // TAG-LAYER4-BUG-1: Count jobs that skip Layer 4 (already tagged)
+  if (_layer4Stats && tags.length > 0) { _layer4Stats.total_reached++; } // tagged by keywords
+  if (_layer4Stats && tags.length === 0 && description.length <= 100) { _layer4Stats.total_reached++; _layer4Stats.short_desc++; } // desc too short
   // TAG-7: Description fallback for general-tagged jobs.
   // WD/SR descriptions injected by aggregator Step 4c (from enrichment sidecar).
   // GH/Lever/Ashby have inline descriptions from their API responses.
@@ -2847,6 +2852,14 @@ function tagDomains(job, options) {
   // Precision = % of US classified jobs containing the phrase that are in the intended domain.
  // Measured across 22,513 US jobs with descriptions analysis).
   if (tags.length === 0 && description.length > 100) {
+    // TAG-LAYER4-BUG-1: Track Layer 4 diagnostic
+    if (_layer4Stats) {
+      _layer4Stats.total_reached++;
+      _layer4Stats.has_desc++;
+      const src = (job.source || "unknown");
+      if (!_layer4Stats.by_source[src]) _layer4Stats.by_source[src] = { reached: 0, hp: 0, std: 0, no_match: 0 };
+      _layer4Stats.by_source[src].reached++;
+    }
     const cleanDesc = description.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').toLowerCase();
 
     // Tier 1: High-precision phrases (>80% precision). 1 match = classify.
@@ -2898,6 +2911,7 @@ function tagDomains(job, options) {
       const match = phrases.find(p => cleanDesc.includes(p));
       if (match) {
         pushTag(domain, '(desc-hp: ' + match + ')', 'description-fallback');
+        if (_layer4Stats) { _layer4Stats.hp_hits++; _layer4Stats.by_source[job.source || "unknown"].hp++; }
         break;
       }
     }
@@ -2908,6 +2922,7 @@ function tagDomains(job, options) {
         const matches = phrases.filter(p => cleanDesc.includes(p));
         if (matches.length >= 2) {
           pushTag(domain, '(desc: ' + matches.slice(0, 2).join(' + ') + ')', 'description-fallback');
+        if (_layer4Stats) { _layer4Stats.std_hits++; _layer4Stats.by_source[job.source || "unknown"].std++; }
           break;
         }
       }
@@ -3575,12 +3590,28 @@ function generateTagStats(jobs) {
     g1_by_source: Object.fromEntries(Object.entries(g1BySource).map(([s, d]) => [s, { total: d.total, general: d.general, rate_pct: Math.round((d.general / d.total) * 1000) / 10 }])),
   } : null;
 
+  // TAG-LAYER4-BUG-1: Include Layer 4 diagnostic in stats output.
+  if (_layer4Stats) {
+    stats.layer4 = {
+      total_reached: _layer4Stats.total_reached,
+      has_desc: _layer4Stats.has_desc,
+      hp_hits: _layer4Stats.hp_hits,
+      std_hits: _layer4Stats.std_hits,
+      no_match: _layer4Stats.total_reached - _layer4Stats.has_desc - _layer4Stats.short_desc - (_layer4Stats.total_reached - _layer4Stats.has_desc),
+      short_desc: _layer4Stats.short_desc,
+      by_source: _layer4Stats.by_source,
+    };
+  }
+
   return stats;
 }
 
 // TAG-SELF-3: Expose keyword arrays for per-keyword health monitoring.
 // Initialized lazily on first call to tagDomains(), then cached.
 let _keywordMap = null;
+
+// TAG-LAYER4-BUG-1: Layer 4 description fallback diagnostic counters.
+let _layer4Stats = null;
 function getKeywordMap() {
   return _keywordMap || {};
 }
