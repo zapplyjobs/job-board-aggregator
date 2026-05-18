@@ -2480,6 +2480,17 @@
       }
     },
     {
+      "name": "Cisive",
+      "url": "https://cisive.wd3.myworkdayjobs.com",
+      "site": "careers",
+      "verified_jobs": 24,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Citi",
       "url": "https://citi.wd5.myworkdayjobs.com",
       "site": "2",
@@ -2664,6 +2675,18 @@
       "default_domain": "hardware"
     },
     {
+      "name": "DuCharne McMillen",
+      "url": "https://ducharme.wd1.myworkdayjobs.com",
+      "site": "careers",
+      "verified_jobs": 62,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "default_domain": "software"
+    },
+    {
       "url": "https://elanco.wd5.myworkdayjobs.com",
       "site": "External_Career",
       "name": "Elanco"
@@ -2741,6 +2764,17 @@
         "data_science"
       ],
       "notes": "US central banking. F93 Wave 4: SJ 13 US tech EL."
+    },
+    {
+      "name": "Fenwick & West",
+      "url": "https://fenwick.wd5.myworkdayjobs.com",
+      "site": "FenwickCareers",
+      "verified_jobs": 45,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Fidelity Investments",
@@ -3056,6 +3090,17 @@
       "url": "https://illumina.wd1.myworkdayjobs.com",
       "site": "illumina-careers",
       "name": "Illumina"
+    },
+    {
+      "name": "Intapp",
+      "url": "https://intapp.wd5.myworkdayjobs.com",
+      "site": "Intapp",
+      "verified_jobs": 51,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Intel",
@@ -3836,6 +3881,18 @@
         "note": "B38: 45 gens. Engineering/manufacturing \u2014 Associate Engineers, Associate Project Engineers (automation/commissioning). Associate Trend Insight Analyst borderline DS. ~80% structural manufacturing, ~20% potentially HW."
       },
       "default_domain": "hardware"
+    },
+    {
+      "name": "Sharecare",
+      "url": "https://sharecare.wd5.myworkdayjobs.com",
+      "site": "Sharecare",
+      "verified_jobs": 41,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://snc.wd1.myworkdayjobs.com",
