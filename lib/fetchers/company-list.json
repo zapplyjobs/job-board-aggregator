@@ -1968,6 +1968,18 @@
       "default_domain": "finance"
     },
     {
+      "name": "Alcon",
+      "url": "https://alcon.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
+    },
+    {
       "name": "Allegion",
       "url": "https://allegion.wd5.myworkdayjobs.com",
       "site": "careers",
@@ -2135,6 +2147,17 @@
       "default_domain": "software"
     },
     {
+      "name": "AssetMark",
+      "url": "https://assetmark.wd5.myworkdayjobs.com",
+      "site": "AssetMark_Careers",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "url": "https://athenahealth.wd1.myworkdayjobs.com",
       "site": "External",
       "name": "athenahealth"
@@ -2151,6 +2174,17 @@
       "default_domain": "software"
     },
     {
+      "name": "Avanade",
+      "url": "https://accenture.wd103.myworkdayjobs.com",
+      "site": "en-GB",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Avnet",
       "url": "https://avnet.wd1.myworkdayjobs.com",
       "site": "external",
@@ -2161,6 +2195,18 @@
         "software"
       ],
       "default_domain": "hardware"
+    },
+    {
+      "name": "Axiom Space",
+      "url": "https://axiomspace.wd5.myworkdayjobs.com",
+      "site": "External_Career_Site",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "BAE Systems",
@@ -2246,6 +2292,18 @@
         "hardware"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Bloom Energy",
+      "url": "https://bloomenergy.wd1.myworkdayjobs.com",
+      "site": "bloomenergycareers",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
     },
     {
       "url": "https://bloomberg.wd1.myworkdayjobs.com",
@@ -2352,6 +2410,17 @@
       ]
     },
     {
+      "name": "Bread Financial",
+      "url": "https://alliancedata.wd5.myworkdayjobs.com",
+      "site": "breadfinancial_us",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Broadcom",
       "url": "https://broadcom.wd1.myworkdayjobs.com",
       "site": "External_Career",
@@ -2367,6 +2436,17 @@
       "url": "https://broadridge.wd5.myworkdayjobs.com",
       "site": "Careers",
       "name": "Broadridge"
+    },
+    {
+      "name": "Brown & Brown Insurance",
+      "url": "https://bbinsurance.wd1.myworkdayjobs.com",
+      "site": "careers",
+      "verified_jobs": 20,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "general"
+      ],
+      "default_domain": "general"
     },
     {
       "name": "CACI",
@@ -2835,6 +2915,17 @@
       "name": "Elanco"
     },
     {
+      "name": "Empower",
+      "url": "https://empower.wd12.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Entegris",
       "url": "https://entegris.wd1.myworkdayjobs.com",
       "site": "entegriscareers",
@@ -2859,6 +2950,17 @@
       "domains": [
         "software",
         "general"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Eversource Energy",
+      "url": "https://eversource.wd1.myworkdayjobs.com",
+      "site": "ExternalSite",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
       ],
       "default_domain": "software"
     },
@@ -2893,6 +2995,17 @@
       "domains": [
         "software",
         "hardware"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Fannie Mae",
+      "url": "https://fanniemae.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
       ],
       "default_domain": "software"
     },
@@ -2959,6 +3072,18 @@
         "hardware"
       ],
       "default_domain": "hardware"
+    },
+    {
+      "name": "FOX",
+      "url": "https://fox.wd1.myworkdayjobs.com",
+      "site": "Domestic",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "general",
+        "software"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://franklintempleton.wd5.myworkdayjobs.com",
@@ -3102,6 +3227,17 @@
       "name": "Globus Medical"
     },
     {
+      "name": "Granite Construction",
+      "url": "https://granite.wd1.myworkdayjobs.com",
+      "site": "careers",
+      "verified_jobs": 20,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "general"
+      ],
+      "default_domain": "general"
+    },
+    {
       "name": "Guidehouse",
       "url": "https://guidehouse.wd1.myworkdayjobs.com",
       "site": "External",
@@ -3219,9 +3355,31 @@
       }
     },
     {
+      "name": "Huntsman",
+      "url": "https://huntsman.wd1.myworkdayjobs.com",
+      "site": "Huntsman",
+      "verified_jobs": 20,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "url": "https://ibotta.wd1.myworkdayjobs.com",
       "site": "Ibotta",
       "name": "Ibotta"
+    },
+    {
+      "name": "ICF",
+      "url": "https://icf.wd5.myworkdayjobs.com",
+      "site": "ICFExternal_Career_Site",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://idexx.wd1.myworkdayjobs.com",
@@ -3556,6 +3714,17 @@
       }
     },
     {
+      "name": "Member Solutions",
+      "url": "https://talentmanagementsolution.wd3.myworkdayjobs.com",
+      "site": "JonasSoftwareUSA",
+      "verified_jobs": 20,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Merck & Co.",
       "url": "https://msd.wd5.myworkdayjobs.com",
       "site": "SearchJobs",
@@ -3750,6 +3919,17 @@
         "software"
       ],
       "notes": "Automotive. F93 Wave 4: SJ 7 US tech EL."
+    },
+    {
+      "name": "NorthMark Strategies",
+      "url": "https://northmark.wd108.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 10,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Northrop Grumman",
@@ -3987,6 +4167,28 @@
       "notes": "Industrial IoT/CAD. F93 Wave 4: SJ 15 US tech EL."
     },
     {
+      "name": "QTS",
+      "url": "https://qtsdatacenters.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Radiance Technologies",
+      "url": "https://radiancetech.wd12.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 20,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Red Hat",
       "url": "https://redhat.wd5.myworkdayjobs.com",
       "site": "jobs",
@@ -4205,6 +4407,18 @@
       "default_domain": "software"
     },
     {
+      "name": "Smith+Nephew",
+      "url": "https://smithnephew.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
+    },
+    {
       "name": "Snap",
       "url": "https://wd1.myworkdaysite.com",
       "site": "snap",
@@ -4364,6 +4578,17 @@
       "default_domain": "finance"
     },
     {
+      "name": "TD Synnex",
+      "url": "https://synnex.wd5.myworkdayjobs.com",
+      "site": "tdsynnexcareers",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "url": "https://tencent.wd1.myworkdayjobs.com",
       "site": "Tencent_Careers",
       "name": "Tencent"
@@ -4385,6 +4610,18 @@
       "site": "Careers_External",
       "name": "The Hartford",
       "default_domain": "finance"
+    },
+    {
+      "name": "The Travelers Companies",
+      "url": "https://travelers.wd5.myworkdayjobs.com",
+      "site": "External",
+      "verified_jobs": 50,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Thermo Fisher Scientific",
@@ -4432,6 +4669,30 @@
       }
     },
     {
+      "name": "TTM Technologies",
+      "url": "https://ttmtech.wd5.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 20,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
+    },
+    {
+      "name": "Uline",
+      "url": "https://uline.wd1.myworkdayjobs.com",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Unisys",
       "url": "https://unisys.wd5.myworkdayjobs.com",
       "site": "External",
@@ -4468,6 +4729,17 @@
         "decision": "mixed",
         "note": "B40: 26 gens. Mostly finance/investment \u2014 CMDB admin, comms consultant, go-to-market strategist. 1 \"Application Security Pentester\" is genuine SW but not caught by keywords (24 gens structural, 1-2 borderline). Correctly general for most."
       }
+    },
+    {
+      "name": "Veritiv",
+      "url": "https://veritiv.wd5.myworkdayjobs.com",
+      "site": "veritivcareers",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Vertex Pharmaceuticals",
