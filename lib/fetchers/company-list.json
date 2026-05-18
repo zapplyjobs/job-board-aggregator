@@ -1997,18 +1997,6 @@
       "default_domain": "finance"
     },
     {
-      "name": "Alcon",
-      "url": "https://alcon.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
       "name": "Allegion",
       "url": "https://allegion.wd5.myworkdayjobs.com",
       "site": "careers",
@@ -2053,18 +2041,6 @@
       "site": "altera",
       "verified_jobs": 201,
       "verified_date": "2026-05-15",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
-      "name": "Ambarella",
-      "url": "https://ambarella.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-17",
       "domains": [
         "hardware",
         "software"
@@ -2203,17 +2179,6 @@
       "default_domain": "software"
     },
     {
-      "name": "Avanade",
-      "url": "https://accenture.wd103.myworkdayjobs.com",
-      "site": "en-GB",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Avnet",
       "url": "https://avnet.wd1.myworkdayjobs.com",
       "site": "external",
@@ -2238,16 +2203,6 @@
       "default_domain": "software"
     },
     {
-      "name": "BAE Systems",
-      "url": "https://bae-systems.wd1.myworkdayjobs.com",
-      "site": "BAE_Systems",
-      "domains": [
-        "software",
-        "hardware"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Baker Hughes",
       "url": "https://bakerhughes.wd5.myworkdayjobs.com",
       "site": "BakerHughes",
@@ -2262,16 +2217,6 @@
         "decision": "structural",
         "note": "B34: Domains [hardware,general]. Oilfield services \u2014 ambiguous jobs are field operations, not hardware engineering."
       }
-    },
-    {
-      "name": "Bank of Montreal",
-      "url": "https://bmo.wd1.myworkdayjobs.com",
-      "site": "BMO",
-      "domains": [
-        "software",
-        "data_science"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "Berkshire Hathaway Energy",
@@ -2522,18 +2467,6 @@
       "notes": "Defense/simulation training. F93: 36 US tech entry-level (SW engr co-ops, R&D, radar, data). Sites: Arlington TX, Tampa FL, Orlando."
     },
     {
-      "name": "Calix",
-      "url": "https://calix.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "hardware"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Capital One",
       "url": "https://capitalone.wd12.myworkdayjobs.com",
       "site": "Capital_One",
@@ -2671,18 +2604,6 @@
       "default_domain": "healthcare"
     },
     {
-      "name": "Cirrus Logic",
-      "url": "https://cirruslogic.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-17",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
       "name": "Cisco",
       "url": "https://cisco.wd5.myworkdayjobs.com",
       "site": "Cisco_Careers",
@@ -2697,17 +2618,6 @@
         "decision": "structural",
         "note": "B38: 51 gens. Project managers (7x), change management (5x), sales talent managers. 2x Component Engineer fixed by PRECISION-19. ~95% structural ops/sales."
       }
-    },
-    {
-      "name": "Cisive",
-      "url": "https://cisive.wd3.myworkdayjobs.com",
-      "site": "careers",
-      "verified_jobs": 24,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "Citi",
@@ -2894,32 +2804,9 @@
       "default_domain": "hardware"
     },
     {
-      "name": "DuCharne McMillen",
-      "url": "https://ducharme.wd1.myworkdayjobs.com",
-      "site": "careers",
-      "verified_jobs": 62,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "general"
-      ],
-      "default_domain": "software"
-    },
-    {
       "url": "https://elanco.wd5.myworkdayjobs.com",
       "site": "External_Career",
       "name": "Elanco"
-    },
-    {
-      "name": "Empower",
-      "url": "https://empower.wd12.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "Entegris",
@@ -2995,17 +2882,6 @@
       "default_domain": "software"
     },
     {
-      "name": "Fannie Mae",
-      "url": "https://fanniemae.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Federal Reserve System",
       "url": "https://rb.wd5.myworkdayjobs.com",
       "site": "en-US",
@@ -3016,17 +2892,6 @@
         "data_science"
       ],
       "notes": "US central banking. F93 Wave 4: SJ 13 US tech EL."
-    },
-    {
-      "name": "Fenwick & West",
-      "url": "https://fenwick.wd5.myworkdayjobs.com",
-      "site": "FenwickCareers",
-      "verified_jobs": 45,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "Fidelity Investments",
@@ -3168,17 +3033,6 @@
       }
     },
     {
-      "name": "General Dynamics Mission Systems",
-      "url": "https://gd-ms.wd1.myworkdayjobs.com",
-      "site": "GDMS",
-      "domains": [
-        "software",
-        "hardware",
-        "AI"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "General Motors",
       "url": "https://generalmotors.wd5.myworkdayjobs.com",
       "site": "Careers_GM",
@@ -3258,16 +3112,6 @@
       "domains": [
         "software",
         "hardware"
-      ],
-      "default_domain": "software"
-    },
-    {
-      "name": "Highmark Health",
-      "url": "https://highmark.wd1.myworkdayjobs.com",
-      "site": "Highmark_Health",
-      "domains": [
-        "software",
-        "data_science"
       ],
       "default_domain": "software"
     },
@@ -3447,17 +3291,6 @@
         "note": "B40: 60 gens. Manufacturing \u2014 electronic technicians, receiving inspectors, work cell managers, diagnostic techs. 59% of classified jobs are manufacturing. All correctly general."
       },
       "default_domain": "manufacturing"
-    },
-    {
-      "name": "John Deere",
-      "url": "https://deere.wd1.myworkdayjobs.com",
-      "site": "Deere",
-      "domains": [
-        "software",
-        "data_science",
-        "hardware"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "Johnson & Johnson",
@@ -3745,16 +3578,6 @@
       "default_domain": "hardware"
     },
     {
-      "name": "Monolithic Power Systems",
-      "url": "https://mps.wd1.myworkdayjobs.com",
-      "site": "MPS",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
       "name": "Moog",
       "url": "https://moog.wd5.myworkdayjobs.com",
       "site": "moog_external_career_site",
@@ -3881,17 +3704,6 @@
       "notes": "Automotive. F93 Wave 4: SJ 7 US tech EL."
     },
     {
-      "name": "NorthMark Strategies",
-      "url": "https://northmark.wd108.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 10,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Northrop Grumman",
       "url": "https://ngc.wd1.myworkdayjobs.com",
       "site": "Northrop_Grumman_External_Site",
@@ -3942,16 +3754,6 @@
       "verified_date": "2026-03-01",
       "domains": [
         "hardware"
-      ],
-      "default_domain": "hardware"
-    },
-    {
-      "name": "Onto Innovation",
-      "url": "https://onto-innovation.wd1.myworkdayjobs.com",
-      "site": "Onto_Innovation",
-      "domains": [
-        "hardware",
-        "software"
       ],
       "default_domain": "hardware"
     },
@@ -4030,17 +3832,6 @@
       "default_domain": "finance"
     },
     {
-      "name": "Pluralsight",
-      "url": "https://pluralsight.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
-    },
-    {
       "url": "https://polaris.wd5.myworkdayjobs.com",
       "site": "PolarisJobs",
       "name": "Polaris",
@@ -4052,18 +3843,6 @@
       "default_domain": "manufacturing"
     },
     {
-      "name": "Premier",
-      "url": "https://premierinc.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 13,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "data_science"
-      ],
-      "notes": "Healthcare analytics. F93 Wave 4: SJ 13 US tech EL."
-    },
-    {
       "name": "PricewaterhouseCoopers",
       "url": "https://pwc.wd3.myworkdayjobs.com",
       "site": "Global_Campus_Careers",
@@ -4073,18 +3852,6 @@
         "finance",
         "software"
       ]
-    },
-    {
-      "name": "Prologis",
-      "url": "https://prologis.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "ai"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "Proofpoint",
@@ -4112,28 +3879,6 @@
         "software"
       ],
       "notes": "Industrial IoT/CAD. F93 Wave 4: SJ 15 US tech EL."
-    },
-    {
-      "name": "QTS",
-      "url": "https://qtsdatacenters.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
-    },
-    {
-      "name": "Radiance Technologies",
-      "url": "https://radiancetech.wd12.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 20,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "Red Hat",
@@ -4195,16 +3940,6 @@
       ]
     },
     {
-      "name": "Royal Bank of Canada",
-      "url": "https://rbc.wd1.myworkdayjobs.com",
-      "site": "RBC",
-      "domains": [
-        "software",
-        "data_science"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "RTX",
       "url": "https://globalhr.wd5.myworkdayjobs.com",
       "site": "rec_rtx_ext_gateway",
@@ -4257,45 +3992,6 @@
       "default_domain": "software"
     },
     {
-      "name": "Schweitzer Engineering Laboratories",
-      "url": "https://sel.wd1.myworkdayjobs.com",
-      "site": "SEL",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
-      "name": "SEL",
-      "url": "https://selinc.wd1.myworkdayjobs.com",
-      "site": "SEL",
-      "verified_jobs": 233,
-      "verified_date": "2026-03-15",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "general_note": {
-        "date": "2026-05-13",
-        "decision": "mixed",
-        "note": "B38: 45 gens. Engineering/manufacturing \u2014 Associate Engineers, Associate Project Engineers (automation/commissioning). Associate Trend Insight Analyst borderline DS. ~80% structural manufacturing, ~20% potentially HW."
-      },
-      "default_domain": "hardware"
-    },
-    {
-      "name": "Sharecare",
-      "url": "https://sharecare.wd5.myworkdayjobs.com",
-      "site": "Sharecare",
-      "verified_jobs": 41,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "general"
-      ],
-      "default_domain": "software"
-    },
-    {
       "url": "https://snc.wd1.myworkdayjobs.com",
       "site": "SNC_External_Career_Site",
       "name": "Sierra Nevada Corporation",
@@ -4306,19 +4002,6 @@
       }
     },
     {
-      "name": "SIG (Susquehanna International Group)",
-      "url": "https://susquehanna.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-17",
-      "domains": [
-        "software",
-        "hardware",
-        "data_science"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Silicon Labs",
       "url": "https://silabs.wd1.myworkdayjobs.com",
       "site": "SiliconlabsCareers",
@@ -4326,31 +4009,6 @@
       "verified_date": "2026-03-14",
       "domains": [
         "hardware"
-      ],
-      "default_domain": "hardware"
-    },
-    {
-      "name": "Skydio",
-      "url": "https://skydio.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-17",
-      "domains": [
-        "software",
-        "hardware",
-        "ai"
-      ],
-      "default_domain": "software"
-    },
-    {
-      "name": "Smith+Nephew",
-      "url": "https://smithnephew.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "hardware",
-        "software"
       ],
       "default_domain": "hardware"
     },
@@ -4423,18 +4081,6 @@
         "note": "B38: 41 gens. Financial services \u2014 alternative investment ops, expense services, client analysts, compliance. 100% structural finance ops."
       },
       "default_domain": "finance"
-    },
-    {
-      "name": "Symbotic",
-      "url": "https://symbotic.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 50,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "hardware"
-      ],
-      "default_domain": "software"
     },
     {
       "url": "https://synchronyfinancial.wd5.myworkdayjobs.com",
@@ -4605,30 +4251,6 @@
       }
     },
     {
-      "name": "TTM Technologies",
-      "url": "https://ttmtech.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 20,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "hardware",
-        "software"
-      ],
-      "default_domain": "hardware"
-    },
-    {
-      "name": "Uline",
-      "url": "https://uline.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software",
-        "general"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Unisys",
       "url": "https://unisys.wd5.myworkdayjobs.com",
       "site": "External",
@@ -4737,17 +4359,6 @@
       "url": "https://warnerbros.wd5.myworkdayjobs.com",
       "site": "global",
       "name": "Warner Bros. Discovery"
-    },
-    {
-      "name": "Wex",
-      "url": "https://wexinc.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 9,
-      "verified_date": "2026-05-18",
-      "domains": [
-        "software"
-      ],
-      "notes": "Fleet/payment tech. F93 Wave 4: SJ 9 US tech EL."
     },
     {
       "name": "Workday Inc",
