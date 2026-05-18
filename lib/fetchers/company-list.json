@@ -1459,6 +1459,10 @@
       "name": "Commure"
     },
     {
+      "slug": "Commure-Athelas",
+      "name": "Commure"
+    },
+    {
       "slug": "confluent",
       "name": "Confluent"
     },
@@ -1516,6 +1520,10 @@
       "name": "Etched"
     },
     {
+      "slug": "ether.fi",
+      "name": "Ether.fi"
+    },
+    {
       "slug": "eventual",
       "name": "Eventual"
     },
@@ -1532,12 +1540,20 @@
       "name": "Flock Safety"
     },
     {
+      "slug": "garage",
+      "name": "Garage"
+    },
+    {
       "slug": "gecko-robotics",
       "name": "Gecko Robotics"
     },
     {
       "slug": "genies",
       "name": "Genies"
+    },
+    {
+      "slug": "GigaML",
+      "name": "GIGA"
     },
     {
       "slug": "gimlet",
@@ -1604,6 +1620,14 @@
       "name": "Lightspeed"
     },
     {
+      "slug": "Lynk",
+      "name": "Lynk"
+    },
+    {
+      "slug": "mach9",
+      "name": "Mach9"
+    },
+    {
       "slug": "maybern",
       "name": "Maybern"
     },
@@ -1628,6 +1652,10 @@
       "name": "Modal"
     },
     {
+      "slug": "N1",
+      "name": "N1"
+    },
+    {
       "slug": "neon",
       "name": "Neon"
     },
@@ -1648,6 +1676,10 @@
       "name": "Odin Dynamics"
     },
     {
+      "slug": "oneapp",
+      "name": "ONE Finance"
+    },
+    {
       "slug": "openai",
       "name": "OpenAI",
       "general_note": {
@@ -1659,6 +1691,10 @@
     {
       "slug": "parafin",
       "name": "Parafin"
+    },
+    {
+      "slug": "parspec",
+      "name": "Parspec"
     },
     {
       "slug": "patreon",
@@ -1718,6 +1754,10 @@
       }
     },
     {
+      "slug": "reframesystems",
+      "name": "Reframe Systems"
+    },
+    {
       "slug": "render",
       "name": "Render"
     },
@@ -1738,6 +1778,10 @@
       "name": "Rilla"
     },
     {
+      "slug": "SecondDinner",
+      "name": "Second Dinner"
+    },
+    {
       "slug": "semgrep",
       "name": "Semgrep"
     },
@@ -1756,6 +1800,14 @@
     {
       "slug": "sift",
       "name": "Sift"
+    },
+    {
+      "slug": "siftstack",
+      "name": "Sift"
+    },
+    {
+      "slug": "simple-ai",
+      "name": "Simple AI"
     },
     {
       "slug": "snowflake",
