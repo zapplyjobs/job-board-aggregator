@@ -1141,6 +1141,58 @@
     {
       "name": "Old Mission Capital",
       "slug": "oldmissioncapital"
+    },
+    {
+      "name": "ALTEN Technology",
+      "slug": "altentechnologyusa"
+    },
+    {
+      "name": "VAST",
+      "slug": "vast"
+    },
+    {
+      "name": "Varda Space",
+      "slug": "vardaspace"
+    },
+    {
+      "name": "IEM",
+      "slug": "industrialelectricmanufacturing"
+    },
+    {
+      "name": "Prolific",
+      "slug": "prolific"
+    },
+    {
+      "name": "Zone 5 Technologies",
+      "slug": "zone5technologies"
+    },
+    {
+      "name": "LVT",
+      "slug": "liveviewtechnologiesinc"
+    },
+    {
+      "name": "Neros Technologies",
+      "slug": "nerostechnologies"
+    },
+    {
+      "name": "Gotion",
+      "slug": "gotion"
+    },
+    {
+      "name": "Canonical",
+      "slug": "canonical"
+    },
+    {
+      "name": "Momentus Space",
+      "slug": "momentus"
+    },
+    {
+      "name": "AcuityMD",
+      "slug": "acuitymd"
+    },
+    {
+      "name": "Testlio",
+      "slug": "testlio"
     }
   ],
   "lever": [
@@ -1379,6 +1431,30 @@
     {
       "slug": "AIFund",
       "name": "AI Fund"
+    },
+    {
+      "name": "Veeva Systems",
+      "slug": "veeva"
+    },
+    {
+      "name": "Synergy ECP",
+      "slug": "synergyecp"
+    },
+    {
+      "name": "Pivotal Software",
+      "slug": "pivotal"
+    },
+    {
+      "name": "Bellese",
+      "slug": "bellese"
+    },
+    {
+      "name": "Omni Design Technologies",
+      "slug": "omnidesigntech"
+    },
+    {
+      "name": "hhaexchange",
+      "slug": "hhaexchange"
     }
   ],
   "ashby": [
