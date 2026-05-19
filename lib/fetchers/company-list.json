@@ -1229,6 +1229,26 @@
     {
       "name": "Docugami",
       "slug": "docugami"
+    },
+    {
+      "slug": "aquaticcapitalmanagement",
+      "name": "Aquatic Capital Management"
+    },
+    {
+      "slug": "axiomaticai",
+      "name": "Axiomatic AI"
+    },
+    {
+      "slug": "genevatrading",
+      "name": "Geneva Trading"
+    },
+    {
+      "slug": "lightmatter",
+      "name": "Lightmatter"
+    },
+    {
+      "slug": "radixuniversity",
+      "name": "Radix Trading"
     }
   ],
   "lever": [
