@@ -4874,6 +4874,38 @@
     {
       "slug": "INFICON2",
       "name": "INFICON"
+    },
+    {
+      "name": "Eurofins",
+      "slug": "Eurofins",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
+    },
+    {
+      "name": "CapTech Consulting",
+      "slug": "CapTechConsulting",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
+    },
+    {
+      "name": "Northwestern Mutual",
+      "slug": "NorthwesternMutual",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
+    },
+    {
+      "name": "BryceTech",
+      "slug": "BryceTech",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
     }
   ],
   "oracle": [
