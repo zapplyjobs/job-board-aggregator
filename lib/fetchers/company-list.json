@@ -4515,6 +4515,226 @@
       "name": "Groundswell",
       "url": "https://groundswell.wd12.myworkdayjobs.com",
       "site": "groundswell"
+    },
+    {
+      "name": "Bank of America",
+      "url": "https://ghr.wd1.myworkdayjobs.com/us-emplsv",
+      "site": "ghr",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "AT&T",
+      "url": "https://att.wd1.myworkdayjobs.com/ATTGeneral",
+      "site": "att",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "The Home Depot",
+      "url": "https://homedepot.wd5.myworkdayjobs.com/HomeDepot",
+      "site": "homedepot",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "PNC Financial Services",
+      "url": "https://pnc.wd5.myworkdayjobs.com/PNC",
+      "site": "pnc",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "DraftKings",
+      "url": "https://draftkings.wd5.myworkdayjobs.com/DraftKings",
+      "site": "draftkings",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Equifax",
+      "url": "https://equifax.wd5.myworkdayjobs.com/UR_External",
+      "site": "equifax",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Q2",
+      "url": "https://q2ebanking.wd5.myworkdayjobs.com/Q2",
+      "site": "q2ebanking",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Stryker",
+      "url": "https://stryker.wd1.myworkdayjobs.com/Stryker",
+      "site": "stryker",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Milwaukee Tool",
+      "url": "https://tti.wd1.myworkdayjobs.com/en-US/TTI",
+      "site": "tti",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Wolters Kluwer",
+      "url": "https://wk.wd3.myworkdayjobs.com/en-US/External",
+      "site": "wk",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Transamerica",
+      "url": "https://transamerica.wd5.myworkdayjobs.com/US",
+      "site": "transamerica",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Xylem",
+      "url": "https://xylem.wd5.myworkdayjobs.com/XylemExternal",
+      "site": "xylem",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Onto Innovation",
+      "url": "https://onto.wd1.myworkdayjobs.com/onto_careers",
+      "site": "onto",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Raymond James Financial",
+      "url": "https://raymondjames.wd1.myworkdayjobs.com/RaymondJamesCareers",
+      "site": "raymondjames",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Cox",
+      "url": "https://cox.wd5.myworkdayjobs.com/cox",
+      "site": "cox",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Smith+Nephew",
+      "url": "https://smithnephew.wd3.myworkdayjobs.com/en-US/SN",
+      "site": "smithnephew",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Ascensus",
+      "url": "https://ascensushr.wd1.myworkdayjobs.com/Ascensus",
+      "site": "ascensushr",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Trend Micro",
+      "url": "https://trendmicro.wd1.myworkdayjobs.com/TrendMicro",
+      "site": "trendmicro",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Royal Bank of Canada",
+      "url": "https://rbc.wd1.myworkdayjobs.com/RBC",
+      "site": "rbc",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Varian",
+      "url": "https://onehealthineers.wd3.myworkdayjobs.com/en-US/VMS",
+      "site": "onehealthineers",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-19",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
     }
   ],
   "smartrecruiters": [
