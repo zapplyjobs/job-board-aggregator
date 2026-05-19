@@ -20,6 +20,10 @@
       "name": "Abnormal Security"
     },
     {
+      "name": "AcuityMD",
+      "slug": "acuitymd"
+    },
+    {
       "slug": "ada18",
       "name": "Ada"
     },
@@ -62,6 +66,10 @@
     {
       "slug": "alphasights",
       "name": "AlphaSights"
+    },
+    {
+      "name": "ALTEN Technology",
+      "slug": "altentechnologyusa"
     },
     {
       "slug": "amplitude",
@@ -147,6 +155,10 @@
       "name": "Aurora Innovation"
     },
     {
+      "slug": "avride",
+      "name": "Avride"
+    },
+    {
       "slug": "axon",
       "name": "Axon",
       "general_note": {
@@ -170,6 +182,10 @@
     {
       "slug": "beyondtrust",
       "name": "BeyondTrust"
+    },
+    {
+      "slug": "billiontoone",
+      "name": "BillionToOne"
     },
     {
       "slug": "bitgo",
@@ -208,6 +224,10 @@
       "name": "Bridgewater Associates"
     },
     {
+      "name": "Canonical",
+      "slug": "canonical"
+    },
+    {
       "slug": "capco",
       "name": "Capco"
     },
@@ -222,6 +242,11 @@
     {
       "slug": "celonis",
       "name": "Celonis"
+    },
+    {
+      "name": "Cerebras Systems",
+      "url": "https://boards-api.greenhouse.io/v1/boards/cerebrassystems",
+      "slug": "cerebrassystems"
     },
     {
       "slug": "biohub",
@@ -474,6 +499,14 @@
       "name": "GlossGenius"
     },
     {
+      "slug": "glydways",
+      "name": "Glydways"
+    },
+    {
+      "name": "Gotion",
+      "slug": "gotion"
+    },
+    {
       "slug": "grafanalabs",
       "name": "Grafana Labs"
     },
@@ -521,6 +554,10 @@
     {
       "slug": "hudl",
       "name": "Hudl"
+    },
+    {
+      "name": "IEM",
+      "slug": "industrialelectricmanufacturing"
     },
     {
       "slug": "imc",
@@ -592,6 +629,10 @@
       "name": "KnowBe4"
     },
     {
+      "slug": "kodiak",
+      "name": "Kodiak Robotics"
+    },
+    {
       "slug": "labelbox",
       "name": "Labelbox"
     },
@@ -628,6 +669,10 @@
       "name": "Lucid Software"
     },
     {
+      "name": "LVT",
+      "slug": "liveviewtechnologiesinc"
+    },
+    {
       "slug": "lyft",
       "name": "Lyft"
     },
@@ -654,6 +699,10 @@
     {
       "slug": "moloco",
       "name": "Moloco"
+    },
+    {
+      "name": "Momentus Space",
+      "slug": "momentus"
     },
     {
       "slug": "mongodb",
@@ -686,6 +735,10 @@
       "name": "Muon Space"
     },
     {
+      "name": "Neros Technologies",
+      "slug": "nerostechnologies"
+    },
+    {
       "slug": "neuralink",
       "name": "Neuralink"
     },
@@ -712,6 +765,10 @@
     {
       "slug": "okta",
       "name": "Okta"
+    },
+    {
+      "name": "Old Mission Capital",
+      "slug": "oldmissioncapital"
     },
     {
       "slug": "olsson",
@@ -765,6 +822,10 @@
       "name": "Pendo"
     },
     {
+      "slug": "perscholashires",
+      "name": "Per Scholas"
+    },
+    {
       "slug": "personalisinc",
       "name": "Personalis"
     },
@@ -791,6 +852,10 @@
     {
       "slug": "postman",
       "name": "Postman"
+    },
+    {
+      "name": "Prolific",
+      "slug": "prolific"
     },
     {
       "slug": "purestorage",
@@ -894,6 +959,10 @@
       "name": "Sigma Computing"
     },
     {
+      "slug": "silananotechnologies",
+      "name": "Sila Nanotechnologies"
+    },
+    {
       "slug": "singlestore",
       "name": "SingleStore"
     },
@@ -983,6 +1052,10 @@
       "name": "Tenstorrent"
     },
     {
+      "name": "Testlio",
+      "slug": "testlio"
+    },
+    {
       "slug": "thenewyorktimes",
       "name": "The New York Times"
     },
@@ -1050,6 +1123,14 @@
     {
       "slug": "unity3d",
       "name": "Unity"
+    },
+    {
+      "name": "Varda Space",
+      "slug": "vardaspace"
+    },
+    {
+      "name": "VAST",
+      "slug": "vast"
     },
     {
       "slug": "vercel",
@@ -1130,69 +1211,12 @@
       ]
     },
     {
-      "slug": "zscaler",
-      "name": "Zscaler"
-    },
-    {
-      "name": "Cerebras Systems",
-      "url": "https://boards-api.greenhouse.io/v1/boards/cerebrassystems",
-      "slug": "cerebrassystems"
-    },
-    {
-      "name": "Old Mission Capital",
-      "slug": "oldmissioncapital"
-    },
-    {
-      "name": "ALTEN Technology",
-      "slug": "altentechnologyusa"
-    },
-    {
-      "name": "VAST",
-      "slug": "vast"
-    },
-    {
-      "name": "Varda Space",
-      "slug": "vardaspace"
-    },
-    {
-      "name": "IEM",
-      "slug": "industrialelectricmanufacturing"
-    },
-    {
-      "name": "Prolific",
-      "slug": "prolific"
-    },
-    {
       "name": "Zone 5 Technologies",
       "slug": "zone5technologies"
     },
     {
-      "name": "LVT",
-      "slug": "liveviewtechnologiesinc"
-    },
-    {
-      "name": "Neros Technologies",
-      "slug": "nerostechnologies"
-    },
-    {
-      "name": "Gotion",
-      "slug": "gotion"
-    },
-    {
-      "name": "Canonical",
-      "slug": "canonical"
-    },
-    {
-      "name": "Momentus Space",
-      "slug": "momentus"
-    },
-    {
-      "name": "AcuityMD",
-      "slug": "acuitymd"
-    },
-    {
-      "name": "Testlio",
-      "slug": "testlio"
+      "slug": "zscaler",
+      "name": "Zscaler"
     }
   ],
   "lever": [
@@ -1201,40 +1225,52 @@
       "name": "Actian"
     },
     {
-      "slug": "certik",
-      "name": "CertiK"
+      "slug": "thinkahead",
+      "name": "AHEAD"
     },
     {
-      "slug": "spotify",
-      "name": "Spotify"
-    },
-    {
-      "slug": "gohighlevel",
-      "name": "HighLevel"
-    },
-    {
-      "slug": "palantir",
-      "name": "Palantir"
+      "slug": "AIFund",
+      "name": "AI Fund"
     },
     {
       "slug": "arrivelogistics",
       "name": "Arrive Logistics"
     },
     {
+      "name": "Bellese",
+      "slug": "bellese"
+    },
+    {
       "slug": "belvederetrading",
       "name": "Belvedere Trading"
+    },
+    {
+      "slug": "bhg-inc",
+      "name": "BHG Financial"
     },
     {
       "slug": "bumbleinc",
       "name": "Bumble"
     },
     {
+      "slug": "certik",
+      "name": "CertiK"
+    },
+    {
       "slug": "cfsenergy",
       "name": "CFS Energy"
     },
     {
+      "slug": "convergentresearch",
+      "name": "Convergent Research"
+    },
+    {
       "slug": "deepgenomics",
       "name": "Deep Genomics"
+    },
+    {
+      "slug": "demiurgestudios",
+      "name": "Demiurge Studios"
     },
     {
       "slug": "dexterity",
@@ -1243,6 +1279,10 @@
     {
       "slug": "fireworkhq",
       "name": "Firework"
+    },
+    {
+      "slug": "floqast",
+      "name": "FloQast"
     },
     {
       "slug": "fullscript",
@@ -1257,6 +1297,22 @@
       "name": "Hermeus"
     },
     {
+      "name": "hhaexchange",
+      "slug": "hhaexchange"
+    },
+    {
+      "slug": "gohighlevel",
+      "name": "HighLevel"
+    },
+    {
+      "slug": "includedhealth",
+      "name": "Included Health"
+    },
+    {
+      "slug": "ivo",
+      "name": "Ivo"
+    },
+    {
       "slug": "kabam",
       "name": "Kabam"
     },
@@ -1269,8 +1325,16 @@
       "name": "LeanTaaS"
     },
     {
+      "slug": "life",
+      "name": "Life.Church (YouVersion)"
+    },
+    {
       "slug": "lumafield",
       "name": "Lumafield"
+    },
+    {
+      "slug": "MachinaLabs",
+      "name": "Machina Labs"
     },
     {
       "slug": "magnetforensics",
@@ -1281,8 +1345,16 @@
       "name": "Match Group"
     },
     {
+      "slug": "MBRDNA",
+      "name": "Mercedes-Benz R&D North America"
+    },
+    {
       "slug": "mistral",
       "name": "Mistral AI"
+    },
+    {
+      "slug": "multiplylabs",
+      "name": "Multiply Labs"
     },
     {
       "slug": "nimblerx",
@@ -1293,16 +1365,52 @@
       "name": "Nium"
     },
     {
+      "name": "Omni Design Technologies",
+      "slug": "omnidesigntech"
+    },
+    {
+      "slug": "palantir",
+      "name": "Palantir"
+    },
+    {
+      "slug": "parallelwireless",
+      "name": "Parallel Wireless"
+    },
+    {
+      "slug": "pditechnologies",
+      "name": "PDI Technologies"
+    },
+    {
       "slug": "perforce",
       "name": "Perforce"
+    },
+    {
+      "slug": "perrknight",
+      "name": "Perr & Knight"
+    },
+    {
+      "name": "Pivotal Software",
+      "slug": "pivotal"
+    },
+    {
+      "slug": "plus-2",
+      "name": "PlusAI"
     },
     {
       "slug": "qrypt",
       "name": "Qrypt"
     },
     {
+      "slug": "make-rain",
+      "name": "Rainmaker"
+    },
+    {
       "slug": "ranger",
       "name": "Ranger"
+    },
+    {
+      "slug": "ro",
+      "name": "Ro"
     },
     {
       "slug": "rover",
@@ -1325,12 +1433,36 @@
       "name": "Sophos"
     },
     {
+      "slug": "spotify",
+      "name": "Spotify"
+    },
+    {
+      "slug": "sunwatercapital",
+      "name": "Sunwater Capital"
+    },
+    {
+      "slug": "SymmetrySystems",
+      "name": "Symmetry Systems"
+    },
+    {
+      "name": "Synergy ECP",
+      "slug": "synergyecp"
+    },
+    {
       "slug": "theathletic",
       "name": "The Athletic"
     },
     {
+      "slug": "tri",
+      "name": "Toyota Research Institute"
+    },
+    {
       "slug": "valkyrietrading",
       "name": "Valkyrie Trading"
+    },
+    {
+      "name": "Veeva Systems",
+      "slug": "veeva"
     },
     {
       "slug": "versapay",
@@ -1359,102 +1491,6 @@
     {
       "slug": "zoox",
       "name": "Zoox"
-    },
-    {
-      "slug": "floqast",
-      "name": "FloQast"
-    },
-    {
-      "slug": "multiplylabs",
-      "name": "Multiply Labs"
-    },
-    {
-      "slug": "parallelwireless",
-      "name": "Parallel Wireless"
-    },
-    {
-      "slug": "pditechnologies",
-      "name": "PDI Technologies"
-    },
-    {
-      "slug": "tri",
-      "name": "Toyota Research Institute"
-    },
-    {
-      "slug": "thinkahead",
-      "name": "AHEAD"
-    },
-    {
-      "slug": "MBRDNA",
-      "name": "Mercedes-Benz R&D North America"
-    },
-    {
-      "slug": "life",
-      "name": "Life.Church (YouVersion)"
-    },
-    {
-      "slug": "bhg-inc",
-      "name": "BHG Financial"
-    },
-    {
-      "slug": "SymmetrySystems",
-      "name": "Symmetry Systems"
-    },
-    {
-      "slug": "convergentresearch",
-      "name": "Convergent Research"
-    },
-    {
-      "slug": "demiurgestudios",
-      "name": "Demiurge Studios"
-    },
-    {
-      "slug": "ivo",
-      "name": "Ivo"
-    },
-    {
-      "slug": "perrknight",
-      "name": "Perr & Knight"
-    },
-    {
-      "slug": "sunwatercapital",
-      "name": "Sunwater Capital"
-    },
-    {
-      "slug": "includedhealth",
-      "name": "Included Health"
-    },
-    {
-      "slug": "ro",
-      "name": "Ro"
-    },
-    {
-      "slug": "AIFund",
-      "name": "AI Fund"
-    },
-    {
-      "name": "Veeva Systems",
-      "slug": "veeva"
-    },
-    {
-      "name": "Synergy ECP",
-      "slug": "synergyecp"
-    },
-    {
-      "name": "Pivotal Software",
-      "slug": "pivotal"
-    },
-    {
-      "name": "Bellese",
-      "slug": "bellese"
-    },
-    {
-      "name": "Omni Design Technologies",
-      "slug": "omnidesigntech"
-    },
-    {
-      "name": "hhaexchange",
-      "slug": "hhaexchange"
     }
   ],
   "ashby": [
