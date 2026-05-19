@@ -1221,6 +1221,14 @@
     {
       "slug": "zscaler",
       "name": "Zscaler"
+    },
+    {
+      "name": "Esri",
+      "slug": "esri"
+    },
+    {
+      "name": "Docugami",
+      "slug": "docugami"
     }
   ],
   "lever": [
