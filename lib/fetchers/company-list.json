@@ -457,6 +457,10 @@
       "name": "Faire"
     },
     {
+      "name": "FanDuel",
+      "slug": "fanduel"
+    },
+    {
       "slug": "fastly",
       "name": "Fastly"
     },
@@ -1026,6 +1030,10 @@
       "slug": "scoutai"
     },
     {
+      "name": "SeatGeek",
+      "slug": "seatgeek"
+    },
+    {
       "slug": "sharkninjaoperatingllc",
       "name": "SharkNinja",
       "general_note": {
@@ -1094,6 +1102,10 @@
     {
       "slug": "starburst",
       "name": "Starburst"
+    },
+    {
+      "name": "State Affairs",
+      "slug": "stateaffairs"
     },
     {
       "slug": "scm",
