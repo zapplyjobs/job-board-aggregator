@@ -20,6 +20,10 @@
       "name": "Abnormal Security"
     },
     {
+      "name": "Accenture Federal Services",
+      "slug": "accenturefederalservices"
+    },
+    {
       "name": "AcuityMD",
       "slug": "acuitymd"
     },
@@ -127,6 +131,10 @@
       "name": "Apptronik"
     },
     {
+      "slug": "aquaticcapitalmanagement",
+      "name": "Aquatic Capital Management"
+    },
+    {
       "slug": "arcinstitute",
       "name": "Arc Institute"
     },
@@ -137,6 +145,10 @@
     {
       "slug": "asana",
       "name": "Asana"
+    },
+    {
+      "name": "ASM",
+      "slug": "asm"
     },
     {
       "slug": "assuredguaranty",
@@ -159,8 +171,16 @@
       "name": "Aurora Innovation"
     },
     {
+      "name": "Avathon",
+      "slug": "avathon"
+    },
+    {
       "slug": "avride",
       "name": "Avride"
+    },
+    {
+      "slug": "axiomaticai",
+      "name": "Axiomatic AI"
     },
     {
       "slug": "axon",
@@ -351,6 +371,10 @@
       "name": "DeepMind"
     },
     {
+      "name": "Dev Technology",
+      "slug": "devtechnology"
+    },
+    {
       "slug": "dialpad",
       "name": "Dialpad"
     },
@@ -361,6 +385,10 @@
     {
       "slug": "discord",
       "name": "Discord"
+    },
+    {
+      "name": "Docugami",
+      "slug": "docugami"
     },
     {
       "slug": "doordashusa",
@@ -403,6 +431,10 @@
     {
       "slug": "epicgames",
       "name": "Epic Games"
+    },
+    {
+      "name": "Esri",
+      "slug": "esri"
     },
     {
       "slug": "eulerity",
@@ -473,6 +505,18 @@
       "name": "Garner Health"
     },
     {
+      "name": "General Matter",
+      "slug": "generalmatter"
+    },
+    {
+      "slug": "genevatrading",
+      "name": "Geneva Trading"
+    },
+    {
+      "name": "GenScript",
+      "slug": "genscript"
+    },
+    {
       "slug": "geotab",
       "name": "Geotab"
     },
@@ -533,6 +577,10 @@
     {
       "slug": "headway",
       "name": "Headway"
+    },
+    {
+      "name": "HeyGen",
+      "slug": "heygen"
     },
     {
       "slug": "hightouch",
@@ -661,6 +709,10 @@
       "name": "LG Electronics"
     },
     {
+      "slug": "lightmatter",
+      "name": "Lightmatter"
+    },
+    {
       "slug": "loop",
       "name": "Loop"
     },
@@ -755,8 +807,16 @@
       "name": "Nextdoor"
     },
     {
+      "name": "NICE",
+      "slug": "nice"
+    },
+    {
       "slug": "nozominetworks",
       "name": "Nozomi Networks"
+    },
+    {
+      "name": "NT Concepts",
+      "slug": "ntconcepts"
     },
     {
       "slug": "nuro",
@@ -870,6 +930,10 @@
       "name": "Qualtrics"
     },
     {
+      "slug": "radixuniversity",
+      "name": "Radix Trading"
+    },
+    {
       "slug": "reach",
       "name": "Reach Financial"
     },
@@ -946,6 +1010,10 @@
       "name": "Scale AI"
     },
     {
+      "name": "Scout AI",
+      "slug": "scoutai"
+    },
+    {
       "slug": "sharkninjaoperatingllc",
       "name": "SharkNinja",
       "general_note": {
@@ -1000,6 +1068,10 @@
       "name": "Speechify"
     },
     {
+      "name": "Squarepoint Capital",
+      "slug": "squarepointcapital"
+    },
+    {
       "slug": "squarespace",
       "name": "Squarespace"
     },
@@ -1026,6 +1098,10 @@
     {
       "slug": "sumologic",
       "name": "Sumo Logic"
+    },
+    {
+      "name": "T-Rex Solutions",
+      "slug": "trexsolutions"
     },
     {
       "slug": "tailscale",
@@ -1221,78 +1297,6 @@
     {
       "slug": "zscaler",
       "name": "Zscaler"
-    },
-    {
-      "name": "Esri",
-      "slug": "esri"
-    },
-    {
-      "name": "Docugami",
-      "slug": "docugami"
-    },
-    {
-      "slug": "aquaticcapitalmanagement",
-      "name": "Aquatic Capital Management"
-    },
-    {
-      "slug": "axiomaticai",
-      "name": "Axiomatic AI"
-    },
-    {
-      "slug": "genevatrading",
-      "name": "Geneva Trading"
-    },
-    {
-      "slug": "lightmatter",
-      "name": "Lightmatter"
-    },
-    {
-      "slug": "radixuniversity",
-      "name": "Radix Trading"
-    },
-    {
-      "name": "ASM",
-      "slug": "asm"
-    },
-    {
-      "name": "NICE",
-      "slug": "nice"
-    },
-    {
-      "name": "General Matter",
-      "slug": "generalmatter"
-    },
-    {
-      "name": "Scout AI",
-      "slug": "scoutai"
-    },
-    {
-      "name": "GenScript",
-      "slug": "genscript"
-    },
-    {
-      "name": "Squarepoint Capital",
-      "slug": "squarepointcapital"
-    },
-    {
-      "name": "NT Concepts",
-      "slug": "ntconcepts"
-    },
-    {
-      "name": "Accenture Federal Services",
-      "slug": "accenturefederalservices"
-    },
-    {
-      "name": "HeyGen",
-      "slug": "heygen"
-    },
-    {
-      "name": "Dev Technology",
-      "slug": "devtechnology"
-    },
-    {
-      "name": "Avathon",
-      "slug": "avathon"
     }
   ],
   "lever": [
