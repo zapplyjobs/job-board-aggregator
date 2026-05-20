@@ -387,6 +387,10 @@
       "name": "Discord"
     },
     {
+      "name": "Divergent Technologies",
+      "slug": "divergent"
+    },
+    {
       "name": "Docugami",
       "slug": "docugami"
     },
@@ -439,6 +443,10 @@
     {
       "slug": "eulerity",
       "name": "Eulerity"
+    },
+    {
+      "name": "Everlaw",
+      "slug": "everlaw"
     },
     {
       "slug": "extrahopnetworks",
@@ -928,6 +936,10 @@
     {
       "slug": "qualtrics",
       "name": "Qualtrics"
+    },
+    {
+      "name": "QuinStreet",
+      "slug": "quinstreet"
     },
     {
       "slug": "radixuniversity",
