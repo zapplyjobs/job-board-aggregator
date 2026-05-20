@@ -1551,6 +1551,14 @@
     {
       "slug": "zoox",
       "name": "Zoox"
+    },
+    {
+      "name": "PingWind",
+      "slug": "pingwind"
+    },
+    {
+      "name": "Velo3D",
+      "slug": "velo3d"
     }
   ],
   "ashby": [
