@@ -1249,6 +1249,34 @@
     {
       "slug": "radixuniversity",
       "name": "Radix Trading"
+    },
+    {
+      "name": "ASM",
+      "slug": "asm"
+    },
+    {
+      "name": "NICE",
+      "slug": "nice"
+    },
+    {
+      "name": "General Matter",
+      "slug": "generalmatter"
+    },
+    {
+      "name": "Scout AI",
+      "slug": "scoutai"
+    },
+    {
+      "name": "GenScript",
+      "slug": "genscript"
+    },
+    {
+      "name": "Squarepoint Capital",
+      "slug": "squarepointcapital"
+    },
+    {
+      "name": "NT Concepts",
+      "slug": "ntconcepts"
     }
   ],
   "lever": [
