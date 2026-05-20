@@ -1289,6 +1289,10 @@
     {
       "name": "Dev Technology",
       "slug": "devtechnology"
+    },
+    {
+      "name": "Avathon",
+      "slug": "avathon"
     }
   ],
   "lever": [
