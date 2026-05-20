@@ -1277,6 +1277,18 @@
     {
       "name": "NT Concepts",
       "slug": "ntconcepts"
+    },
+    {
+      "name": "Accenture Federal Services",
+      "slug": "accenturefederalservices"
+    },
+    {
+      "name": "HeyGen",
+      "slug": "heygen"
+    },
+    {
+      "name": "Dev Technology",
+      "slug": "devtechnology"
     }
   ],
   "lever": [
