@@ -1413,6 +1413,10 @@
     {
       "name": "Mixpanel",
       "slug": "mixpanel"
+    },
+    {
+      "name": "OKX",
+      "slug": "okx"
     }
   ],
   "lever": [
