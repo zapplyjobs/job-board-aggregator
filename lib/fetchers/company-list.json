@@ -1381,6 +1381,26 @@
     {
       "name": "ZoomInfo",
       "slug": "zoominfo"
+    },
+    {
+      "name": "DRW",
+      "slug": "drweng"
+    },
+    {
+      "name": "OpenEye",
+      "slug": "openeye"
+    },
+    {
+      "name": "Iterative Health",
+      "slug": "iterativehealth"
+    },
+    {
+      "name": "Axios",
+      "slug": "axios"
+    },
+    {
+      "name": "Aquatic",
+      "slug": "aquaticcapitalmanagement"
     }
   ],
   "lever": [
