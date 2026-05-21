@@ -2206,6 +2206,102 @@
     {
       "name": "Mandolin",
       "slug": "mandolin"
+    },
+    {
+      "name": "LangChain",
+      "slug": "langchain"
+    },
+    {
+      "name": "Plaid",
+      "slug": "plaid"
+    },
+    {
+      "name": "Lovable",
+      "slug": "lovable"
+    },
+    {
+      "name": "Ashby",
+      "slug": "ashby"
+    },
+    {
+      "name": "Docker",
+      "slug": "docker"
+    },
+    {
+      "name": "Attio",
+      "slug": "attio"
+    },
+    {
+      "name": "Astronomer",
+      "slug": "astronomer"
+    },
+    {
+      "name": "Vapi",
+      "slug": "vapi"
+    },
+    {
+      "name": "Campfire",
+      "slug": "campfire"
+    },
+    {
+      "name": "Linear",
+      "slug": "linear"
+    },
+    {
+      "name": "Poolside",
+      "slug": "poolside"
+    },
+    {
+      "name": "Qualified",
+      "slug": "qualified"
+    },
+    {
+      "name": "Cradle Bio",
+      "slug": "cradlebio"
+    },
+    {
+      "name": "Railway",
+      "slug": "railway"
+    },
+    {
+      "name": "Airbyte",
+      "slug": "airbyte"
+    },
+    {
+      "name": "Browserbase",
+      "slug": "browserbase"
+    },
+    {
+      "name": "Pinecone",
+      "slug": "pinecone"
+    },
+    {
+      "name": "Turbopuffer",
+      "slug": "turbopuffer"
+    },
+    {
+      "name": "Reka",
+      "slug": "reka"
+    },
+    {
+      "name": "Statsig",
+      "slug": "statsig"
+    },
+    {
+      "name": "Weaviate",
+      "slug": "weaviate"
+    },
+    {
+      "name": "Stytch",
+      "slug": "stytch"
+    },
+    {
+      "name": "Prefect",
+      "slug": "prefect"
+    },
+    {
+      "name": "Runway",
+      "slug": "runway"
     }
   ],
   "workday": [
