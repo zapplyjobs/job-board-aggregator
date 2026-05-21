@@ -1373,6 +1373,14 @@
         "decision": "mixed",
         "note": "B40: 22 gens. Data center \u2014 gas pipeline engineers, construction managers. \"Gas Pipeline Engineer\" is infrastructure, not SWE. Mostly structural (facilities, construction)."
       }
+    },
+    {
+      "name": "Remote",
+      "slug": "remotecom"
+    },
+    {
+      "name": "ZoomInfo",
+      "slug": "zoominfo"
     }
   ],
   "lever": [
