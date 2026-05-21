@@ -1417,6 +1417,10 @@
     {
       "name": "OKX",
       "slug": "okx"
+    },
+    {
+      "name": "Sezzle",
+      "slug": "sezzle"
     }
   ],
   "lever": [
