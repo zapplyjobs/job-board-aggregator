@@ -1409,6 +1409,10 @@
     {
       "name": "Acrisure Innovation",
       "slug": "acrisureinnovation"
+    },
+    {
+      "name": "Mixpanel",
+      "slug": "mixpanel"
     }
   ],
   "lever": [
