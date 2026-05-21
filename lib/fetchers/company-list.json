@@ -1401,6 +1401,14 @@
     {
       "name": "Aquatic",
       "slug": "aquaticcapitalmanagement"
+    },
+    {
+      "name": "RVO Health",
+      "slug": "rvohealth"
+    },
+    {
+      "name": "Acrisure Innovation",
+      "slug": "acrisureinnovation"
     }
   ],
   "lever": [
