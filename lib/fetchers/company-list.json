@@ -1699,6 +1699,10 @@
     {
       "name": "Velo3D",
       "slug": "velo3d"
+    },
+    {
+      "name": "WeRide",
+      "slug": "weride"
     }
   ],
   "ashby": [
