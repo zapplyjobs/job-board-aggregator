@@ -1731,6 +1731,22 @@
     {
       "name": "WeRide",
       "slug": "weride"
+    },
+    {
+      "name": "Institute for Foundation Models",
+      "slug": "ifm-us"
+    },
+    {
+      "name": "Woven by Toyota",
+      "slug": "woven-by-toyota"
+    },
+    {
+      "name": "Crest Industries",
+      "slug": "crestoperations"
+    },
+    {
+      "name": "Teleo",
+      "slug": "teleo"
     }
   ],
   "ashby": [
