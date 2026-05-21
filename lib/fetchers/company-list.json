@@ -1437,6 +1437,14 @@
     {
       "name": "Schonfeld",
       "slug": "schonfeld"
+    },
+    {
+      "name": "Scout Motors",
+      "slug": "scoutmotors"
+    },
+    {
+      "name": "SupplyHouse.com",
+      "slug": "supplyhouse"
     }
   ],
   "lever": [
