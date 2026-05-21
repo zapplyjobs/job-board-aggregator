@@ -673,6 +673,10 @@
       "name": "Invisible Technologies"
     },
     {
+      "name": "iSpot.tv",
+      "slug": "ispottv"
+    },
+    {
       "slug": "jfrog",
       "name": "JFrog"
     },
@@ -880,6 +884,10 @@
       "name": "OpenEye Scientific"
     },
     {
+      "name": "OpenSesame",
+      "slug": "opensesame"
+    },
+    {
       "slug": "opentable",
       "name": "OpenTable"
     },
@@ -980,6 +988,10 @@
     {
       "slug": "reach",
       "name": "Reach Financial"
+    },
+    {
+      "name": "Red Ventures",
+      "slug": "redventures"
     },
     {
       "slug": "reddit",
