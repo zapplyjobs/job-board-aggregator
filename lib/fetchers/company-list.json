@@ -5720,6 +5720,41 @@
         "finance"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Equifax",
+      "url": "https://equifax.wd5.myworkdayjobs.com",
+      "site": "UR_External",
+      "verified_date": "2026-05-22",
+      "default_domain": "software"
+    },
+    {
+      "name": "Q2",
+      "url": "https://q2ebanking.wd5.myworkdayjobs.com",
+      "site": "Q2",
+      "verified_date": "2026-05-22",
+      "default_domain": "software"
+    },
+    {
+      "name": "Wolters Kluwer",
+      "url": "https://wk.wd3.myworkdayjobs.com",
+      "site": "External",
+      "verified_date": "2026-05-22",
+      "default_domain": "software"
+    },
+    {
+      "name": "Transamerica",
+      "url": "https://transamerica.wd5.myworkdayjobs.com",
+      "site": "US",
+      "verified_date": "2026-05-22",
+      "default_domain": "finance"
+    },
+    {
+      "name": "Raymond James Financial",
+      "url": "https://raymondjames.wd1.myworkdayjobs.com",
+      "site": "RaymondJamesCareers",
+      "verified_date": "2026-05-22",
+      "default_domain": "finance"
     }
   ],
   "smartrecruiters": [
