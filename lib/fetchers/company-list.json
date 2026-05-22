@@ -3103,6 +3103,18 @@
       "notes": "University-specific portal. Separate from Cadence External_Careers entry."
     },
     {
+      "name": "Campbell Soup Company",
+      "url": "https://campbellsoup.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "manufacturing"
+      ],
+      "default_domain": "operations"
+    },
+    {
       "name": "Capital One",
       "url": "https://capitalone.wd12.myworkdayjobs.com",
       "site": "Capital_One",
@@ -3256,6 +3268,18 @@
       }
     },
     {
+      "name": "Cisive",
+      "url": "https://cisive.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "operations"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Citi",
       "url": "https://citi.wd5.myworkdayjobs.com",
       "site": "2",
@@ -3398,6 +3422,18 @@
       "notes": "Computing/tech. F93 Wave 4: SJ 6 US tech EL."
     },
     {
+      "name": "Delta Dental",
+      "url": "https://rhsc.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "operations"
+      ],
+      "default_domain": "healthcare"
+    },
+    {
       "name": "Deluxe Corp",
       "url": "https://deluxe.wd1.myworkdayjobs.com",
       "site": "external_career_page",
@@ -3430,6 +3466,18 @@
       "domains": [
         "software",
         "retail"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Diligent Corporation",
+      "url": "https://diligentcorporation.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "operations"
       ],
       "default_domain": "software"
     },
@@ -3474,6 +3522,30 @@
         "data_science"
       ],
       "default_domain": "hardware"
+    },
+    {
+      "name": "DriveTime",
+      "url": "https://drivetime.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "software"
+      ],
+      "default_domain": "operations"
+    },
+    {
+      "name": "EQT Corporation",
+      "url": "https://eqtcorporation.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "data_science"
+      ],
+      "default_domain": "operations"
     },
     {
       "url": "https://elanco.wd5.myworkdayjobs.com",
@@ -4064,6 +4136,18 @@
       "default_domain": "software"
     },
     {
+      "name": "JM Family Enterprises",
+      "url": "https://jmfamily.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "software"
+      ],
+      "default_domain": "operations"
+    },
+    {
       "url": "https://jabil.wd5.myworkdayjobs.com",
       "site": "Jabil_Careers",
       "name": "Jabil",
@@ -4452,6 +4536,18 @@
         "healthcare"
       ],
       "default_domain": "data_science"
+    },
+    {
+      "name": "Momentive",
+      "url": "https://momentive.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "manufacturing",
+        "software"
+      ],
+      "default_domain": "manufacturing"
     },
     {
       "name": "Moog",
@@ -5096,6 +5192,19 @@
       }
     },
     {
+      "name": "Splunk",
+      "url": "https://splunk.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "data_science",
+        "ai"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Stanley Black & Decker",
       "url": "https://sbdinc.wd1.myworkdayjobs.com",
       "site": "en-US",
@@ -5362,6 +5471,18 @@
         "software"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "VSP Vision",
+      "url": "https://vsp.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "operations"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "url": "https://vanguard.wd5.myworkdayjobs.com",
