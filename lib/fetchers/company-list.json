@@ -2421,6 +2421,18 @@
       "default_domain": "finance"
     },
     {
+      "name": "ASM Global",
+      "url": "https://asmglobal.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "software"
+      ],
+      "default_domain": "operations"
+    },
+    {
       "name": "ASML",
       "url": "https://asml.wd3.myworkdayjobs.com",
       "site": "asmlext1",
@@ -2729,6 +2741,18 @@
       "default_domain": "software"
     },
     {
+      "name": "BP",
+      "url": "https://bpinternational.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "data_science"
+      ],
+      "default_domain": "operations"
+    },
+    {
       "name": "Baker Hughes",
       "url": "https://bakerhughes.wd5.myworkdayjobs.com",
       "site": "BakerHughes",
@@ -2790,6 +2814,18 @@
         "data_science"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Bio-Techne",
+      "url": "https://biotechne.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "manufacturing"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "url": "https://biibhr.wd3.myworkdayjobs.com",
@@ -3636,6 +3672,18 @@
       "default_domain": "finance"
     },
     {
+      "name": "Fresenius Medical Care",
+      "url": "https://freseniusmedicalcare.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "operations"
+      ],
+      "default_domain": "healthcare"
+    },
+    {
       "name": "GDIT",
       "url": "https://gdit.wd5.myworkdayjobs.com",
       "site": "external_career_site",
@@ -3715,6 +3763,18 @@
       }
     },
     {
+      "name": "Genmab",
+      "url": "https://genmab.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "data_science"
+      ],
+      "default_domain": "healthcare"
+    },
+    {
       "name": "Gilead Sciences",
       "url": "https://gilead.wd1.myworkdayjobs.com",
       "site": "gileadcareers",
@@ -3785,6 +3845,18 @@
         "hardware"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "HNTB",
+      "url": "https://hntb.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "software"
+      ],
+      "default_domain": "operations"
     },
     {
       "name": "HP Inc",
@@ -3915,6 +3987,18 @@
       "url": "https://illumina.wd1.myworkdayjobs.com",
       "site": "illumina-careers",
       "name": "Illumina"
+    },
+    {
+      "name": "Insulet Corporation",
+      "url": "https://insulet.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "hardware"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "name": "Intapp",
@@ -4129,6 +4213,19 @@
       "default_domain": "software"
     },
     {
+      "name": "Leonardo",
+      "url": "https://leonardocompany.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "hardware",
+        "software",
+        "manufacturing"
+      ],
+      "default_domain": "hardware"
+    },
+    {
       "name": "Live Nation",
       "url": "https://livenation.wd1.myworkdayjobs.com",
       "site": "external_career_page",
@@ -4284,6 +4381,18 @@
       "default_domain": "software"
     },
     {
+      "name": "Menasha Corporation",
+      "url": "https://menasha.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "manufacturing",
+        "operations"
+      ],
+      "default_domain": "manufacturing"
+    },
+    {
       "name": "Merck & Co.",
       "url": "https://msd.wd5.myworkdayjobs.com",
       "site": "SearchJobs",
@@ -4391,6 +4500,18 @@
       "url": "https://ncr.wd1.myworkdayjobs.com",
       "site": "ext_us",
       "name": "NCR Voyix"
+    },
+    {
+      "name": "NREL",
+      "url": "https://nrel.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "data_science",
+        "software"
+      ],
+      "default_domain": "data_science"
     },
     {
       "name": "NVIDIA",
@@ -4671,6 +4792,18 @@
       "default_domain": "manufacturing"
     },
     {
+      "name": "Premier",
+      "url": "https://premierinc.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "PricewaterhouseCoopers",
       "url": "https://pwc.wd3.myworkdayjobs.com",
       "site": "Global_Campus_Careers",
@@ -4739,6 +4872,18 @@
         "decision": "structural",
         "note": "B38: 249 gens. Ops managers (6x Material Program Manager), contracts managers, admin. 2x Associate Engineer \u2014 ambiguous but volume too low for keyword. 95%+ structural general."
       }
+    },
+    {
+      "name": "Radiance Technologies",
+      "url": "https://radiancetech.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
     },
     {
       "name": "Red Hat",
@@ -4830,6 +4975,18 @@
     {
       "name": "SS&C Technologies",
       "url": "https://ssctech.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "finance"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "SWBC",
+      "url": "https://swbc.wd1.myworkdayjobs.com",
       "site": "external_career_page",
       "verified_jobs": 0,
       "verified_date": "2026-05-22",
@@ -5179,6 +5336,18 @@
       "default_domain": "finance"
     },
     {
+      "name": "Uline",
+      "url": "https://uline.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "software"
+      ],
+      "default_domain": "operations"
+    },
+    {
       "name": "Ultra Intelligence & Communications",
       "url": "https://ultra.wd3.myworkdayjobs.com",
       "site": "en-GB"
@@ -5203,6 +5372,18 @@
         "decision": "mixed",
         "note": "B40: 26 gens. Mostly finance/investment \u2014 CMDB admin, comms consultant, go-to-market strategist. 1 \"Application Security Pentester\" is genuine SW but not caught by keywords (24 gens structural, 1-2 borderline). Correctly general for most."
       }
+    },
+    {
+      "name": "Velera",
+      "url": "https://velera.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "finance"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Veritiv",
