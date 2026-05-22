@@ -5899,6 +5899,22 @@
       "verified_interns": 3,
       "verified_date": "2026-05-22",
       "default_domain": "software"
+    },
+    {
+      "name": "Solidigm",
+      "slug": "solidigm",
+      "verified_us_jobs": 17,
+      "verified_interns": 1,
+      "verified_date": "2026-05-22",
+      "default_domain": "hardware"
+    },
+    {
+      "name": "Kioxia",
+      "slug": "kioxia",
+      "verified_us_jobs": 7,
+      "verified_interns": 1,
+      "verified_date": "2026-05-22",
+      "default_domain": "hardware"
     }
   ],
   "oracle": [
