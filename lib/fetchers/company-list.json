@@ -2669,6 +2669,19 @@
       "default_domain": "software"
     },
     {
+      "name": "AstraZeneca",
+      "url": "https://astrazeneca.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "data_science",
+        "software"
+      ],
+      "default_domain": "healthcare"
+    },
+    {
       "name": "Autodesk",
       "url": "https://autodesk.wd1.myworkdayjobs.com",
       "site": "Ext",
@@ -2730,6 +2743,43 @@
         "decision": "structural",
         "note": "B34: Domains [hardware,general]. Oilfield services \u2014 ambiguous jobs are field operations, not hardware engineering."
       }
+    },
+    {
+      "name": "Barclays",
+      "url": "https://barclays.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "finance"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Baxter International",
+      "url": "https://baxter.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "manufacturing"
+      ],
+      "default_domain": "healthcare"
+    },
+    {
+      "name": "Becton Dickinson",
+      "url": "https://bdx.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "software",
+        "manufacturing"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "name": "Berkshire Hathaway Energy",
@@ -2896,6 +2946,18 @@
         "software"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Bristol Myers Squibb",
+      "url": "https://bristolmyerssquibb.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "data_science"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "name": "Broadcom",
@@ -3352,6 +3414,19 @@
       }
     },
     {
+      "name": "Dow Jones",
+      "url": "https://dowjones.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "data_science",
+        "finance"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Draper",
       "url": "https://draper.wd5.myworkdayjobs.com",
       "site": "Draper_Careers",
@@ -3368,6 +3443,19 @@
       "url": "https://elanco.wd5.myworkdayjobs.com",
       "site": "External_Career",
       "name": "Elanco"
+    },
+    {
+      "name": "Elevance Health",
+      "url": "https://elevancehealth.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "software",
+        "data_science"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "name": "Entegris",
@@ -3880,6 +3968,18 @@
       "default_domain": "finance"
     },
     {
+      "name": "JLL",
+      "url": "https://jll.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "operations"
+      ],
+      "default_domain": "software"
+    },
+    {
       "url": "https://jabil.wd5.myworkdayjobs.com",
       "site": "Jabil_Careers",
       "name": "Jabil",
@@ -4026,6 +4126,18 @@
         "decision": "structural",
         "note": "B38: 126 gens. Defense ops \u2014 task order managers, capture managers, security specialists. Business Systems Analyst (2) blocked by BSA guard (correct). 100% structural."
       },
+      "default_domain": "software"
+    },
+    {
+      "name": "Live Nation",
+      "url": "https://livenation.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "operations"
+      ],
       "default_domain": "software"
     },
     {
@@ -4318,6 +4430,19 @@
       "default_domain": "hardware"
     },
     {
+      "name": "Nasdaq",
+      "url": "https://nasdaq.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "finance",
+        "data_science"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "National Interstate Insurance",
       "url": "https://gaig.wd1.myworkdayjobs.com",
       "site": "GAIG_External",
@@ -4573,6 +4698,19 @@
       "name": "Prudential Financial"
     },
     {
+      "name": "RELX",
+      "url": "https://relx.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "data_science",
+        "ai"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "RTX",
       "url": "https://globalhr.wd5.myworkdayjobs.com",
       "site": "rec_rtx_ext_gateway",
@@ -4656,6 +4794,18 @@
       "notes": "Life sciences/diagnostics. F93 Wave 4: SJ 9 US tech EL."
     },
     {
+      "name": "Rocket Companies",
+      "url": "https://quickenloans.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "finance"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Rockwell Automation",
       "url": "https://rockwellautomation.wd1.myworkdayjobs.com",
       "site": "External-Rockwell-Automation-Early-Careers",
@@ -4699,6 +4849,19 @@
         "software"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Sanofi",
+      "url": "https://sanofi.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "data_science",
+        "ai"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "name": "Schweitzer Engineering Laboratories",
@@ -5053,6 +5216,19 @@
       "default_domain": "software"
     },
     {
+      "name": "Verizon",
+      "url": "https://verizon.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "operations",
+        "hardware"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Vertex Pharmaceuticals",
       "url": "https://vrtx.wd501.myworkdayjobs.com",
       "site": "vertex_careers",
@@ -5192,6 +5368,18 @@
         "ai"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Zoetis",
+      "url": "https://zoetis.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "healthcare",
+        "data_science"
+      ],
+      "default_domain": "healthcare"
     },
     {
       "name": "Zoom",
