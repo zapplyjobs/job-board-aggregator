@@ -3,6 +3,7 @@
  *
  * Classification layers (in priority order):
  * 1. Department/team-based classification (highest confidence — company's own categorization)
+ * 1b. WD jobFamilyGroup exact-match lookup (TAG-FAMILY-1 — fallback when Layer 1 regex misses)
  * 2. Title keyword matching (primary — all 16 domains)
  * 3. O*NET taxonomy lookup (fallback for general-tagged jobs — 28,486 title variants, parenthetical-stripped matching)
  * 4. Description phrase matching (fallback for GH/Lever/Ashby jobs with descriptions)
@@ -17,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 22;
+const TAG_ENGINE_VERSION = 26;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -86,6 +87,24 @@ const ONET = (() => {
   } catch {
     console.warn('tag-engine: onet-unified-lookup.json not found — O*NET fallback disabled');
     return { substringEntries: [], cleanedSubstringTitles: [], substringWordIndex: new Map(), regexEntries: [], regexWordIndex: new Map(), STRIP_PARENS: (s) => s };
+  }
+})();
+
+// TAG-FAMILY-1: WD jobFamilyGroup → domain mapping (AGG-WD-DEPT-1 provides departments[]).
+// Exact-match lookup for 1,497 WD family names curated by B69/B72.
+// Fires when Layer 1 dept regex rules don't match — more reliable than regex for known family names.
+const WD_FAMILY_MAP = (() => {
+  try {
+    const data = require(path.join(__dirname, 'wd-family-domain-map.json'));
+    const map = new Map();
+    for (const [family, domain] of Object.entries(data)) {
+      if (domain && domain !== 'UNMAPPED') {
+        map.set(family.toLowerCase(), domain);
+      }
+    }
+    return map;
+  } catch {
+    return new Map();
   }
 })();
 
@@ -335,6 +354,19 @@ function tagDomains(job, options) {
         pushTag(domain, '(dept: ' + deptRaw.substring(0, 30) + ')', 'department');
         break;
       }
+    }
+  }
+
+  // TAG-FAMILY-1: L6 — WD jobFamilyGroup exact-match lookup.
+  // Fires only when Layer 1 dept regex did not match. WD family names are curated strings
+  // from the API facet descriptor field — exact match is more reliable than regex inference.
+  // GUARD-4 carry-forward: if L1 blocked bare-IT→software, L6 must not re-add software.
+  // IMPORTANT: only push when family gives a confident non-general domain. When family says
+  // 'general', skip — do NOT pushTag('general') here, or L2-L4 title layers never fire.
+  if (tags.length === 0 && deptRaw && WD_FAMILY_MAP.has(deptRaw)) {
+    const familyDomain = WD_FAMILY_MAP.get(deptRaw);
+    if (familyDomain !== 'general' && !(deptGuardedSoftware && familyDomain === 'software')) {
+      pushTag(familyDomain, '(family: ' + deptRaw.substring(0, 40) + ')', 'department');
     }
   }
 
@@ -726,6 +758,10 @@ function tagDomains(job, options) {
   // "Optical Network Engineer" at Google builds physical fiber infrastructure.
   // Guard fires when sole match AND title has hardware context.
   const isHwNetworkEngineer = /\b(optical|5g|lte|fiber|photonics|telecommunications?)\b/i.test(title);
+  // TAG-GUARD-6: 'solutions/solution engineer' — pre-sales, commercial, enterprise, account roles.
+  // "Solutions Engineer, Commercial" at Notion is customer-facing, not software engineering.
+  // Allow when title has tech context: AI, cloud, security, data science, network, software, platform.
+  const isNonSwSolutionsEngineer = !/\b(ai |ml |machine learning|cloud|security|cyber|data science|network|software|developer|platform|infrastructure|devops|sre)\b/i.test(title);
   const matchesSoftware = (text) =>
     softwareKeywords.some(kw => text.includes(kw)) || softwareShortKeywords.test(text);
   // Guard: block guarded keywords only when they are the sole match
@@ -745,6 +781,9 @@ function tagDomains(job, options) {
     if (sole === 'network engineer' && isHwNetworkEngineer) return true;
     if ((sole === 'systems administrator' || sole === 'system administrator') && isItSystemsRole) return true;
     if (sole === 'it project manager') return true;
+    // TAG-GUARD-6: 'solutions/solution engineer' — pre-sales/customer-facing roles, not SWE.
+    // 292 of 335 SW-tagged jobs have no tech context. Allow when AI/cloud/security/data present.
+    if ((sole === 'solutions engineer' || sole === 'solution engineer') && isNonSwSolutionsEngineer) return true;
     return false;
   };
  // TAG-MISROUTE-1 Issue 3b: software domain is now TITLE-ONLY.
@@ -761,7 +800,7 @@ function tagDomains(job, options) {
       (/\btechnicians?\b/i.test(title) || (/\btech\b/i.test(title) && !/\btechnology\b/i.test(title))) &&
       !/\bengineer/i.test(title);
   })();
-  if (!isSalesRole && !isRetailClerk && !isIssComplianceOfficer && !isSwTechnicianOnly && !isItSystemsRole && matchesSoftware(title) && !isGuardedSwOnly(title)) {
+  if (!isSalesRole && !isRetailClerk && !isIssComplianceOfficer && !isSwTechnicianOnly && matchesSoftware(title) && !isGuardedSwOnly(title)) {
     pushTag('software', findMatch(softwareKeywords, title) || (softwareShortKeywords.test(title) ? 'swe/sre regex' : null), 'title');
   }
 
@@ -3007,10 +3046,10 @@ function tagDomains(job, options) {
     // "systems administrator", and "service desk" to software. These are now handled by
     // title keywords (TAG-PRECISION-13) with appropriate guards, so this guard only blocks
     // O*NET fallback for titles that don't match any keyword.
-    // TAG-KEYWORD-11: Extended to cover 'it service' and 'it systems' admin/AV/ops variants.
+    // TAG-KEYWORD-11: Extended to cover 'it service' and 'it systems' admin/AV/ops/engineer variants.
     const isOnetSwFP = (
       /\b(network engineer|systems? administrator|service desk|it services? (?:technician|manager|level|delivery|desk))\b/i.test(title) ||
-      (/\bit systems\b/i.test(title) && /\b(administrator|a\/v|ops|operations|manager|supervisor)\b/i.test(title))
+      (/\bit systems\b/i.test(title) && /\b(administrator|a\/v|ops|operations|manager|supervisor|engineer)\b/i.test(title))
     ) && !/\b(software|developer|cloud|platform|site reliability|devops)\b/i.test(title);
     const titleClean = ONET.STRIP_PARENS(title);
     const titleWords = titleClean.split(/\s+/).filter(w => w.length >= 4);

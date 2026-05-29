@@ -4,7 +4,7 @@
   "description": "Zapply job pipeline aggregator — fetchers, tag engine, processors",
   "main": "lib/aggregator/index.js",
   "scripts": {
-    "test": "node lib/__tests__/tag-engine.test.js"
+    "test": "node lib/__tests__/tag-engine.test.js && node lib/__tests__/deployment-parity.test.js"
   },
   "engines": {
     "node": ">=18.0.0"
