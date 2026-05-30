@@ -18,9 +18,19 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '20'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run tests
         run: npm test
+
+      - name: Lint GitHub Actions workflows
+        uses: docker://rhysd/actionlint:1.7.12
+        with:
+          args: -color
 
       - name: Check critical files exist and have content
         run: |
@@ -28,6 +38,7 @@ jobs:
           MIN_SIZE=100
           for FILE in \
             package.json \
+            package-lock.json \
             lib/fetchers/ats-fetcher.js \
             lib/fetchers/company-list.json \
             lib/fetchers/http-client.js \
