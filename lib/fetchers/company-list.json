@@ -965,10 +965,11 @@
     {
       "slug": "olsson",
       "name": "Olsson",
+      "default_domain": "hardware",
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 74 gens. Engineering consulting \u2014 surveyors, construction techs, environmental geologists, admin coordinators. Water Resources engineers correctly blocked by civil guard. 100% structural civil/consulting."
+        "note": "B38: 74 gens. Engineering consulting \u2014 surveyors, construction techs, environmental geologists, admin coordinators. Water Resources engineers correctly blocked by civil guard. 100% structural civil/consulting. SM31: tenant default added (77 G1, 80% hardware)."
       }
     },
     {
