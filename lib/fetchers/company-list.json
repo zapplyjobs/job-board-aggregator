@@ -2595,7 +2595,8 @@
     },
     {
       "name": "Alteryx",
-      "url": "https://alteryx.wd108.myworkdayjobs.com/AlteryxCareers"
+      "url": "https://alteryx.wd108.myworkdayjobs.com",
+      "site": "AlteryxCareers"
     },
     {
       "name": "Ambarella",
@@ -2700,7 +2701,8 @@
     },
     {
       "name": "Arlo",
-      "url": "https://arlo.wd12.myworkdayjobs.com/en-US/external_careers"
+      "url": "https://arlo.wd12.myworkdayjobs.com",
+      "site": "external_careers"
     },
     {
       "url": "https://arrow.wd1.myworkdayjobs.com",
@@ -3364,7 +3366,8 @@
     },
     {
       "name": "Clarivate",
-      "url": "https://clarivate.wd3.myworkdayjobs.com/Clarivate_Careers"
+      "url": "https://clarivate.wd3.myworkdayjobs.com",
+      "site": "Clarivate_Careers"
     },
     {
       "name": "CME Group",
@@ -3422,7 +3425,8 @@
     },
     {
       "name": "CoStar Group",
-      "url": "https://costar.wd1.myworkdayjobs.com/en-US/Costar_Campus"
+      "url": "https://costar.wd1.myworkdayjobs.com/en-US",
+      "site": "Costar_Campus"
     },
     {
       "name": "Crane Co.",
@@ -4654,7 +4658,8 @@
     },
     {
       "name": "Monolithic Power Systems",
-      "url": "https://monolithicpower.wd12.myworkdayjobs.com/MPS_Careers"
+      "url": "https://monolithicpower.wd12.myworkdayjobs.com",
+      "site": "MPS_Careers"
     },
     {
       "name": "Moog",
@@ -4952,7 +4957,8 @@
     },
     {
       "name": "Pfizer",
-      "url": "https://pfizer.wd1.myworkdayjobs.com/en-US/PfizerCareers"
+      "url": "https://pfizer.wd1.myworkdayjobs.com/en-US",
+      "site": "PfizerCareers"
     },
     {
       "name": "Philips",
@@ -5283,7 +5289,8 @@
     },
     {
       "name": "Snyk",
-      "url": "https://snyk.wd103.myworkdayjobs.com/External"
+      "url": "https://snyk.wd103.myworkdayjobs.com",
+      "site": "External"
     },
     {
       "name": "Sonos",
@@ -5481,7 +5488,8 @@
     },
     {
       "name": "TEL",
-      "url": "https://tel.wd3.myworkdayjobs.com/en-US/tel-careers"
+      "url": "https://tel.wd3.myworkdayjobs.com/en-US",
+      "site": "tel-careers"
     },
     {
       "url": "https://tencent.wd1.myworkdayjobs.com",
