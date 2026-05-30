@@ -199,6 +199,10 @@
       "slug": "avathon"
     },
     {
+      "name": "AvePoint",
+      "slug": "avepoint"
+    },
+    {
       "slug": "avride",
       "name": "Avride"
     },
@@ -688,8 +692,16 @@
       "name": "Hudl"
     },
     {
+      "name": "iCapital Network",
+      "slug": "icapitalnetwork"
+    },
+    {
       "name": "IEM",
       "slug": "industrialelectricmanufacturing"
+    },
+    {
+      "name": "iHerb",
+      "slug": "iherb"
     },
     {
       "slug": "imc",
@@ -739,6 +751,10 @@
     {
       "slug": "janestreet",
       "name": "Jane Street"
+    },
+    {
+      "name": "Jensen Hughes",
+      "slug": "jensenhughes"
     },
     {
       "slug": "jetbrains",
@@ -1391,6 +1407,10 @@
     {
       "name": "Upstart",
       "slug": "upstart"
+    },
+    {
+      "name": "US Conec",
+      "slug": "usconec"
     },
     {
       "name": "Varda Space",
