@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 26;
+const TAG_ENGINE_VERSION = 27;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -272,7 +272,11 @@ function tagEmployment(job) {
  */
 function tagDomains(job, options) {
   const debug = options && options.debug;
-  const title = (job.title || '').toLowerCase();
+  // TAG-ABBREV-1: Expand common ATS abbreviations before keyword matching.
+  // WD and other ATS systems truncate "Engineer" → "Engr" in titles (e.g., "Software Engr II").
+  // Without expansion, 29+ G1 jobs miss keyword matches. Safe: only expands "Engr" at word boundary.
+  const rawTitle = (job.title || '').toLowerCase();
+  const title = rawTitle.replace(/\bengr\b/g, 'engineer');
   const description = (job.description || '').toLowerCase();
   const tags = [];
   const matches = debug ? [] : null;
