@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 27;
+const TAG_ENGINE_VERSION = 28;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -323,7 +323,19 @@ function tagDomains(job, options) {
       [/\b(manufacturing|production|assembly|quality)\b/i, 'manufacturing'],
       [/\b(healthcare|clinical|medical|nursing|pharma)\b/i, 'healthcare'],
       [/\b(warehouse|logistics|distribution|shipping|transport)\b/i, 'logistics'],
-      [/\b(retail|store|merchandis)\b/i, 'retail'],
+      [/\b(retail|stores?|merchandis)\b/i, 'retail'],
+      // SM31: safe dept rules for high-count general jobs (Cat A analysis)
+      // stores→retail: 89 Alo Yoga store roles. 'stores' wasn't matching \bstore\b (trailing 's').
+      [/\b(solutions engineering)\b/i, 'sales'],
+      // solutions engineering→sales: 17 pre-sales SE roles at Verkada/Vanta/Sigma. Confirmed pre-sales.
+      [/\b(data center technicians?)\b/i, 'operations'],
+      // data center technicians→operations: 11 Microsoft DC tech roles. Facility ops, not SW.
+      [/\b(cloud procurement)\b/i, 'operations'],
+      // cloud procurement→operations: 12 Crusoe supply/category manager roles. Procurement, not tech.
+      [/\b(customer outcomes)\b/i, 'sales'],
+      // customer outcomes→sales: 4 Glean AI Success Managers. Customer-facing account management.
+      [/\b(channel)\b/i, 'sales'],
+      // channel→sales: 2 Datadog/Zscaler partner managers. Channel sales.
     ];
     for (const [re, domain] of DEPT_RULES) {
       if (re.test(deptRaw)) {
