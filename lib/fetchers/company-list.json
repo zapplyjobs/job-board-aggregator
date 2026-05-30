@@ -16,14 +16,6 @@
       "name": "84.51\u00b0"
     },
     {
-      "name": "ALTEN Technology",
-      "slug": "altentechnologyusa"
-    },
-    {
-      "name": "ASM",
-      "slug": "asm"
-    },
-    {
       "slug": "abnormalsecurity",
       "name": "Abnormal Security"
     },
@@ -32,12 +24,20 @@
       "slug": "accenturefederalservices"
     },
     {
+      "name": "Acrisure Innovation",
+      "slug": "acrisureinnovation"
+    },
+    {
       "name": "AcuityMD",
       "slug": "acuitymd"
     },
     {
       "slug": "ada18",
       "name": "Ada"
+    },
+    {
+      "name": "Aevex Aerospace",
+      "slug": "aevexaerospace"
     },
     {
       "slug": "affirm",
@@ -84,6 +84,10 @@
       "name": "AlphaSights"
     },
     {
+      "name": "ALTEN Technology",
+      "slug": "altentechnologyusa"
+    },
+    {
       "slug": "amplitude",
       "name": "Amplitude"
     },
@@ -119,10 +123,6 @@
       }
     },
     {
-      "slug": "applovin",
-      "name": "AppLovin"
-    },
-    {
       "slug": "appian",
       "name": "Appian"
     },
@@ -131,8 +131,16 @@
       "name": "Applied Intuition"
     },
     {
+      "slug": "applovin",
+      "name": "AppLovin"
+    },
+    {
       "slug": "apptronik",
       "name": "Apptronik"
+    },
+    {
+      "name": "Aquatic",
+      "slug": "aquaticcapitalmanagement"
     },
     {
       "slug": "aquaticcapitalmanagement",
@@ -147,8 +155,20 @@
       "name": "Arcesium"
     },
     {
+      "name": "Archer",
+      "slug": "archer56"
+    },
+    {
+      "name": "Armada",
+      "slug": "armada"
+    },
+    {
       "slug": "asana",
       "name": "Asana"
+    },
+    {
+      "name": "ASM",
+      "slug": "asm"
     },
     {
       "slug": "assuredguaranty",
@@ -161,6 +181,10 @@
     {
       "slug": "astranis",
       "name": "Astranis"
+    },
+    {
+      "name": "Attentive",
+      "slug": "attentive"
     },
     {
       "slug": "audaxgroup",
@@ -181,6 +205,10 @@
     {
       "slug": "axiomaticai",
       "name": "Axiomatic AI"
+    },
+    {
+      "name": "Axios",
+      "slug": "axios"
     },
     {
       "slug": "axon",
@@ -248,16 +276,16 @@
       "name": "Bridgewater Associates"
     },
     {
-      "slug": "clear",
-      "name": "CLEAR"
-    },
-    {
       "name": "Canonical",
       "slug": "canonical"
     },
     {
       "slug": "capco",
       "name": "Capco"
+    },
+    {
+      "name": "Capital Rx",
+      "slug": "capitalrx"
     },
     {
       "slug": "captivation",
@@ -297,6 +325,10 @@
       "name": "Chime"
     },
     {
+      "slug": "clear",
+      "name": "CLEAR"
+    },
+    {
       "slug": "clickhouse",
       "name": "ClickHouse"
     },
@@ -315,6 +347,10 @@
     {
       "slug": "collibra",
       "name": "Collibra"
+    },
+    {
+      "name": "Commvault",
+      "slug": "commvault"
     },
     {
       "slug": "contentful",
@@ -354,10 +390,6 @@
       "name": "Dashlane"
     },
     {
-      "slug": "datacamp",
-      "name": "DataCamp"
-    },
-    {
       "slug": "databricks",
       "name": "Databricks",
       "titleOverrides": {
@@ -371,6 +403,10 @@
       }
     },
     {
+      "slug": "datacamp",
+      "name": "DataCamp"
+    },
+    {
       "slug": "datadog",
       "name": "Datadog"
     },
@@ -379,8 +415,16 @@
       "name": "DeepMind"
     },
     {
+      "name": "Defense Unicorns",
+      "slug": "defenseunicorns"
+    },
+    {
       "name": "Dev Technology",
       "slug": "devtechnology"
+    },
+    {
+      "name": "DevRev",
+      "slug": "devrev"
     },
     {
       "slug": "dialpad",
@@ -414,6 +458,10 @@
     {
       "slug": "dropbox",
       "name": "Dropbox"
+    },
+    {
+      "name": "DRW",
+      "slug": "drweng"
     },
     {
       "slug": "duolingo",
@@ -505,6 +553,10 @@
       "name": "Fivetran"
     },
     {
+      "name": "Flagship Pioneering",
+      "slug": "flagshippioneeringinc"
+    },
+    {
       "slug": "flexport",
       "name": "Flexport"
     },
@@ -533,16 +585,16 @@
       "name": "Garner Health"
     },
     {
-      "name": "GenScript",
-      "slug": "genscript"
-    },
-    {
       "name": "General Matter",
       "slug": "generalmatter"
     },
     {
       "slug": "genevatrading",
       "name": "Geneva Trading"
+    },
+    {
+      "name": "GenScript",
+      "slug": "genscript"
     },
     {
       "slug": "geotab",
@@ -644,15 +696,6 @@
       "name": "IMC Trading"
     },
     {
-      "slug": "ixllearning",
-      "name": "IXL Learning",
-      "general_note": {
-        "date": "2026-05-13",
-        "decision": "structural",
-        "note": "B38: 41 gens. Education \u2014 math curriculum designers, district partnership specialists, professional learning specialists. 100% structural education (domain not in taxonomy)."
-      }
-    },
-    {
       "slug": "inflectionai",
       "name": "Inflection AI"
     },
@@ -663,6 +706,10 @@
     {
       "slug": "instacart",
       "name": "Instacart"
+    },
+    {
+      "slug": "interfaceai",
+      "name": "interface.ai"
     },
     {
       "slug": "intrinsicrobotics",
@@ -677,8 +724,17 @@
       "slug": "ispottv"
     },
     {
-      "slug": "jfrog",
-      "name": "JFrog"
+      "name": "Iterative Health",
+      "slug": "iterativehealth"
+    },
+    {
+      "slug": "ixllearning",
+      "name": "IXL Learning",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B38: 41 gens. Education \u2014 math curriculum designers, district partnership specialists, professional learning specialists. 100% structural education (domain not in taxonomy)."
+      }
     },
     {
       "slug": "janestreet",
@@ -687,6 +743,10 @@
     {
       "slug": "jetbrains",
       "name": "JetBrains"
+    },
+    {
+      "slug": "jfrog",
+      "name": "JFrog"
     },
     {
       "slug": "jumptrading",
@@ -713,14 +773,6 @@
       "name": "Kodiak Robotics"
     },
     {
-      "slug": "lgelectronics",
-      "name": "LG Electronics"
-    },
-    {
-      "name": "LVT",
-      "slug": "liveviewtechnologiesinc"
-    },
-    {
       "slug": "labelbox",
       "name": "Labelbox"
     },
@@ -741,8 +793,16 @@
       "name": "League"
     },
     {
+      "slug": "lgelectronics",
+      "name": "LG Electronics"
+    },
+    {
       "slug": "lightmatter",
       "name": "Lightmatter"
+    },
+    {
+      "name": "Lila Sciences",
+      "slug": "lilasciences"
     },
     {
       "slug": "loop",
@@ -755,6 +815,10 @@
     {
       "slug": "lucidsoftware",
       "name": "Lucid Software"
+    },
+    {
+      "name": "LVT",
+      "slug": "liveviewtechnologiesinc"
     },
     {
       "slug": "lyft",
@@ -783,6 +847,10 @@
     {
       "slug": "merge",
       "name": "Merge"
+    },
+    {
+      "name": "Mixpanel",
+      "slug": "mixpanel"
     },
     {
       "slug": "moloco",
@@ -827,12 +895,8 @@
       "slug": "tripactions"
     },
     {
-      "name": "NICE",
-      "slug": "nice"
-    },
-    {
-      "name": "NT Concepts",
-      "slug": "ntconcepts"
+      "name": "Neo4j",
+      "slug": "neo4j"
     },
     {
       "name": "Neros Technologies",
@@ -851,8 +915,16 @@
       "name": "Nextdoor"
     },
     {
+      "name": "NICE",
+      "slug": "nice"
+    },
+    {
       "slug": "nozominetworks",
       "name": "Nozomi Networks"
+    },
+    {
+      "name": "NT Concepts",
+      "slug": "ntconcepts"
     },
     {
       "slug": "nuro",
@@ -867,6 +939,10 @@
       "name": "Okta"
     },
     {
+      "name": "OKX",
+      "slug": "okx"
+    },
+    {
       "name": "Old Mission Capital",
       "slug": "oldmissioncapital"
     },
@@ -878,6 +954,10 @@
         "decision": "structural",
         "note": "B38: 74 gens. Engineering consulting \u2014 surveyors, construction techs, environmental geologists, admin coordinators. Water Resources engineers correctly blocked by civil guard. 100% structural civil/consulting."
       }
+    },
+    {
+      "name": "OpenEye",
+      "slug": "openeye"
     },
     {
       "slug": "openeye",
@@ -910,8 +990,8 @@
       }
     },
     {
-      "slug": "pdtpartners",
-      "name": "PDT Partners"
+      "name": "Oura",
+      "slug": "oura"
     },
     {
       "slug": "pagerduty",
@@ -920,6 +1000,10 @@
     {
       "slug": "pathai",
       "name": "PathAI"
+    },
+    {
+      "slug": "pdtpartners",
+      "name": "PDT Partners"
     },
     {
       "name": "Peloton",
@@ -978,6 +1062,10 @@
       "name": "Qualtrics"
     },
     {
+      "name": "QuEra Computing",
+      "slug": "queracomputinginc"
+    },
+    {
       "name": "QuinStreet",
       "slug": "quinstreet"
     },
@@ -988,6 +1076,10 @@
     {
       "slug": "reach",
       "name": "Reach Financial"
+    },
+    {
+      "name": "Realtor.com",
+      "slug": "rdccareers"
     },
     {
       "name": "Red Ventures",
@@ -1004,6 +1096,10 @@
     {
       "slug": "relativity",
       "name": "Relativity Space"
+    },
+    {
+      "name": "Remote",
+      "slug": "remotecom"
     },
     {
       "slug": "riotgames",
@@ -1046,6 +1142,10 @@
       "name": "RunPod"
     },
     {
+      "name": "RVO Health",
+      "slug": "rvohealth"
+    },
+    {
       "slug": "safariai",
       "name": "Safari AI"
     },
@@ -1066,6 +1166,10 @@
       "name": "Scale AI"
     },
     {
+      "name": "Schonfeld",
+      "slug": "schonfeld"
+    },
+    {
       "name": "Scopely",
       "slug": "scopely"
     },
@@ -1074,8 +1178,16 @@
       "slug": "scoutai"
     },
     {
+      "name": "Scout Motors",
+      "slug": "scoutmotors"
+    },
+    {
       "name": "SeatGeek",
       "slug": "seatgeek"
+    },
+    {
+      "name": "Sezzle",
+      "slug": "sezzle"
     },
     {
       "slug": "sharkninjaoperatingllc",
@@ -1166,6 +1278,10 @@
     {
       "slug": "sumologic",
       "name": "Sumo Logic"
+    },
+    {
+      "name": "SupplyHouse.com",
+      "slug": "supplyhouse"
     },
     {
       "name": "T-Rex Solutions",
@@ -1277,12 +1393,12 @@
       "slug": "upstart"
     },
     {
-      "name": "VAST",
-      "slug": "vast"
-    },
-    {
       "name": "Varda Space",
       "slug": "vardaspace"
+    },
+    {
+      "name": "VAST",
+      "slug": "vast"
     },
     {
       "slug": "vercel",
@@ -1310,10 +1426,6 @@
       "name": "Visier"
     },
     {
-      "slug": "wppmedia",
-      "name": "WPP Media"
-    },
-    {
       "slug": "waymo",
       "name": "Waymo"
     },
@@ -1334,12 +1446,25 @@
       "name": "WorldQuant"
     },
     {
-      "slug": "xpengmotors",
-      "name": "XPENG Motors"
+      "slug": "wppmedia",
+      "name": "WPP Media"
+    },
+    {
+      "slug": "xai",
+      "name": "xAI",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "mixed",
+        "note": "B40: 22 gens. Data center \u2014 gas pipeline engineers, construction managers. \"Gas Pipeline Engineer\" is infrastructure, not SWE. Mostly structural (facilities, construction)."
+      }
     },
     {
       "slug": "xometry",
       "name": "Xometry"
+    },
+    {
+      "slug": "xpengmotors",
+      "name": "XPENG Motors"
     },
     {
       "slug": "yugabyte",
@@ -1358,93 +1483,12 @@
       "slug": "zone5technologies"
     },
     {
-      "slug": "zscaler",
-      "name": "Zscaler"
-    },
-    {
-      "slug": "interfaceai",
-      "name": "interface.ai"
-    },
-    {
-      "slug": "xai",
-      "name": "xAI",
-      "general_note": {
-        "date": "2026-05-13",
-        "decision": "mixed",
-        "note": "B40: 22 gens. Data center \u2014 gas pipeline engineers, construction managers. \"Gas Pipeline Engineer\" is infrastructure, not SWE. Mostly structural (facilities, construction)."
-      }
-    },
-    {
-      "name": "Remote",
-      "slug": "remotecom"
-    },
-    {
       "name": "ZoomInfo",
       "slug": "zoominfo"
     },
     {
-      "name": "DRW",
-      "slug": "drweng"
-    },
-    {
-      "name": "OpenEye",
-      "slug": "openeye"
-    },
-    {
-      "name": "Iterative Health",
-      "slug": "iterativehealth"
-    },
-    {
-      "name": "Axios",
-      "slug": "axios"
-    },
-    {
-      "name": "Aquatic",
-      "slug": "aquaticcapitalmanagement"
-    },
-    {
-      "name": "RVO Health",
-      "slug": "rvohealth"
-    },
-    {
-      "name": "Acrisure Innovation",
-      "slug": "acrisureinnovation"
-    },
-    {
-      "name": "Mixpanel",
-      "slug": "mixpanel"
-    },
-    {
-      "name": "OKX",
-      "slug": "okx"
-    },
-    {
-      "name": "Sezzle",
-      "slug": "sezzle"
-    },
-    {
-      "name": "Archer",
-      "slug": "archer56"
-    },
-    {
-      "name": "Realtor.com",
-      "slug": "rdccareers"
-    },
-    {
-      "name": "Capital Rx",
-      "slug": "capitalrx"
-    },
-    {
-      "name": "Schonfeld",
-      "slug": "schonfeld"
-    },
-    {
-      "name": "Scout Motors",
-      "slug": "scoutmotors"
-    },
-    {
-      "name": "SupplyHouse.com",
-      "slug": "supplyhouse"
+      "slug": "zscaler",
+      "name": "Zscaler"
     }
   ],
   "lever": [
