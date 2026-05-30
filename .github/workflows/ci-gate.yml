@@ -27,6 +27,35 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Run tag-engine tests
+        run: node lib/__tests__/tag-engine.test.js
+
+      - name: Check tag-engine source/deployment parity
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const sourcePath = 'lib/processors/tag-engine.js';
+          const deployPath = '.github/scripts/aggregator/lib/processors/tag-engine.js';
+          const versionRe = /const\s+TAG_ENGINE_VERSION\s*=\s*(\d+)/;
+
+          if (!fs.existsSync(sourcePath) || !fs.existsSync(deployPath)) {
+            console.error(`::error::Missing tag-engine copy. source=${fs.existsSync(sourcePath)} deploy=${fs.existsSync(deployPath)}`);
+            process.exit(1);
+          }
+
+          const source = fs.readFileSync(sourcePath, 'utf8');
+          const deploy = fs.readFileSync(deployPath, 'utf8');
+          const sourceVersion = source.match(versionRe)?.[1] || 'unknown';
+          const deployVersion = deploy.match(versionRe)?.[1] || 'unknown';
+
+          if (source !== deploy) {
+            console.error(`::error file=${deployPath}::tag-engine.js drift: source v${sourceVersion}, deployment v${deployVersion}. Keep copies byte-identical.`);
+            process.exit(1);
+          }
+
+          console.log(`PASS: tag-engine source/deployment synced at v${sourceVersion}`);
+          NODE
+
       - name: Lint GitHub Actions workflows
         uses: docker://rhysd/actionlint:1.7.12
         with:
