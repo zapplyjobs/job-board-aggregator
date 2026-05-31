@@ -1555,7 +1555,16 @@
     },
     {
       "slug": "arrivelogistics",
-      "name": "Arrive Logistics"
+      "name": "Arrive Logistics",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Open Deck Executive Solutions Manager\\b",
+            "result": "sales",
+            "reason": "Arrive Logistics open-deck executive solutions manager roles are brokerage sales/solutions roles, but the exact phrase is too narrow for a global keyword."
+          }
+        ]
+      }
     },
     {
       "name": "Bellese",
