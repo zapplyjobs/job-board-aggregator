@@ -428,6 +428,7 @@ function tagDomains(job, options) {
     'network automation engineer',  // ~4 hits — IT network automation
     'software automation engineer', // ~3 hits — SW automation
     'programmer analyst',           // ~6 hits — Boeing/defense SW programmer-analysts
+    'oic developer',               // 4 gen, 0 FP — Oracle Integration Cloud developer roles (Anduril)
  // TAXONOMY-AUDIT-1: general-tagged engineering roles
     'project engineer',             // 163 hits — engineering project roles (guard: not sales/manufacturing)
     'integration engineer',         // 90 hits — systems integration (defense/tech)
@@ -2575,6 +2576,7 @@ function tagDomains(job, options) {
     'bhr operations',               // 1 gen, 0 FP — AD BHR Operations Acquisitions & Integration (AbbVie business HR)
     'benefits coordinator',         // 1 gen, 0 FP — Benefits Coordinator (SpaceX)
     'employee relations',           // 4 gen, 0 FP — Employee Relations Partner (Intuitive ×2), Employee Relations (ER) Specialist (Medtronic), Employee Relations Business Partner (Snap)
+    'people business partner',     // 8 gen, 0 FP — people/HRBP titles
     'accommodations',               // 2 gen, 0 FP — Specialist, Accommodations (NBCUniversal; reasonable accommodation/ADA process), Global Benefits & Accommodations Intern (Proofpoint)
     'credit college',               // 1 gen, 0 FP — Principal Associate - Learning Consultant- Credit College (Capital One; enterprise L&D for credit/banking education)
     'recruiting lead',              // 1 gen, 0 FP — Principal Associate Recruiting Lead - Students And Grads (Capital One; campus/early-career recruiting)
@@ -2722,6 +2724,7 @@ function tagDomains(job, options) {
     'industrial hygienist',      // 2 gen — workplace safety/hygiene
     'production coach',          // 2 gen — production floor supervisors (Moog)
     'production equipment',      // 8 gen — production equipment technicians (Broadridge)
+    'manufacturing associate',     // 4 gen, 0 FP — manufacturing associate I/II/III/IV
     'quality assurance',         // 12 gen — QA supervisors/reviewers (Abbott, Biogen)
     'mechanical repair',         // 2 gen — mechanical repair technicians
     'deburr',                    // 6 gen — deburring technicians (Jabil)
