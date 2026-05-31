@@ -1264,6 +1264,15 @@
     {
       "slug": "spacex",
       "name": "SpaceX",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Starlink Market Access & Development Manager\\b",
+            "result": "operations",
+            "reason": "SpaceX Starlink market access manager roles are structural market-operations work, but the exact phrase is too narrow for a global keyword."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
