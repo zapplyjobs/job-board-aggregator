@@ -2106,6 +2106,7 @@ function tagDomains(job, options) {
     'customs specialist',        // 6 gen — customs/trade compliance
     'executive protection',      // 3 gen — corporate security/protection
     'workplace coordinator',     // 3 gen — facilities/workplace coordination
+    'facilities coordinator',     // 2 gen, 0 FP — facilities/workplace coordination
     'production and inventory',  // 3 gen — production/inventory coordination
     'yard supervisor',           // 2 gen — yard/lot management (Copart)
     'program controls',          // 2 gen — program controls analysis (Moog defense)
