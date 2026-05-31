@@ -3556,18 +3556,6 @@
       "default_domain": "software"
     },
     {
-      "name": "Diligent Corporation",
-      "url": "https://diligentcorporation.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-22",
-      "domains": [
-        "software",
-        "operations"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Disney",
       "url": "https://disney.wd5.myworkdayjobs.com",
       "site": "disneycareer",
@@ -3666,18 +3654,6 @@
         "manufacturing"
       ],
       "default_domain": "healthcare"
-    },
-    {
-      "name": "EQT Corporation",
-      "url": "https://eqtcorporation.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-22",
-      "domains": [
-        "operations",
-        "data_science"
-      ],
-      "default_domain": "operations"
     },
     {
       "name": "Equifax",
@@ -4058,19 +4034,6 @@
         "software"
       ],
       "default_domain": "operations"
-    },
-    {
-      "name": "Honeywell",
-      "url": "https://honeywell.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-17",
-      "domains": [
-        "software",
-        "hardware",
-        "ai"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "HP Inc",
@@ -4833,10 +4796,10 @@
     },
     {
       "name": "NREL",
-      "url": "https://nrel.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-22",
+      "url": "https://nrel.wd5.myworkdayjobs.com",
+      "site": "NLR",
+      "verified_jobs": 51,
+      "verified_date": "2026-05-31",
       "domains": [
         "data_science",
         "software"
@@ -5322,19 +5285,6 @@
         "decision": "structural",
         "note": "B34: Domains [software,general]. Airline operations \u2014 ambiguous jobs are operations/admin, not software. No safe default."
       }
-    },
-    {
-      "name": "Splunk",
-      "url": "https://splunk.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-22",
-      "domains": [
-        "software",
-        "data_science",
-        "ai"
-      ],
-      "default_domain": "software"
     },
     {
       "name": "SS&C Technologies",
