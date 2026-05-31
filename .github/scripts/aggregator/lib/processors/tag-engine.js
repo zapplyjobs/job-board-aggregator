@@ -391,6 +391,7 @@ function tagDomains(job, options) {
     'software engineer', 'software developer', 'full stack', 'fullstack',
     'frontend', 'back end', 'backend', 'web developer', 'web dev',
     'mobile developer', 'ios developer', 'android developer',
+    'mobile engineer',             // 5 gen, 0 FP — iOS/Android/mobile app engineering
     'devops', 'site reliability', 'platform engineer',
     // Intern-specific patterns missed by above (INTERN-1 fix):
     'software intern', 'systems engineer', 'computer engineer', 'computer engineering',
@@ -1705,6 +1706,7 @@ function tagDomains(job, options) {
     'finance analyst',              // 19 hits — financial analysis roles
     'investment consultant',        // 14 hits — wealth management consulting
     'cost control analyst',         // 12 hits — defense program cost analysis
+    'financial systems analyst',   // 4 gen, 0 FP — finance systems / ERP finance analysis
     'client relationship',          // 21 hits — Morgan Stanley/WF client relationship analyst
     'private wealth',               // 11 hits — Morgan Stanley/Goldman private wealth associate/officer
     'client service associate',     // 84 hits — Morgan Stanley/Ameriprise FINRA-licensed wealth mgmt
@@ -1877,6 +1879,7 @@ function tagDomains(job, options) {
     'area access executive', // 8 gen — AbbVie pharma field sales
     'field sales rep',       // 5 gen — territory field sales reps (JCI)
     'presales engineer',     // 2 gen — pre-sales engineering (Motorola)
+    'national business development manager', // 3 gen, 0 FP — direct sales/BD leadership
     'solutions specialist',  // 19 gen — solutions/pre-sales specialists
     'account specialist',    // 13 gen — account management specialists
     'client partner',        // 7 gen — client partnership/sales roles
@@ -2125,6 +2128,7 @@ function tagDomains(job, options) {
     'sous chef',                 // 3 gen — kitchen sous chefs (SpaceX)
     'janitor',                   // 5 gen — janitorial roles
     'food service',              // 4 gen — food service specialists
+    'kitchen manager, dashmart',  // 5 gen, 0 FP — DoorDash DashMart kitchen operations
     'subject matter expert',     // 8 gen — defense/consulting SMEs
     'planning and scheduling',   // 5 gen — program planning/scheduling
     'player tracking',           // 4 gen — sports tracking systems (Zebra)
