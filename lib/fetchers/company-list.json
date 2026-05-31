@@ -4828,10 +4828,10 @@
     },
     {
       "name": "NREL",
-      "url": "https://nrel.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
-      "verified_date": "2026-05-22",
+      "url": "https://nrel.wd5.myworkdayjobs.com",
+      "site": "NLR",
+      "verified_jobs": 51,
+      "verified_date": "2026-05-31",
       "domains": [
         "data_science",
         "software"
