@@ -3351,14 +3351,14 @@
     {
       "name": "Clarios",
       "url": "https://clarios.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 10,
-      "verified_date": "2026-05-18",
+      "site": "clarioscareers",
+      "verified_jobs": 152,
+      "verified_date": "2026-05-31",
       "domains": [
         "hardware",
         "software"
       ],
-      "notes": "Battery manufacturer. F93 Wave 4: SJ 10 US tech EL."
+      "notes": "Battery manufacturer. F93 Wave 4: SJ 10 US tech EL.; A141 site alias fix via live API probe: clarioscareers"
     },
     {
       "name": "Clarivate",
@@ -4745,14 +4745,15 @@
     {
       "name": "Nelnet",
       "url": "https://nelnet.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
+      "site": "MyNelnet",
+      "verified_jobs": 23,
+      "verified_date": "2026-05-31",
       "domains": [
         "software",
         "ai"
       ],
-      "default_domain": "software"
+      "default_domain": "software",
+      "notes": "A141 site alias fix via live API probe: MyNelnet"
     },
     {
       "name": "Netflix",
@@ -4930,14 +4931,14 @@
     {
       "name": "Parsons",
       "url": "https://parsons.wd5.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 30,
-      "verified_date": "2026-05-18",
+      "site": "search",
+      "verified_jobs": 1699,
+      "verified_date": "2026-05-31",
       "domains": [
         "software",
         "general"
       ],
-      "notes": "Defense/digital infrastructure. F93: SJ ~5 US tech EL. WD site from SimplifyJs URLs."
+      "notes": "Defense/digital infrastructure. F93: SJ ~5 US tech EL. WD site from SimplifyJs URLs.; A141 site alias fix via live API probe: search"
     },
     {
       "name": "PayPal",
@@ -5345,14 +5346,14 @@
     {
       "name": "Stanley Black & Decker",
       "url": "https://sbdinc.wd1.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 7,
-      "verified_date": "2026-05-18",
+      "site": "Stanley_Black_Decker_Career_Site",
+      "verified_jobs": 507,
+      "verified_date": "2026-05-31",
       "domains": [
         "hardware",
         "software"
       ],
-      "notes": "Tools/industrial. F93 Wave 4: SJ 7 US tech EL."
+      "notes": "Tools/industrial. F93 Wave 4: SJ 7 US tech EL.; A141 site alias fix via live API probe: Stanley_Black_Decker_Career_Site"
     },
     {
       "name": "State Street",
@@ -5497,14 +5498,14 @@
     {
       "name": "Thales",
       "url": "https://thales.wd3.myworkdayjobs.com",
-      "site": "en-US",
-      "verified_jobs": 34,
-      "verified_date": "2026-05-18",
+      "site": "Careers",
+      "verified_jobs": 2000,
+      "verified_date": "2026-05-31",
       "domains": [
         "hardware",
         "software"
       ],
-      "notes": "Defense/aerospace. F93: SJ ~1 US tech EL. LOW yield."
+      "notes": "Defense/aerospace. F93: SJ ~1 US tech EL. LOW yield.; A141 site alias fix via live API probe: Careers"
     },
     {
       "url": "https://thehartford.wd5.myworkdayjobs.com",
