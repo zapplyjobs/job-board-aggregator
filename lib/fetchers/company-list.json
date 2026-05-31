@@ -2870,16 +2870,6 @@
       "default_domain": "healthcare"
     },
     {
-      "name": "Berkshire Hathaway Energy",
-      "url": "https://bhe.wd1.myworkdayjobs.com",
-      "site": "BHE",
-      "domains": [
-        "software",
-        "data_science"
-      ],
-      "default_domain": "software"
-    },
-    {
       "name": "Bio-Techne",
       "url": "https://biotechne.wd5.myworkdayjobs.com",
       "site": "Biotechne",
@@ -5560,7 +5550,14 @@
     {
       "name": "Ultra Intelligence & Communications",
       "url": "https://ultra.wd3.myworkdayjobs.com",
-      "site": "en-GB"
+      "site": "ultra-careers",
+      "verified_jobs": 157,
+      "verified_date": "2026-05-31",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Unisys",
