@@ -2870,6 +2870,16 @@
       "default_domain": "healthcare"
     },
     {
+      "name": "Berkshire Hathaway Energy",
+      "url": "https://bhe.wd1.myworkdayjobs.com",
+      "site": "BHE",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Bio-Techne",
       "url": "https://biotechne.wd5.myworkdayjobs.com",
       "site": "Biotechne",
@@ -2965,6 +2975,13 @@
             "pattern": "(Senior|Sr)[,.]\\s*(Associate|Analyst|Specialist|Coordinator|Technician|Admin)",
             "result": "entry_level",
             "reason": "Boeing senior-associate/analyst roles are admin/support, not senior engineering"
+          }
+        ],
+        "domain": [
+          {
+            "pattern": "^Contracts Manager\\b",
+            "result": "legal",
+            "reason": "Boeing contracts manager roles are legal/contracts, but the generic phrase is too risky globally."
           }
         ]
       },
@@ -3165,10 +3182,19 @@
         "software",
         "finance"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Product Design Manager\\b",
+            "result": "product",
+            "reason": "Capital One product design manager titles are product/UX leadership; the exact phrase is too mixed globally."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 77 gens. Banking \u2014 product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
+        "note": "B38: 77 gens. Banking — product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
       }
     },
     {
@@ -3546,6 +3572,18 @@
       "default_domain": "software"
     },
     {
+      "name": "Diligent Corporation",
+      "url": "https://diligentcorporation.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "operations"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Disney",
       "url": "https://disney.wd5.myworkdayjobs.com",
       "site": "disneycareer",
@@ -3644,6 +3682,18 @@
         "manufacturing"
       ],
       "default_domain": "healthcare"
+    },
+    {
+      "name": "EQT Corporation",
+      "url": "https://eqtcorporation.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "data_science"
+      ],
+      "default_domain": "operations"
     },
     {
       "name": "Equifax",
@@ -4024,6 +4074,19 @@
         "software"
       ],
       "default_domain": "operations"
+    },
+    {
+      "name": "Honeywell",
+      "url": "https://honeywell.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-17",
+      "domains": [
+        "software",
+        "hardware",
+        "ai"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "HP Inc",
@@ -4786,10 +4849,10 @@
     },
     {
       "name": "NREL",
-      "url": "https://nrel.wd5.myworkdayjobs.com",
-      "site": "NLR",
-      "verified_jobs": 51,
-      "verified_date": "2026-05-31",
+      "url": "https://nrel.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
       "domains": [
         "data_science",
         "software"
@@ -5147,6 +5210,13 @@
             "result": "entry_level",
             "reason": "RTX Team Lead = manufacturing/project coordination, not senior engineering"
           }
+        ],
+        "domain": [
+          {
+            "pattern": "^Contracts Manager\\b",
+            "result": "legal",
+            "reason": "RTX contracts manager roles are legal/contracts, but the generic phrase is too risky globally."
+          }
         ]
       },
       "general_note": {
@@ -5275,6 +5345,19 @@
         "decision": "structural",
         "note": "B34: Domains [software,general]. Airline operations \u2014 ambiguous jobs are operations/admin, not software. No safe default."
       }
+    },
+    {
+      "name": "Splunk",
+      "url": "https://splunk.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "data_science",
+        "ai"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "SS&C Technologies",
@@ -5550,14 +5633,7 @@
     {
       "name": "Ultra Intelligence & Communications",
       "url": "https://ultra.wd3.myworkdayjobs.com",
-      "site": "ultra-careers",
-      "verified_jobs": 157,
-      "verified_date": "2026-05-31",
-      "domains": [
-        "software",
-        "hardware"
-      ],
-      "default_domain": "software"
+      "site": "en-GB"
     },
     {
       "name": "Unisys",

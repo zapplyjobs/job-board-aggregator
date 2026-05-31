@@ -50,6 +50,35 @@ const TENANT_DEFAULTS = (() => {
   }
 })();
 
+// Layer 5a: Per-company domain title overrides from company-list.json.
+// Use only for high-confidence company/title combinations where global keywords are too risky.
+const DOMAIN_TITLE_OVERRIDES = (() => {
+  try {
+    const cl = require(path.join(__dirname, '..', 'fetchers', 'company-list.json'));
+    const map = new Map();
+    for (const ats of Object.values(cl)) {
+      if (!Array.isArray(ats)) continue;
+      for (const entry of ats) {
+        const overrides = entry?.titleOverrides?.domain;
+        const companyName = (entry?.name || '').toLowerCase();
+        if (!companyName || !Array.isArray(overrides) || overrides.length === 0) continue;
+        const compiled = [];
+        for (const rule of overrides) {
+          try {
+            compiled.push({ regex: new RegExp(rule.pattern, 'i'), result: rule.result, reason: rule.reason || null });
+          } catch (err) {
+            console.warn(`tag-engine: invalid domain override regex for ${entry.name}: ${rule.pattern} — ${err.message}`);
+          }
+        }
+        if (compiled.length > 0) map.set(companyName, compiled);
+      }
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
+})();
+
 // O*NET unified domain lookup — 28,486 title variants mapped to our domains via SOC codes.
 // Source: O*NET v29.1 (public domain, CC BY 4.0). See TAG_CLASSIFICATION_RESEARCH_.md.
 // Two matching methods: substring for 3+ word titles, word-boundary regex for 2-word titles.
@@ -3124,6 +3153,21 @@ function tagDomains(job, options) {
           }
         }
         if (tags.length > 0) break;
+      }
+    }
+  }
+
+
+  // Layer 5a: Per-company domain title overrides.
+  // Fires only when the generic layers produce no match; more specific than tenant default.
+  if (tags.length === 0 && DOMAIN_TITLE_OVERRIDES.size > 0 && job.company_name) {
+    const rules = DOMAIN_TITLE_OVERRIDES.get(job.company_name.toLowerCase());
+    if (rules) {
+      for (const rule of rules) {
+        if (rule.regex.test(job.title || '')) {
+          pushTag(rule.result, `(company-domain: ${job.company_name})`, 'company-domain-override');
+          break;
+        }
       }
     }
   }
