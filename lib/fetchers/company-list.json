@@ -4343,10 +4343,24 @@
         "healthcare",
         "software"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Associate Area Manager or Area Manager\\b",
+            "result": "sales",
+            "reason": "Johnson & Johnson MedTech area manager roles are device/territory sales roles, but the exact phrase is too company-specific for a global keyword."
+          },
+          {
+            "pattern": "^Regional Technology Specialist\\b",
+            "result": "sales",
+            "reason": "Johnson & Johnson MedTech regional technology specialist roles are customer-facing medtech sales/support roles, not a broad healthcare keyword case."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-12",
         "decision": "mixed",
-        "note": "B34: 28 gen (32%). Admin assistants, facilities, co-ops (finance, digital art, medtech). Multi-domain [HC,SW] \u2014 borderline for HC default but co-ops span domains."
+        "note": "B34: 28 gen (32%). Admin assistants, facilities, co-ops (finance, digital art, medtech). Multi-domain [HC,SW] — borderline for HC default but co-ops span domains."
       }
     },
     {
