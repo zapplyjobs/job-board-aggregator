@@ -1581,6 +1581,10 @@
       "name": "Convergent Research"
     },
     {
+      "name": "Crest Industries",
+      "slug": "crestoperations"
+    },
+    {
       "slug": "deepgenomics",
       "name": "Deep Genomics"
     },
@@ -1591,6 +1595,14 @@
     {
       "slug": "dexterity",
       "name": "Dexterity"
+    },
+    {
+      "name": "Fehr & Peers",
+      "slug": "fehrandpeers"
+    },
+    {
+      "name": "Field AI",
+      "slug": "field-ai"
     },
     {
       "slug": "fireworkhq",
@@ -1623,6 +1635,10 @@
     {
       "slug": "includedhealth",
       "name": "Included Health"
+    },
+    {
+      "name": "Institute for Foundation Models",
+      "slug": "ifm-us"
     },
     {
       "slug": "ivo",
@@ -1705,6 +1721,10 @@
       "name": "Perr & Knight"
     },
     {
+      "name": "PingWind",
+      "slug": "pingwind"
+    },
+    {
       "name": "Pivotal Software",
       "slug": "pivotal"
     },
@@ -1723,6 +1743,10 @@
     {
       "slug": "ranger",
       "name": "Ranger"
+    },
+    {
+      "name": "Rigetti",
+      "slug": "rigetti"
     },
     {
       "slug": "ro",
@@ -1765,6 +1789,10 @@
       "slug": "synergyecp"
     },
     {
+      "name": "Teleo",
+      "slug": "teleo"
+    },
+    {
       "slug": "theathletic",
       "name": "The Athletic"
     },
@@ -1773,12 +1801,20 @@
       "name": "Toyota Research Institute"
     },
     {
+      "name": "UntilLabs",
+      "slug": "until"
+    },
+    {
       "slug": "valkyrietrading",
       "name": "Valkyrie Trading"
     },
     {
       "name": "Veeva Systems",
       "slug": "veeva"
+    },
+    {
+      "name": "Velo3D",
+      "slug": "velo3d"
     },
     {
       "slug": "versapay",
@@ -1797,6 +1833,10 @@
       "name": "WeRide"
     },
     {
+      "name": "WeRide",
+      "slug": "weride"
+    },
+    {
       "slug": "whoop",
       "name": "WHOOP"
     },
@@ -1805,52 +1845,12 @@
       "name": "Wintermute Trading"
     },
     {
-      "slug": "zoox",
-      "name": "Zoox"
-    },
-    {
-      "name": "PingWind",
-      "slug": "pingwind"
-    },
-    {
-      "name": "Velo3D",
-      "slug": "velo3d"
-    },
-    {
-      "name": "WeRide",
-      "slug": "weride"
-    },
-    {
-      "name": "Institute for Foundation Models",
-      "slug": "ifm-us"
-    },
-    {
       "name": "Woven by Toyota",
       "slug": "woven-by-toyota"
     },
     {
-      "name": "Crest Industries",
-      "slug": "crestoperations"
-    },
-    {
-      "name": "Teleo",
-      "slug": "teleo"
-    },
-    {
-      "name": "Field AI",
-      "slug": "field-ai"
-    },
-    {
-      "name": "Rigetti",
-      "slug": "rigetti"
-    },
-    {
-      "name": "UntilLabs",
-      "slug": "until"
-    },
-    {
-      "name": "Fehr & Peers",
-      "slug": "fehrandpeers"
+      "slug": "zoox",
+      "name": "Zoox"
     }
   ],
   "ashby": [
@@ -1861,6 +1861,10 @@
     {
       "slug": "abridge",
       "name": "Abridge"
+    },
+    {
+      "name": "Airbyte",
+      "slug": "airbyte"
     },
     {
       "slug": "alchemy",
@@ -1879,8 +1883,20 @@
       "name": "Anyscale"
     },
     {
+      "name": "Ashby",
+      "slug": "ashby"
+    },
+    {
+      "name": "Astronomer",
+      "slug": "astronomer"
+    },
+    {
       "slug": "atomicsemi",
       "name": "Atomic Semi"
+    },
+    {
+      "name": "Attio",
+      "slug": "attio"
     },
     {
       "slug": "baseten",
@@ -1893,6 +1909,14 @@
     {
       "slug": "benchling",
       "name": "Benchling"
+    },
+    {
+      "name": "Browserbase",
+      "slug": "browserbase"
+    },
+    {
+      "name": "Campfire",
+      "slug": "campfire"
     },
     {
       "slug": "candidhealth",
@@ -1913,6 +1937,10 @@
     {
       "slug": "clickup",
       "name": "ClickUp"
+    },
+    {
+      "name": "Clipboard Health",
+      "slug": "clipboard"
     },
     {
       "slug": "cluely",
@@ -1952,6 +1980,10 @@
       "name": "Contoro Robotics"
     },
     {
+      "name": "Cradle Bio",
+      "slug": "cradlebio"
+    },
+    {
       "slug": "creditgenie",
       "name": "Credit Genie"
     },
@@ -1981,6 +2013,10 @@
       "name": "Decagon"
     },
     {
+      "name": "Docker",
+      "slug": "docker"
+    },
+    {
       "slug": "drata",
       "name": "Drata"
     },
@@ -1995,6 +2031,10 @@
     {
       "slug": "eliseai",
       "name": "EliseAI"
+    },
+    {
+      "name": "Ellipsis Labs",
+      "slug": "ellipsislabs"
     },
     {
       "slug": "etched",
@@ -2093,6 +2133,10 @@
       "name": "Lambda"
     },
     {
+      "name": "LangChain",
+      "slug": "langchain"
+    },
+    {
       "slug": "lightspark",
       "name": "Lightspark"
     },
@@ -2101,12 +2145,24 @@
       "name": "Lightspeed"
     },
     {
+      "name": "Linear",
+      "slug": "linear"
+    },
+    {
+      "name": "Lovable",
+      "slug": "lovable"
+    },
+    {
       "slug": "Lynk",
       "name": "Lynk"
     },
     {
       "slug": "mach9",
       "name": "Mach9"
+    },
+    {
+      "name": "Mandolin",
+      "slug": "mandolin"
     },
     {
       "slug": "maybern",
@@ -2190,8 +2246,24 @@
       "name": "Persona"
     },
     {
+      "name": "Pinecone",
+      "slug": "pinecone"
+    },
+    {
+      "name": "Plaid",
+      "slug": "plaid"
+    },
+    {
+      "name": "Poolside",
+      "slug": "poolside"
+    },
+    {
       "slug": "poshmark",
       "name": "Poshmark"
+    },
+    {
+      "name": "Prefect",
+      "slug": "prefect"
     },
     {
       "slug": "promise",
@@ -2206,12 +2278,20 @@
       "name": "Pylon"
     },
     {
+      "name": "Qualified",
+      "slug": "qualified"
+    },
+    {
       "slug": "quora",
       "name": "Quora"
     },
     {
       "slug": "radiant-industries",
       "name": "Radiant Industries"
+    },
+    {
+      "name": "Railway",
+      "slug": "railway"
     },
     {
       "slug": "ramp",
@@ -2239,6 +2319,10 @@
       "name": "Reframe Systems"
     },
     {
+      "name": "Reka",
+      "slug": "reka"
+    },
+    {
       "slug": "render",
       "name": "Render"
     },
@@ -2257,6 +2341,10 @@
     {
       "slug": "rilla",
       "name": "Rilla"
+    },
+    {
+      "name": "Runway",
+      "slug": "runway"
     },
     {
       "slug": "SecondDinner",
@@ -2295,6 +2383,14 @@
       "name": "Snowflake"
     },
     {
+      "name": "Statsig",
+      "slug": "statsig"
+    },
+    {
+      "name": "Stytch",
+      "slug": "stytch"
+    },
+    {
       "slug": "suno",
       "name": "Suno"
     },
@@ -2320,6 +2416,10 @@
       "name": "The Exploration Company"
     },
     {
+      "name": "Turbopuffer",
+      "slug": "turbopuffer"
+    },
+    {
       "slug": "uipath",
       "name": "UiPath"
     },
@@ -2330,6 +2430,10 @@
     {
       "slug": "vanta",
       "name": "Vanta"
+    },
+    {
+      "name": "Vapi",
+      "slug": "vapi"
     },
     {
       "slug": "voyant-photonics",
@@ -2348,6 +2452,10 @@
       "name": "Watershed"
     },
     {
+      "name": "Weaviate",
+      "slug": "weaviate"
+    },
+    {
       "slug": "whatnot",
       "name": "Whatnot"
     },
@@ -2356,120 +2464,12 @@
       "name": "Witness AI"
     },
     {
-      "slug": "zip",
-      "name": "Zip"
-    },
-    {
-      "name": "Clipboard Health",
-      "slug": "clipboard"
-    },
-    {
       "name": "Yotta Labs",
       "slug": "yotta"
     },
     {
-      "name": "Ellipsis Labs",
-      "slug": "ellipsislabs"
-    },
-    {
-      "name": "Mandolin",
-      "slug": "mandolin"
-    },
-    {
-      "name": "LangChain",
-      "slug": "langchain"
-    },
-    {
-      "name": "Plaid",
-      "slug": "plaid"
-    },
-    {
-      "name": "Lovable",
-      "slug": "lovable"
-    },
-    {
-      "name": "Ashby",
-      "slug": "ashby"
-    },
-    {
-      "name": "Docker",
-      "slug": "docker"
-    },
-    {
-      "name": "Attio",
-      "slug": "attio"
-    },
-    {
-      "name": "Astronomer",
-      "slug": "astronomer"
-    },
-    {
-      "name": "Vapi",
-      "slug": "vapi"
-    },
-    {
-      "name": "Campfire",
-      "slug": "campfire"
-    },
-    {
-      "name": "Linear",
-      "slug": "linear"
-    },
-    {
-      "name": "Poolside",
-      "slug": "poolside"
-    },
-    {
-      "name": "Qualified",
-      "slug": "qualified"
-    },
-    {
-      "name": "Cradle Bio",
-      "slug": "cradlebio"
-    },
-    {
-      "name": "Railway",
-      "slug": "railway"
-    },
-    {
-      "name": "Airbyte",
-      "slug": "airbyte"
-    },
-    {
-      "name": "Browserbase",
-      "slug": "browserbase"
-    },
-    {
-      "name": "Pinecone",
-      "slug": "pinecone"
-    },
-    {
-      "name": "Turbopuffer",
-      "slug": "turbopuffer"
-    },
-    {
-      "name": "Reka",
-      "slug": "reka"
-    },
-    {
-      "name": "Statsig",
-      "slug": "statsig"
-    },
-    {
-      "name": "Weaviate",
-      "slug": "weaviate"
-    },
-    {
-      "name": "Stytch",
-      "slug": "stytch"
-    },
-    {
-      "name": "Prefect",
-      "slug": "prefect"
-    },
-    {
-      "name": "Runway",
-      "slug": "runway"
+      "slug": "zip",
+      "name": "Zip"
     }
   ],
   "workday": [
@@ -3221,7 +3221,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 77 gens. Banking — product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
+        "note": "B38: 77 gens. Banking \u2014 product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
       }
     },
     {
@@ -5950,24 +5950,91 @@
       "default_domain": "healthcare"
     },
     {
-      "slug": "VeoliaEnvironnementSA",
-      "name": "Veolia",
-      "verified_us_jobs": 438,
-      "verified_interns": 45,
+      "name": "ATPCO",
+      "slug": "atpco1",
+      "verified_us_jobs": 6,
+      "verified_interns": 3,
+      "verified_date": "2026-05-22",
+      "default_domain": "software"
+    },
+    {
+      "slug": "BoschGroup",
+      "name": "Bosch Group",
+      "verified_us_jobs": 248,
+      "verified_interns": 42,
+      "verified_date": "2026-03-11",
+      "general_note": {
+        "date": "2026-05-13",
+        "decision": "structural",
+        "note": "B39: 34 gens. Controlling analysts, talent scouts, sales development managers. Industrial conglomerate ops."
+      }
+    },
+    {
+      "name": "BryceTech",
+      "slug": "BryceTech",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
+    },
+    {
+      "name": "CapTech Consulting",
+      "slug": "CapTechConsulting",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
+    },
+    {
+      "name": "Eurofins",
+      "slug": "Eurofins",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
+    },
+    {
+      "slug": "EVERSANA1",
+      "name": "EVERSANA",
+      "verified_us_jobs": 84,
+      "verified_interns": 0,
       "verified_date": "2026-03-11"
     },
     {
-      "slug": "ServiceNow",
-      "name": "ServiceNow",
-      "verified_us_jobs": 422,
-      "verified_interns": 4,
+      "slug": "Experian",
+      "name": "Experian",
+      "verified_us_jobs": 56,
+      "verified_interns": 1,
       "verified_date": "2026-03-11"
     },
     {
-      "slug": "RedBull",
-      "name": "Red Bull",
-      "verified_us_jobs": 393,
-      "verified_interns": 18,
+      "slug": "INFICON2",
+      "name": "INFICON"
+    },
+    {
+      "slug": "Intuitive",
+      "name": "Intuitive Surgical",
+      "verified_us_jobs": 358,
+      "verified_interns": 16,
+      "verified_date": "2026-03-11"
+    },
+    {
+      "name": "Kioxia",
+      "slug": "kioxia",
+      "verified_us_jobs": 7,
+      "verified_interns": 1,
+      "verified_date": "2026-05-22",
+      "default_domain": "hardware"
+    },
+    {
+      "slug": "llnl",
+      "name": "Lawrence Livermore National Laboratory"
+    },
+    {
+      "slug": "LinkedIn3",
+      "name": "LinkedIn",
+      "verified_us_jobs": 209,
+      "verified_interns": 3,
       "verified_date": "2026-03-11"
     },
     {
@@ -5984,36 +6051,25 @@
       "default_domain": "operations"
     },
     {
-      "slug": "Intuitive",
-      "name": "Intuitive Surgical",
-      "verified_us_jobs": 358,
-      "verified_interns": 16,
+      "name": "Northwestern Mutual",
+      "slug": "NorthwesternMutual",
+      "verified_us_jobs": 0,
+      "verified_interns": 0,
+      "verified_date": "2026-05-19",
+      "default_domain": "software"
+    },
+    {
+      "slug": "RaytheonTechnologies",
+      "name": "Raytheon Technologies",
+      "verified_us_jobs": 17,
+      "verified_interns": 0,
       "verified_date": "2026-03-11"
     },
     {
-      "slug": "BoschGroup",
-      "name": "Bosch Group",
-      "verified_us_jobs": 248,
-      "verified_interns": 42,
-      "verified_date": "2026-03-11",
-      "general_note": {
-        "date": "2026-05-13",
-        "decision": "structural",
-        "note": "B39: 34 gens. Controlling analysts, talent scouts, sales development managers. Industrial conglomerate ops."
-      }
-    },
-    {
-      "slug": "LinkedIn3",
-      "name": "LinkedIn",
-      "verified_us_jobs": 209,
-      "verified_interns": 3,
-      "verified_date": "2026-03-11"
-    },
-    {
-      "slug": "SmithsGroup2",
-      "name": "Smiths Group",
-      "verified_us_jobs": 178,
-      "verified_interns": 12,
+      "slug": "RedBull",
+      "name": "Red Bull",
+      "verified_us_jobs": 393,
+      "verified_interns": 18,
       "verified_date": "2026-03-11"
     },
     {
@@ -6024,20 +6080,6 @@
       "verified_date": "2026-03-11"
     },
     {
-      "slug": "WesternDigital",
-      "name": "Western Digital",
-      "verified_us_jobs": 106,
-      "verified_interns": 14,
-      "verified_date": "2026-03-11"
-    },
-    {
-      "slug": "EVERSANA1",
-      "name": "EVERSANA",
-      "verified_us_jobs": 84,
-      "verified_interns": 0,
-      "verified_date": "2026-03-11"
-    },
-    {
       "slug": "Sandisk",
       "name": "SanDisk",
       "verified_us_jobs": 83,
@@ -6045,73 +6087,18 @@
       "verified_date": "2026-03-11"
     },
     {
-      "slug": "Experian",
-      "name": "Experian",
-      "verified_us_jobs": 56,
-      "verified_interns": 1,
+      "slug": "ServiceNow",
+      "name": "ServiceNow",
+      "verified_us_jobs": 422,
+      "verified_interns": 4,
       "verified_date": "2026-03-11"
     },
     {
-      "slug": "WellmarkInc",
-      "name": "Wellmark",
-      "verified_us_jobs": 44,
-      "verified_interns": 0,
+      "slug": "SmithsGroup2",
+      "name": "Smiths Group",
+      "verified_us_jobs": 178,
+      "verified_interns": 12,
       "verified_date": "2026-03-11"
-    },
-    {
-      "slug": "RaytheonTechnologies",
-      "name": "Raytheon Technologies",
-      "verified_us_jobs": 17,
-      "verified_interns": 0,
-      "verified_date": "2026-03-11"
-    },
-    {
-      "slug": "llnl",
-      "name": "Lawrence Livermore National Laboratory"
-    },
-    {
-      "slug": "INFICON2",
-      "name": "INFICON"
-    },
-    {
-      "name": "Eurofins",
-      "slug": "Eurofins",
-      "verified_us_jobs": 0,
-      "verified_interns": 0,
-      "verified_date": "2026-05-19",
-      "default_domain": "software"
-    },
-    {
-      "name": "CapTech Consulting",
-      "slug": "CapTechConsulting",
-      "verified_us_jobs": 0,
-      "verified_interns": 0,
-      "verified_date": "2026-05-19",
-      "default_domain": "software"
-    },
-    {
-      "name": "Northwestern Mutual",
-      "slug": "NorthwesternMutual",
-      "verified_us_jobs": 0,
-      "verified_interns": 0,
-      "verified_date": "2026-05-19",
-      "default_domain": "software"
-    },
-    {
-      "name": "BryceTech",
-      "slug": "BryceTech",
-      "verified_us_jobs": 0,
-      "verified_interns": 0,
-      "verified_date": "2026-05-19",
-      "default_domain": "software"
-    },
-    {
-      "name": "ATPCO",
-      "slug": "atpco1",
-      "verified_us_jobs": 6,
-      "verified_interns": 3,
-      "verified_date": "2026-05-22",
-      "default_domain": "software"
     },
     {
       "name": "Solidigm",
@@ -6122,12 +6109,25 @@
       "default_domain": "hardware"
     },
     {
-      "name": "Kioxia",
-      "slug": "kioxia",
-      "verified_us_jobs": 7,
-      "verified_interns": 1,
-      "verified_date": "2026-05-22",
-      "default_domain": "hardware"
+      "slug": "VeoliaEnvironnementSA",
+      "name": "Veolia",
+      "verified_us_jobs": 438,
+      "verified_interns": 45,
+      "verified_date": "2026-03-11"
+    },
+    {
+      "slug": "WellmarkInc",
+      "name": "Wellmark",
+      "verified_us_jobs": 44,
+      "verified_interns": 0,
+      "verified_date": "2026-03-11"
+    },
+    {
+      "slug": "WesternDigital",
+      "name": "Western Digital",
+      "verified_us_jobs": 106,
+      "verified_interns": 14,
+      "verified_date": "2026-03-11"
     }
   ],
   "oracle": [
@@ -6153,6 +6153,20 @@
       "notes": "Bank. Vanshb03: Data Engineer Intern (Providence, RI)."
     },
     {
+      "name": "Cummins",
+      "slug": "cummins",
+      "base_url": "https://fa-espx-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Industrial/manufacturing tech. Live Oracle probe found 876 total / 54 US tech / 1 internship."
+    },
+    {
+      "name": "Emerson Electric",
+      "slug": "emerson-electric",
+      "base_url": "https://hdjq.fa.us2.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Industrial tech. Replaces Simplify-only path. Live Oracle probe found 761 total / 76 US tech / 1 internship."
+    },
+    {
       "name": "Fortive",
       "slug": "fortive",
       "base_url": "https://ejta.fa.us6.oraclecloud.com",
@@ -6172,6 +6186,13 @@
       "base_url": "https://ehzq.fa.us2.oraclecloud.com",
       "site_number": "CX_1",
       "notes": "Accounting/advisory. Vanshb03: Technology Modernization Intern (Chicago, IL)."
+    },
+    {
+      "name": "Hologic",
+      "slug": "hologic",
+      "base_url": "https://ebwb.fa.us2.oraclecloud.com",
+      "site_number": "CX",
+      "notes": "Healthcare/device tech. Live Oracle probe found 261 total / 42 US tech / 1 internship."
     },
     {
       "name": "Honeywell",
@@ -6200,6 +6221,20 @@
       "base_url": "https://jpmc.fa.oraclecloud.com",
       "site_number": "CX_1",
       "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
+    },
+    {
+      "name": "Nokia",
+      "slug": "nokia",
+      "base_url": "https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Networking/telecom. Replaces Simplify-only path. Live Oracle probe found 808 total / 122 US tech / 17 internships."
+    },
+    {
+      "name": "onsemi",
+      "slug": "onsemi",
+      "base_url": "https://hctz.fa.us2.oraclecloud.com",
+      "site_number": "CX_1001",
+      "notes": "Semiconductor. Replaces Simplify-only path. Live Oracle probe found 599 total / 68 US tech / 2 internships."
     },
     {
       "name": "Oracle",
