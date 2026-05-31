@@ -3351,14 +3351,14 @@
     {
       "name": "Clarios",
       "url": "https://clarios.wd5.myworkdayjobs.com",
-      "site": "clarioscareers",
-      "verified_jobs": 152,
-      "verified_date": "2026-05-31",
+      "site": "en-US",
+      "verified_jobs": 10,
+      "verified_date": "2026-05-18",
       "domains": [
         "hardware",
         "software"
       ],
-      "notes": "Battery manufacturer. F93 Wave 4: SJ 10 US tech EL.; A141 site alias fix via live API probe: clarioscareers"
+      "notes": "Battery manufacturer. F93 Wave 4: SJ 10 US tech EL."
     },
     {
       "name": "Clarivate",
@@ -3556,6 +3556,18 @@
       "default_domain": "software"
     },
     {
+      "name": "Diligent Corporation",
+      "url": "https://diligentcorporation.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "operations"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Disney",
       "url": "https://disney.wd5.myworkdayjobs.com",
       "site": "disneycareer",
@@ -3656,6 +3668,18 @@
       "default_domain": "healthcare"
     },
     {
+      "name": "EQT Corporation",
+      "url": "https://eqtcorporation.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "operations",
+        "data_science"
+      ],
+      "default_domain": "operations"
+    },
+    {
       "name": "Equifax",
       "url": "https://equifax.wd5.myworkdayjobs.com",
       "site": "UR_External",
@@ -3722,14 +3746,14 @@
     {
       "name": "Federal Reserve System",
       "url": "https://rb.wd5.myworkdayjobs.com",
-      "site": "FRS",
-      "verified_jobs": 84,
-      "verified_date": "2026-05-31",
+      "site": "en-US",
+      "verified_jobs": 13,
+      "verified_date": "2026-05-18",
       "domains": [
         "software",
         "data_science"
       ],
-      "notes": "US central banking. F93 Wave 4: SJ 13 US tech EL.; A141 heuristic probe fix via live API: FRS"
+      "notes": "US central banking. F93 Wave 4: SJ 13 US tech EL."
     },
     {
       "name": "Fidelity Investments",
@@ -3841,7 +3865,13 @@
     {
       "url": "https://geaerospace.wd5.myworkdayjobs.com",
       "site": "GE_ExternalSite",
-      "name": "GE Aerospace"
+      "name": "GE Aerospace",
+      "general_note": {
+        "date": "2026-05-31",
+        "decision": "defaulted",
+        "note": "B: 6 current general titles are Auburn Manufacturing Associate (2), Materials 3, Process Technical Specialist 3, and Repair Station Associate (2). Current non-general split is 14 manufacturing / 2 hardware; the hardware-like \"Engineer - Product Definition\" title already classifies without tenant fallback. Added default_domain: manufacturing."
+      },
+      "default_domain": "manufacturing"
     },
     {
       "name": "GE Healthcare",
@@ -4028,6 +4058,19 @@
         "software"
       ],
       "default_domain": "operations"
+    },
+    {
+      "name": "Honeywell",
+      "url": "https://honeywell.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-17",
+      "domains": [
+        "software",
+        "hardware",
+        "ai"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "HP Inc",
@@ -4708,15 +4751,14 @@
     {
       "name": "Nelnet",
       "url": "https://nelnet.wd1.myworkdayjobs.com",
-      "site": "MyNelnet",
-      "verified_jobs": 23,
-      "verified_date": "2026-05-31",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
       "domains": [
         "software",
         "ai"
       ],
-      "default_domain": "software",
-      "notes": "A141 site alias fix via live API probe: MyNelnet"
+      "default_domain": "software"
     },
     {
       "name": "Netflix",
@@ -4791,10 +4833,10 @@
     },
     {
       "name": "NREL",
-      "url": "https://nrel.wd5.myworkdayjobs.com",
-      "site": "NLR",
-      "verified_jobs": 51,
-      "verified_date": "2026-05-31",
+      "url": "https://nrel.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
       "domains": [
         "data_science",
         "software"
@@ -4894,14 +4936,14 @@
     {
       "name": "Parsons",
       "url": "https://parsons.wd5.myworkdayjobs.com",
-      "site": "search",
-      "verified_jobs": 1699,
-      "verified_date": "2026-05-31",
+      "site": "en-US",
+      "verified_jobs": 30,
+      "verified_date": "2026-05-18",
       "domains": [
         "software",
         "general"
       ],
-      "notes": "Defense/digital infrastructure. F93: SJ ~5 US tech EL. WD site from SimplifyJs URLs.; A141 site alias fix via live API probe: search"
+      "notes": "Defense/digital infrastructure. F93: SJ ~5 US tech EL. WD site from SimplifyJs URLs."
     },
     {
       "name": "PayPal",
@@ -5282,6 +5324,19 @@
       }
     },
     {
+      "name": "Splunk",
+      "url": "https://splunk.wd1.myworkdayjobs.com",
+      "site": "external_career_page",
+      "verified_jobs": 0,
+      "verified_date": "2026-05-22",
+      "domains": [
+        "software",
+        "data_science",
+        "ai"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "SS&C Technologies",
       "url": "https://ssctech.wd1.myworkdayjobs.com",
       "site": "ssctechnologies",
@@ -5296,14 +5351,14 @@
     {
       "name": "Stanley Black & Decker",
       "url": "https://sbdinc.wd1.myworkdayjobs.com",
-      "site": "Stanley_Black_Decker_Career_Site",
-      "verified_jobs": 507,
-      "verified_date": "2026-05-31",
+      "site": "en-US",
+      "verified_jobs": 7,
+      "verified_date": "2026-05-18",
       "domains": [
         "hardware",
         "software"
       ],
-      "notes": "Tools/industrial. F93 Wave 4: SJ 7 US tech EL.; A141 site alias fix via live API probe: Stanley_Black_Decker_Career_Site"
+      "notes": "Tools/industrial. F93 Wave 4: SJ 7 US tech EL."
     },
     {
       "name": "State Street",
@@ -5448,14 +5503,14 @@
     {
       "name": "Thales",
       "url": "https://thales.wd3.myworkdayjobs.com",
-      "site": "Careers",
-      "verified_jobs": 2000,
-      "verified_date": "2026-05-31",
+      "site": "en-US",
+      "verified_jobs": 34,
+      "verified_date": "2026-05-18",
       "domains": [
         "hardware",
         "software"
       ],
-      "notes": "Defense/aerospace. F93: SJ ~1 US tech EL. LOW yield.; A141 site alias fix via live API probe: Careers"
+      "notes": "Defense/aerospace. F93: SJ ~1 US tech EL. LOW yield."
     },
     {
       "url": "https://thehartford.wd5.myworkdayjobs.com",
