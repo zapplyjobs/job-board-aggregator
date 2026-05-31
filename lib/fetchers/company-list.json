@@ -2847,8 +2847,8 @@
     {
       "name": "Baxter International",
       "url": "https://baxter.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "baxter",
+      "verified_jobs": 488,
       "verified_date": "2026-05-22",
       "domains": [
         "healthcare",
@@ -3368,8 +3368,8 @@
     {
       "name": "CME Group",
       "url": "https://cmegroup.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "cme_careers",
+      "verified_jobs": 76,
       "verified_date": "2026-05-22",
       "domains": [
         "software",
@@ -3586,8 +3586,8 @@
     {
       "name": "Dow Jones",
       "url": "https://dowjones.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "Dow_Jones_Career",
+      "verified_jobs": 151,
       "verified_date": "2026-05-22",
       "domains": [
         "software",
@@ -3658,8 +3658,8 @@
     {
       "name": "Envista Holdings",
       "url": "https://envista.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "envistacareers",
+      "verified_jobs": 263,
       "verified_date": "2026-05-22",
       "domains": [
         "healthcare",
@@ -4207,8 +4207,8 @@
     {
       "name": "Invesco",
       "url": "https://invesco.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "IVZ",
+      "verified_jobs": 207,
       "verified_date": "2026-05-22",
       "domains": [
         "finance",
@@ -4630,8 +4630,8 @@
     {
       "name": "Moderna",
       "url": "https://modernatx.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "M_tx",
+      "verified_jobs": 153,
       "verified_date": "2026-05-22",
       "domains": [
         "data_science",
@@ -4703,8 +4703,8 @@
     {
       "name": "Nasdaq",
       "url": "https://nasdaq.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "Global_External_Site",
+      "verified_jobs": 198,
       "verified_date": "2026-05-22",
       "domains": [
         "software",
@@ -5592,8 +5592,8 @@
     {
       "name": "Uline",
       "url": "https://uline.wd1.myworkdayjobs.com",
-      "site": "external_career_page",
-      "verified_jobs": 0,
+      "site": "Uline_Careers",
+      "verified_jobs": 403,
       "verified_date": "2026-05-22",
       "domains": [
         "operations",
@@ -5767,7 +5767,9 @@
     },
     {
       "name": "Wells Fargo",
-      "url": "https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs"
+      "url": "https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs",
+      "site": "wellsfargojobs",
+      "verified_jobs": 1511
     },
     {
       "name": "Wex",
