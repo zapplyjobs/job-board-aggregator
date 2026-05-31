@@ -257,7 +257,16 @@
     },
     {
       "slug": "boxinc",
-      "name": "Box"
+      "name": "Box",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Manager, Business Development\\b",
+            "result": "sales",
+            "reason": "Box business development manager titles are sales/BD, but the exact phrase is too risky globally."
+          }
+        ]
+      }
     },
     {
       "slug": "bracebridgecapital",
@@ -3194,7 +3203,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 77 gens. Banking \u2014 product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
+        "note": "B38: 77 gens. Banking — product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
       }
     },
     {
@@ -3332,6 +3341,15 @@
         "date": "2026-05-13",
         "decision": "structural",
         "note": "B38: 51 gens. Project managers (7x), change management (5x), sales talent managers. 2x Component Engineer fixed by PRECISION-19. ~95% structural ops/sales."
+      },
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Manager, Early in Career Sales Talent\\b",
+            "result": "sales",
+            "reason": "Cisco early-in-career sales talent manager roles are sales-program management, but the exact phrase is too narrow for a global keyword."
+          }
+        ]
       }
     },
     {
@@ -6117,13 +6135,6 @@
       "notes": "Bank. Vanshb03: Data Engineer Intern (Providence, RI)."
     },
     {
-      "name": "Emerson Electric",
-      "slug": "emerson-electric",
-      "base_url": "https://hdjq.fa.us2.oraclecloud.com",
-      "site_number": "CX_1",
-      "notes": "Industrial tech. Simplify currently supplies 6 jobs; live Oracle probe found 761 total / 76 US tech / 1 internship."
-    },
-    {
       "name": "Fortive",
       "slug": "fortive",
       "base_url": "https://ejta.fa.us6.oraclecloud.com",
@@ -6171,20 +6182,6 @@
       "base_url": "https://jpmc.fa.oraclecloud.com",
       "site_number": "CX_1",
       "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
-    },
-    {
-      "name": "Nokia",
-      "slug": "nokia",
-      "base_url": "https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com",
-      "site_number": "CX_1",
-      "notes": "Networking/telecom. Replaces Simplify-only path. Live Oracle probe found 808 total / 122 US tech / 17 internships."
-    },
-    {
-      "name": "onsemi",
-      "slug": "onsemi",
-      "base_url": "https://hctz.fa.us2.oraclecloud.com",
-      "site_number": "CX_1001",
-      "notes": "Semiconductor. Replaces Simplify-only path. Live Oracle probe found 599 total / 68 US tech / 2 internships."
     },
     {
       "name": "Oracle",
