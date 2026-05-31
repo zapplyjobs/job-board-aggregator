@@ -213,6 +213,15 @@
     {
       "slug": "axon",
       "name": "Axon",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Software Technical Account Manager\\b",
+            "result": "operations",
+            "reason": "B39: Axon software TAM roles are customer-facing account operations, not engineering."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
