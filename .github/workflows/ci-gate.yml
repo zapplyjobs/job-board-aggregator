@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   gate:
     runs-on: ubuntu-latest
@@ -24,11 +27,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run company-list removal guard
+        id: company_list_guard
+        continue-on-error: true
+        run: node lib/__tests__/company-list-guard.test.js
+
       - name: Run tests
+        if: steps.company_list_guard.outcome != 'failure'
         run: npm test
 
       - name: Run tag-engine tests
+        if: steps.company_list_guard.outcome != 'failure'
         run: node lib/__tests__/tag-engine.test.js
+      - name: Auto-restore company-list after unsafe removal
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.company_list_guard.outcome == 'failure'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout HEAD~1 -- lib/fetchers/company-list.json
+          if git diff --quiet -- lib/fetchers/company-list.json; then
+            echo "::error::company-list guard failed but no restoration diff found"
+            exit 1
+          fi
+          git add lib/fetchers/company-list.json
+          git commit -m "chore(meta): restore company-list after unsafe removal"
+          git push origin HEAD:main
+
+      - name: Fail on unsafe company-list removal
+        if: steps.company_list_guard.outcome == 'failure'
+        run: |
+          echo "::error::Unsafe company-list removal detected. Source commit restored company-list.json on main."
+          exit 1
+
 
       - name: Check tag-engine source/deployment parity
         run: |
