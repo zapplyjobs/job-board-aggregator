@@ -441,6 +441,7 @@ function tagDomains(job, options) {
     'software asset manager',      // 1 gen, 0 FP — software asset management
     'ai automation', 'software development engineer',
     'developer experience', 'datapath engineer', 'application developer',
+    'protocol engineer',           // 2 gen, 0 FP — protocol engineering roles (Alchemy)
     'automation developer', 'internet measurement', 'digital engineer',
     'enterprise architecture analyst',
     // TAG-OVERHAUL-A additions:
@@ -1732,6 +1733,7 @@ function tagDomains(job, options) {
     'accountant',               // accountant — (bare 'accounting' NOT added: 'Accounting Technology Consultant' FP)
     'tax analyst', 'payroll',
     'treasury analyst',
+    'capital analyst',             // 2 gen, 0 FP — capital/treasury-style finance analysis
     'actuary', 'actuarial',
     'underwriter',
     'personal banker', 'universal banker', 'banker', // retail banking roles
@@ -2146,6 +2148,7 @@ function tagDomains(job, options) {
     'associate specialist, operations', // 3 gen, 0 FP — Merck operations specialists
     'executive operations & analytics manager', // 1 gen, 0 FP — Boeing ops/analytics management
     'customer experience project specialist',   // 1 gen, 0 FP — Cisco customer experience project work
+    'customer enablement specialist', // 2 gen, 0 FP — customer enablement / support ops
     'production and inventory',  // 3 gen — production/inventory coordination
     'yard supervisor',           // 2 gen — yard/lot management (Copart)
     'program controls',          // 2 gen — program controls analysis (Moog defense)
