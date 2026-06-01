@@ -417,6 +417,13 @@
             "result": "entry_level",
             "reason": "Databricks Solutions/Business/Sales/Pre-sales Architect = pre-sales/consulting role, not senior IC engineering"
           }
+        ],
+        "domain": [
+          {
+            "pattern": "^Solutions Engineer\\b",
+            "result": "software",
+            "reason": "Databricks solutions engineer roles sit in field engineering and are software-adjacent, but the phrase is too risky as a global keyword."
+          }
         ]
       }
     },
