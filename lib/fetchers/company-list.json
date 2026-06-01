@@ -4414,10 +4414,24 @@
         "software",
         "defense"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Functional Area Analyst\\b",
+            "result": "operations",
+            "reason": "KBR functional area analyst roles are defense operations/support work; the phrase is too broad for a global operations keyword."
+          },
+          {
+            "pattern": "^Knowledge Manager\\b",
+            "result": "operations",
+            "reason": "KBR knowledge manager roles are defense knowledge/ops support, while the same phrase is too mixed globally."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 92 gens. Defense ops \u2014 engineering SMEs, knowledge managers, admin. Civil/Structural Designer (2) borderline HW. 97% structural."
+        "note": "B38: 92 gens. Defense ops — engineering SMEs, knowledge managers, admin. Civil/Structural Designer (2) borderline HW. 97% structural."
       }
     },
     {
@@ -4929,10 +4943,19 @@
         "software",
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Manager Programs\\b",
+            "result": "operations",
+            "reason": "Northrop Grumman 'Manager Programs' titles are program/ops management, but the phrase is too ambiguous to force globally."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-12",
         "decision": "mixed",
-        "note": "B34: 45 gen (21%). Mix: admin/ops/security (structural) + some SW keyword gaps (engineer software quality, emulator). Multi-domain [HW,SW,gen] \u2014 no safe default."
+        "note": "B34: 45 gen (21%). Mix: admin/ops/security (structural) + some SW keyword gaps (engineer software quality, emulator). Multi-domain [HW,SW,gen] — no safe default."
       }
     },
     {
