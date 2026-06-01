@@ -2150,6 +2150,7 @@ function tagDomains(job, options) {
     'executive operations & analytics manager', // 1 gen, 0 FP — Boeing ops/analytics management
     'customer experience project specialist',   // 1 gen, 0 FP — Cisco customer experience project work
     'customer enablement specialist', // 2 gen, 0 FP — customer enablement / support ops
+    'demand operations program manager', // 3 gen, 0 FP — Waymo demand operations programs
     'production and inventory',  // 3 gen — production/inventory coordination
     'yard supervisor',           // 2 gen — yard/lot management (Copart)
     'program controls',          // 2 gen — program controls analysis (Moog defense)
@@ -2745,6 +2746,7 @@ function tagDomains(job, options) {
     'manufacturing technician',  // 50 hits — manufacturing production techs
     'field technical manager',     // 3 gen, 0 FP — LG field technical management
     'quality inspection/final test', // 5 gen, 0 FP — Vertiv quality/final test floor roles
+    'manager, external manufacturing', // 1 gen, 0 FP — J&J external manufacturing leadership
     'fabricat',                  // 38 hits — fabricator/fabrication (prefix match)
     'wastewater',                // 20 hits — wastewater operator/technician (Veolia, SpaceX)
     'manufacturing supervisor',  // 16 hits — production floor supervisors
