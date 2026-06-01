@@ -4164,6 +4164,11 @@
             "pattern": "^Cryptography Intern\\b",
             "result": "software",
             "reason": "HP cryptography intern titles are security/software internships, but the exact phrase is too narrow for a global keyword."
+          },
+          {
+            "pattern": "^Technical and Engineering Graduate Roles\\b",
+            "result": "software",
+            "reason": "HP technical and engineering graduate roles in the live pool are software-only graduate postings; keep the company-specific scope instead of a global phrase."
           }
         ]
       },
