@@ -1939,6 +1939,7 @@ function tagDomains(job, options) {
     'ad sales intelligence', // 1 gen, 0 FP — enterprise ad sales intelligence
     'sales onboarding manager',    // 3 gen, 0 FP — sales onboarding/program roles
     'partner sales rep',           // 1 gen, 0 FP — explicit partner sales representative
+    'flightline operations manager', // 3 gen, 0 FP — Boeing flightline operations roles
     'wellbore intervention', // 1 gen, 0 FP — wellbore intervention sales
     'refinery account',      // 1 gen, 0 FP — refinery account rep
     'enterprise renewals',   // 1 gen, 0 FP — enterprise renewals specialist
@@ -2743,6 +2744,7 @@ function tagDomains(job, options) {
     'manufacturing operator',    // 35 hits — factory floor operators
     'manufacturing technician',  // 50 hits — manufacturing production techs
     'field technical manager',     // 3 gen, 0 FP — LG field technical management
+    'quality inspection/final test', // 5 gen, 0 FP — Vertiv quality/final test floor roles
     'fabricat',                  // 38 hits — fabricator/fabrication (prefix match)
     'wastewater',                // 20 hits — wastewater operator/technician (Veolia, SpaceX)
     'manufacturing supervisor',  // 16 hits — production floor supervisors
