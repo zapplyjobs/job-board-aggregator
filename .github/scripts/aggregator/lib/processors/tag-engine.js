@@ -341,6 +341,7 @@ function tagDomains(job, options) {
       [/\b(machine learning|artificial intelligence|ai |data science|ml engineer(?:ing)?)\b/i, 'ai'],
       [/\b(data anal|business intel|analytics)\b/i, 'data_science'],
       [/\b(hardware|electrical|mechanical|embedded|firmware|test engineer(?:ing)?|systems engineer(?:ing)?|materials engineer(?:ing)?)\b/i, 'hardware'],
+      [/\b(starlink enterprise & gov.?t account management)\b/i, 'sales'],
       [/\b(sales|business develop|account exec|revenue)\b/i, 'sales'],
       [/\b(marketing|brand|content|growth|creative|communications)\b/i, 'marketing'],
       [/\b(finance|accounting|treasury|tax |fp&a|financial|actuarial)\b/i, 'finance'],
@@ -349,7 +350,9 @@ function tagDomains(job, options) {
       // 'People' dept name is used by tech companies for all non-eng functions — EAs, admins, recruiters.
       // Only explicit HR terms are safe as dept-level signals.
       [/\b(human resources|human resource|recruiting|hr )\b/i, 'hr'],
+      [/\b(talent acquisition)\b/i, 'hr'],
       [/\b(operations|ops |customer (experience|success|care|support)|fleet|supply chain|cx|field service)\b/i, 'operations'],
+      [/\b(food services - starbase)\b/i, 'operations'],
       // 'Engineering / Design / Projects' dept (Veolia) was matching product — civil/mech engineering roles.
       // 'design' only valid as product signal when paired with ux/ui context.
       [/\b(product)\b|\b(ux|ui)\b|\bdesign\b(?=.*\b(ux|ui|user experience|product)\b)/i, 'product'],
