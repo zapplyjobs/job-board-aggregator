@@ -576,7 +576,16 @@
     },
     {
       "slug": "flexport",
-      "name": "Flexport"
+      "name": "Flexport",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Area Manager\\b",
+            "result": "operations",
+            "reason": "Flexport area manager roles are warehouse/logistics operations management, but the exact phrase is too broad to force globally."
+          }
+        ]
+      }
     },
     {
       "slug": "flowtraders",
