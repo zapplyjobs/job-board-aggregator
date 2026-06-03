@@ -6298,6 +6298,15 @@
       "slug": "oracle",
       "base_url": "https://eeho.fa.us2.oraclecloud.com",
       "site_number": "CX_45001",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Facilities Operations Manager\\b",
+            "result": "operations",
+            "reason": "Oracle facilities operations manager titles are data-center/facilities operations leadership, while the phrase is too company-specific to force globally."
+          }
+        ]
+      },
       "notes": "Oracle Corp HCM Cloud. ~560 US positions. Verified live F21 (2026-04-30)."
     },
     {
