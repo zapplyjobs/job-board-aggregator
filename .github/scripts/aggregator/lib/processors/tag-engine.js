@@ -1942,7 +1942,6 @@ function tagDomains(job, options) {
     'ad sales intelligence', // 1 gen, 0 FP — enterprise ad sales intelligence
     'sales onboarding manager',    // 3 gen, 0 FP — sales onboarding/program roles
     'partner sales rep',           // 1 gen, 0 FP — explicit partner sales representative
-    'flightline operations manager', // 3 gen, 0 FP — Boeing flightline operations roles
     'wellbore intervention', // 1 gen, 0 FP — wellbore intervention sales
     'refinery account',      // 1 gen, 0 FP — refinery account rep
     'enterprise renewals',   // 1 gen, 0 FP — enterprise renewals specialist
@@ -2151,6 +2150,7 @@ function tagDomains(job, options) {
     'facilities coordinator',     // 2 gen, 0 FP — facilities/workplace coordination
     'associate specialist, operations', // 3 gen, 0 FP — Merck operations specialists
     'executive operations & analytics manager', // 1 gen, 0 FP — Boeing ops/analytics management
+    'flightline operations manager', // Boeing ops/manufacturing-style flightline management
     'customer experience project specialist',   // 1 gen, 0 FP — Cisco customer experience project work
     'customer enablement specialist', // 2 gen, 0 FP — customer enablement / support ops
     'demand operations program manager', // 3 gen, 0 FP — Waymo demand operations programs
@@ -2747,7 +2747,6 @@ function tagDomains(job, options) {
     'engineering technician',    // 47 hits — manufacturing/production engineering
     'manufacturing operator',    // 35 hits — factory floor operators
     'manufacturing technician',  // 50 hits — manufacturing production techs
-    'field technical manager',     // 3 gen, 0 FP — LG field technical management
     'quality inspection/final test', // 5 gen, 0 FP — Vertiv quality/final test floor roles
     'manager, external manufacturing', // 1 gen, 0 FP — J&J external manufacturing leadership
     'fabricat',                  // 38 hits — fabricator/fabrication (prefix match)
