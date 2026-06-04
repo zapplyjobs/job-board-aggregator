@@ -1302,7 +1302,16 @@
     },
     {
       "slug": "speechify",
-      "name": "Speechify"
+      "name": "Speechify",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Go-to-Market Engineer\\b",
+            "result": "operations",
+            "reason": "Speechify Go-to-Market Engineer is a GTM systems / RevOps infrastructure role serving sales tooling and outbound operations, not a software engineering listing for seekers."
+          }
+        ]
+      }
     },
     {
       "name": "Squarepoint Capital",
