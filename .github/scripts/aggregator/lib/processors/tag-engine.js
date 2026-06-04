@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 42;
+const TAG_ENGINE_VERSION = 43;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -1505,6 +1505,7 @@ function tagDomains(job, options) {
     'radiation therapist',
     'endoscopy technician',
     'clinical research coordinator',
+    'admission coordinator',
     'patient service representative', 'patient service specialist',
     'patient access rep',
     'patient transporter',
@@ -1878,6 +1879,7 @@ function tagDomains(job, options) {
     'financial wellness associate',  // 13 gen — KeyBank financial wellness products
     'branch manager',                // 14 gen — bank branch management
     'claims analyst',                // 8 gen — insurance claims analysis
+    'business management manager',   // 2 gen, 0 FP — Northrop business-management leadership
     // TAG-PRECISION-17 (B36): finance keyword gaps
     'relationship manager',         // 30 gen — banking relationship manager (Capital One, Citi, KeyBank, TD Bank, Vanguard)
     'energy trading',               // 1 gen — energy trading analyst
@@ -2163,6 +2165,7 @@ function tagDomains(job, options) {
     'demand operations program manager', // 3 gen, 0 FP — Waymo demand operations programs
     'assistant manager trainee', // 8 gen, 0 FP — Sherwin-Williams store operations trainee title
     'manager proposals', // 2 gen, 0 FP — Northrop proposal-management operations title
+    'manager design release coordinator', // 2 gen, 0 FP — RTX release/coordination operations title
     'production and inventory',  // 3 gen — production/inventory coordination
     'yard supervisor',           // 2 gen — yard/lot management (Copart)
     'program controls',          // 2 gen — program controls analysis (Moog defense)
@@ -2890,6 +2893,8 @@ function tagDomains(job, options) {
     'quality manager',              // 21 gen — QA/QC management
     'process technician',           // 15 gen — process/production technicians (Applied Materials, etc.)
     'manufacturing manager',        // 8 gen — manufacturing floor management
+    'facility general laborer',     // 2 gen, 0 FP — plant/facility labor roles at Sherwin
+    'r&d- technician ii',           // 2 gen, 0 FP — Sherwin R&D technician roles
     // TAG-INTERN-1 (B45): manufacturing internship keyword gaps
     'metrology automation intern',             // 1 gen — Rolls Royce Metrology Automation Intern
     'paint shop quality intern',               // 1 gen — Rolls Royce Paint Shop Quality Intern
