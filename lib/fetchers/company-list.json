@@ -4075,6 +4075,20 @@
         "software",
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Project Supervisor - Hospital A/R - PFS - Revenue Cycle$",
+            "result": "healthcare",
+            "reason": "Guidehouse hospital A/R revenue-cycle supervisor title is healthcare-provider revenue-cycle work; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Healthcare Technology Consultant \\(Epic/Meditech Revenue Cycle\\)$",
+            "result": "healthcare",
+            "reason": "Guidehouse Epic/Meditech revenue-cycle consultant title is healthcare-domain work; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
