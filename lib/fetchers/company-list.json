@@ -6442,6 +6442,21 @@
             "pattern": "^Facilities Operations Manager\\b",
             "result": "operations",
             "reason": "Oracle facilities operations manager titles are data-center/facilities operations leadership, while the phrase is too company-specific to force globally."
+          },
+          {
+            "pattern": "^Microsoft 365 Engineer$",
+            "result": "software",
+            "reason": "Oracle Microsoft 365 Engineer is a clear IT/software platform engineering title; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Network Developer 2$",
+            "result": "software",
+            "reason": "Oracle Network Developer 2 is a software/network development title; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Clinical Informaticist - ONSITE$",
+            "result": "healthcare",
+            "reason": "Oracle clinical informaticist title is a healthcare-domain role; keep the match exact and company-scoped."
           }
         ]
       },
