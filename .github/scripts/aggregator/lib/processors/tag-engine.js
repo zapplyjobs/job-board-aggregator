@@ -3338,6 +3338,32 @@ const NON_US_LOCATIONS = [
   'tijuana', 'baja california', // Mexico (prevents 'california' usKeyword false match)
 ];
 
+const CANADA_PROVINCE_ABBR = new Set([
+  'on', 'bc', 'qc', 'ab', 'ns', 'mb', 'sk', 'nb', 'nl', 'pe', 'yt', 'nt', 'nu',
+]);
+
+function hasCanadaLocation(locationStr) {
+  if (!locationStr) return false;
+
+  if (/\b(canada|canadian|remote canada|virtual canada)\b/i.test(locationStr)) {
+    return true;
+  }
+
+  const wdCountryProv = locationStr.match(/^ca[\s-]([a-z]{2})\b/i);
+  if (wdCountryProv && CANADA_PROVINCE_ABBR.has(wdCountryProv[1].toLowerCase())) {
+    return true;
+  }
+
+  const commaProvRe = /,\s*([a-z]{2})\b/gi;
+  let commaProv;
+  while ((commaProv = commaProvRe.exec(locationStr)) !== null) {
+    const code = commaProv[1].toLowerCase();
+    if (CANADA_PROVINCE_ABBR.has(code)) return true;
+  }
+
+  return /\b(toronto|vancouver|montreal|montréal|ottawa|calgary|edmonton|mississauga|markham|burnaby|victoria|halifax|kitchener)\b/i.test(locationStr);
+}
+
 /**
  * Tag locations (multi-select)
  * Handles both legacy format (job.is_us_only, job.is_remote)
@@ -3357,6 +3383,7 @@ function tagLocations(job) {
   const locationStr = (
     job.location || job.job_city || job.job_location || job.job_country || ''
   ).toLowerCase().replace(/[\u2013\u2014]/g, '-');
+  const hasCanada = hasCanadaLocation(locationStr);
 
   // OUT-FILTER-1: Detect Workday international format (COUNTRY-STATE-City) to prevent
   // false US tagging. WD locations like "IN-TN-CHENNAI" (India-TamilNadu-Chennai) get
@@ -3372,6 +3399,9 @@ function tagLocations(job) {
     // Skip US tagging entirely. The NON_US_LOCATIONS check below will still
     // catch countries like "india", "canada" etc., but this prevents false
     // matches on state codes like "TN" (Tamil Nadu != Tennessee).
+    if (wdIntlMatch[1] === 'ca' && hasCanada && !tags.includes('canada')) {
+      tags.push('canada');
+    }
     return tags; // Empty locations array = filtered out by consumers
   }
 
@@ -3495,6 +3525,10 @@ function tagLocations(job) {
       }
     } else if (hasNonUS) {
       // Non-US location detected and NO US signal found — skip US tag.
+    }
+
+    if (hasCanada && !tags.includes('canada')) {
+      tags.push('canada');
     }
 
     // Layer 2: company-slug fallback for ambiguous bare location strings.
