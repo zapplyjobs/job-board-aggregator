@@ -6288,6 +6288,31 @@
             "pattern": "^Senior Associate, Customer Lifecycle Marketing$",
             "result": "marketing",
             "reason": "JPMorgan customer lifecycle marketing is a marketing function; keep it company-specific instead of broadening generic associate or lifecycle terms."
+          },
+          {
+            "pattern": "^Investment Banking \\[Multiple Positions Available\\]$",
+            "result": "finance",
+            "reason": "JPMorgan investment banking title is an obvious finance role, but the phrase is too employer-specific and generic to force globally."
+          },
+          {
+            "pattern": "^Client Specialist - Commercial Term Lending, Commercial Real Estate$",
+            "result": "finance",
+            "reason": "JPMorgan commercial term lending and commercial real estate client specialist is a finance/lending role; keep it company-specific."
+          },
+          {
+            "pattern": "^JPMorgan Wealth Management Securities Based Lending Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan wealth management securities-based lending analyst is a finance role; exact title avoids broadening wealth or lending phrases globally."
+          },
+          {
+            "pattern": "^Finance & Business Management - Associate$",
+            "result": "finance",
+            "reason": "JPMorgan finance and business management associate is a finance function title; exact match avoids catching unrelated business management roles."
+          },
+          {
+            "pattern": "^Finance and Business Management$",
+            "result": "finance",
+            "reason": "JPMorgan finance and business management is an internal finance function title; keep it exact and company-scoped."
           }
         ]
       },
