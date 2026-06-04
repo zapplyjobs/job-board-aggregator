@@ -5370,6 +5370,25 @@
         "software",
         "manufacturing"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Project Engineer I - Automation$",
+            "result": "hardware",
+            "reason": "SEL automation project engineer titles are power-systems engineering roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Associate Project Engineer - Automation$",
+            "result": "hardware",
+            "reason": "SEL associate automation project engineer titles are power-systems engineering roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Project Engineer - Commissioning$",
+            "result": "hardware",
+            "reason": "SEL commissioning project engineer titles are field/power engineering roles; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "default_domain": "hardware"
     },
     {
@@ -5467,6 +5486,25 @@
         "hardware",
         "software"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Project Engineer, Electro-mechanical$",
+            "result": "hardware",
+            "reason": "Stanley Black & Decker electro-mechanical project engineer titles are hardware engineering roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Project Engineer, Electrical$",
+            "result": "hardware",
+            "reason": "Stanley Black & Decker electrical project engineer titles are hardware engineering roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Engineer III, Mechanical$",
+            "result": "hardware",
+            "reason": "Stanley Black & Decker mechanical engineer titles are hardware engineering roles; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "notes": "Tools/industrial. F93 Wave 4: SJ 7 US tech EL."
     },
     {

@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 36;
+const TAG_ENGINE_VERSION = 37;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -3081,36 +3081,39 @@ function tagDomains(job, options) {
   // Titles with 'project engineer' + civil modifier were blocked from sw (isGuardedSwOnly) but
   // then fell through to O*NET which matched 'project engineer' -> hardware.
   // These are civil/structural/water resources project engineers (RE/SPEC, Veolia) — should be general.
-  // Guard: 'project engineer' as title anchor + civil-domain modifier → push general, skip O*NET.
+  // Guard: 'project engineer' as title anchor + civil-domain modifier → push general, skip O*NET,
+  // unless an exact company override intentionally claims the title.
+  const overrideKeys = [];
+  if (job.company_name) overrideKeys.push(job.company_name.toLowerCase());
+  if (job.company_slug) overrideKeys.push(job.company_slug.toLowerCase());
+  const seenOverrideKeys = new Set();
+  const matchingCompanyDomainOverride = (() => {
+    if (DOMAIN_TITLE_OVERRIDES.size === 0) return null;
+    for (const key of overrideKeys) {
+      if (!key || seenOverrideKeys.has(key)) continue;
+      seenOverrideKeys.add(key);
+      const rules = DOMAIN_TITLE_OVERRIDES.get(key);
+      if (!rules) continue;
+      const matchedRule = rules.find(rule => rule.regex.test(job.title || ''));
+      if (matchedRule) return { key, result: matchedRule.result };
+    }
+    return null;
+  })();
   if (tags.length === 0 && title.includes('project engineer') && isCivilProjectEngineer) {
-    pushTag('general', null, null);
+    if (matchingCompanyDomainOverride) {
+      pushTag(matchingCompanyDomainOverride.result, `(company-domain: ${matchingCompanyDomainOverride.key})`, 'company-domain-override');
+    } else {
+      pushTag('general', null, null);
+    }
   }
 
   // O*NET maps executive/administrative assistants to office/admin SOCs that can
   // leak into domain routing. Keep them general by default, but allow an exact
   // company override to opt specific clinic/support titles into a domain later.
   const isExecAdminAssistant = /\b(executive assistant|administrative assistant|admin assistant)\b/i.test(title);
-  let execAdminCompanyOverride = null;
-  if (tags.length === 0 && isExecAdminAssistant && DOMAIN_TITLE_OVERRIDES.size > 0) {
-    const overrideKeys = [];
-    if (job.company_name) overrideKeys.push(job.company_name.toLowerCase());
-    if (job.company_slug) overrideKeys.push(job.company_slug.toLowerCase());
-    const seen = new Set();
-    for (const key of overrideKeys) {
-      if (!key || seen.has(key)) continue;
-      seen.add(key);
-      const rules = DOMAIN_TITLE_OVERRIDES.get(key);
-      if (!rules) continue;
-      const matchedRule = rules.find(rule => rule.regex.test(job.title || ''));
-      if (matchedRule) {
-        execAdminCompanyOverride = { key, result: matchedRule.result };
-        break;
-      }
-    }
-  }
   if (tags.length === 0 && isExecAdminAssistant) {
-    if (execAdminCompanyOverride) {
-      pushTag(execAdminCompanyOverride.result, `(company-domain: ${execAdminCompanyOverride.key})`, 'company-domain-override');
+    if (matchingCompanyDomainOverride) {
+      pushTag(matchingCompanyDomainOverride.result, `(company-domain: ${matchingCompanyDomainOverride.key})`, 'company-domain-override');
     } else {
       pushTag('general', null, null);
     }
@@ -3202,24 +3205,8 @@ function tagDomains(job, options) {
 
   // Layer 5a: Per-company domain title overrides.
   // Fires only when the generic layers produce no match; more specific than tenant default.
-  if (tags.length === 0 && DOMAIN_TITLE_OVERRIDES.size > 0) {
-    const overrideKeys = [];
-    if (job.company_name) overrideKeys.push(job.company_name.toLowerCase());
-    if (job.company_slug) overrideKeys.push(job.company_slug.toLowerCase());
-    const seen = new Set();
-    for (const key of overrideKeys) {
-      if (!key || seen.has(key)) continue;
-      seen.add(key);
-      const rules = DOMAIN_TITLE_OVERRIDES.get(key);
-      if (!rules) continue;
-      for (const rule of rules) {
-        if (rule.regex.test(job.title || '')) {
-          pushTag(rule.result, `(company-domain: ${key})`, 'company-domain-override');
-          break;
-        }
-      }
-      if (tags.length > 0) break;
-    }
+  if (tags.length === 0 && matchingCompanyDomainOverride) {
+    pushTag(matchingCompanyDomainOverride.result, `(company-domain: ${matchingCompanyDomainOverride.key})`, 'company-domain-override');
   }
 
 
