@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 41;
+const TAG_ENGINE_VERSION = 42;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -445,6 +445,7 @@ function tagDomains(job, options) {
     'ai automation', 'software development engineer',
     'developer experience', 'datapath engineer', 'application developer',
     'protocol engineer',           // 2 gen, 0 FP — protocol engineering roles (Alchemy)
+    'penetration tester',          // 1 gen, 0 FP — explicit offensive-security / pentest role
     'automation developer', 'internet measurement', 'digital engineer',
     'enterprise architecture analyst',
     // TAG-OVERHAUL-A additions:
@@ -1257,6 +1258,7 @@ function tagDomains(job, options) {
     'device physics',                   // 1 gen, 0 FP — Device Physics Engineer (SpaceX Starlink)
     'hardware reliability',             // 14 matches, 0 FP — all hardware reliability engineering
     'low voltage engineer',             // 3 gen, 0 FP — Oracle data-center low-voltage electrical engineering
+    'engineer electronics',             // 2 gen, 0 FP — Northrop electronics engineering titles
     'scada',                            // 4 matches, 0 real FP — SCADA systems engineering (1 manufacturing, acceptable)
     'ic package',                       // 1 gen, 0 FP — IC Package Engineer (SpaceX Starlink)
     'eee components',                   // 1 gen, 0 FP — EEE Components Engineer (SpaceX)
@@ -1943,6 +1945,7 @@ function tagDomains(job, options) {
     'ad sales intelligence', // 1 gen, 0 FP — enterprise ad sales intelligence
     'sales onboarding manager',    // 3 gen, 0 FP — sales onboarding/program roles
     'partner sales rep',           // 1 gen, 0 FP — explicit partner sales representative
+    'management & sales training program', // 24 gen, 0 FP — Sherwin-Williams sales trainee program
     'wellbore intervention', // 1 gen, 0 FP — wellbore intervention sales
     'refinery account',      // 1 gen, 0 FP — refinery account rep
     'enterprise renewals',   // 1 gen, 0 FP — enterprise renewals specialist
@@ -2158,6 +2161,8 @@ function tagDomains(job, options) {
     'customer experience project specialist',   // 1 gen, 0 FP — Cisco customer experience project work
     'customer enablement specialist', // 2 gen, 0 FP — customer enablement / support ops
     'demand operations program manager', // 3 gen, 0 FP — Waymo demand operations programs
+    'assistant manager trainee', // 8 gen, 0 FP — Sherwin-Williams store operations trainee title
+    'manager proposals', // 2 gen, 0 FP — Northrop proposal-management operations title
     'production and inventory',  // 3 gen — production/inventory coordination
     'yard supervisor',           // 2 gen — yard/lot management (Copart)
     'program controls',          // 2 gen — program controls analysis (Moog defense)
