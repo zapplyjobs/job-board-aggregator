@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 38;
+const TAG_ENGINE_VERSION = 39;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -2152,6 +2152,8 @@ function tagDomains(job, options) {
     'associate specialist, operations', // 3 gen, 0 FP — Merck operations specialists
     'executive operations & analytics manager', // 1 gen, 0 FP — Boeing ops/analytics management
     'critical environment operations manager', // 3 gen, 0 FP — Microsoft data center critical environment operations
+    'critical environment energy marshall', // 2 gen, 0 FP — Microsoft data center critical environment / safety operations
+    'critical environment ops technician', // 1 gen, 0 FP — Microsoft data center critical environment operations tech
     'flightline operations manager', // Boeing ops/manufacturing-style flightline management
     'customer experience project specialist',   // 1 gen, 0 FP — Cisco customer experience project work
     'customer enablement specialist', // 2 gen, 0 FP — customer enablement / support ops
