@@ -6216,6 +6216,15 @@
       "slug": "citizens-financial",
       "base_url": "https://hcgn.fa.us2.oraclecloud.com",
       "site_number": "CX_1",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^CSI Regional Control Officer$",
+            "result": "finance",
+            "reason": "Citizens Financial Group regional control officer titles are bank risk/control functions; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "notes": "Bank. Vanshb03: Data Engineer Intern (Providence, RI)."
     },
     {
@@ -6251,6 +6260,15 @@
       "slug": "grant-thornton",
       "base_url": "https://ehzq.fa.us2.oraclecloud.com",
       "site_number": "CX_1",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Forensic Accounting Senior Associate \\(Construction\\)$",
+            "result": "finance",
+            "reason": "Grant Thornton forensic accounting senior associate is a clear accounting/advisory finance role; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "notes": "Accounting/advisory. Vanshb03: Technology Modernization Intern (Chicago, IL)."
     },
     {
