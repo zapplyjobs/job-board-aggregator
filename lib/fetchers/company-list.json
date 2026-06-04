@@ -6322,6 +6322,26 @@
             "pattern": "^Finance and Business Management$",
             "result": "finance",
             "reason": "JPMorgan finance and business management is an internal finance function title; keep it exact and company-scoped."
+          },
+          {
+            "pattern": "^Payment Lifecycle Specialist(?: [IVX]+)?$",
+            "result": "finance",
+            "reason": "JPMorgan payment lifecycle specialist titles are payment operations / finance roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Transactions Specialist(?: [IVX]+)?(?: - .*)?$",
+            "result": "finance",
+            "reason": "JPMorgan transactions specialist titles are bank transaction-processing roles; exact company-scoped pattern avoids broadening generic specialist titles."
+          },
+          {
+            "pattern": "^Trade Lifecycle Associate I .*$",
+            "result": "finance",
+            "reason": "JPMorgan trade lifecycle associate titles are securities operations / finance roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^International Payments Associate - Commercial Bank$",
+            "result": "finance",
+            "reason": "JPMorgan international payments associate titles are bank payments roles; keep the match exact and company-scoped."
           }
         ]
       },
