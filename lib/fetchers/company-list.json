@@ -3913,6 +3913,15 @@
         "healthcare",
         "operations"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^(?:PT\\s+)?Clinic(?:al)? Administrative Assistant(?: - ?PART TIME| - Part Time)?(?: - 20 hours/week)?$",
+            "result": "healthcare",
+            "reason": "Fresenius clinic administrative assistant titles are patient-clinic support roles inside a healthcare provider context; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "default_domain": "healthcare"
     },
     {

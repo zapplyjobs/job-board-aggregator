@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 32;
+const TAG_ENGINE_VERSION = 33;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -3085,15 +3085,35 @@ function tagDomains(job, options) {
     pushTag('general', null, null);
   }
 
-  // O*NET maps 'executive assistant' → operations (SOC 43-6011: Executive Secretaries).
-  // But EAs are not operations roles — they're administrative support. After removing ea/aa from
-  // hrKeywords, these 101 jobs were falling to O*NET and getting tagged operations.
-  // Correct classification: general (cross-functional admin support, no domain signal).
+  // O*NET maps executive/administrative assistants to office/admin SOCs that can
+  // leak into domain routing. Keep them general by default, but allow an exact
+  // company override to opt specific clinic/support titles into a domain later.
   const isExecAdminAssistant = /\b(executive assistant|administrative assistant|admin assistant)\b/i.test(title);
-  if (tags.length === 0 && isExecAdminAssistant) {
-    pushTag('general', null, null);
+  let execAdminCompanyOverride = null;
+  if (tags.length === 0 && isExecAdminAssistant && DOMAIN_TITLE_OVERRIDES.size > 0) {
+    const overrideKeys = [];
+    if (job.company_name) overrideKeys.push(job.company_name.toLowerCase());
+    if (job.company_slug) overrideKeys.push(job.company_slug.toLowerCase());
+    const seen = new Set();
+    for (const key of overrideKeys) {
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      const rules = DOMAIN_TITLE_OVERRIDES.get(key);
+      if (!rules) continue;
+      const matchedRule = rules.find(rule => rule.regex.test(job.title || ''));
+      if (matchedRule) {
+        execAdminCompanyOverride = { key, result: matchedRule.result };
+        break;
+      }
+    }
   }
-
+  if (tags.length === 0 && isExecAdminAssistant) {
+    if (execAdminCompanyOverride) {
+      pushTag(execAdminCompanyOverride.result, `(company-domain: ${execAdminCompanyOverride.key})`, 'company-domain-override');
+    } else {
+      pushTag('general', null, null);
+    }
+  }
   // ENR-8: Pre-O*NET Intuitive Surgical clinical/QC guard.
   // 'Clinical Application Engineer' (singular) misses the hw keyword 'applications engineer'
   // but O*NET matches 'application engineer' → hardware. These are clinical training/support
@@ -3200,6 +3220,8 @@ function tagDomains(job, options) {
       if (tags.length > 0) break;
     }
   }
+
+
 
  // Layer 5: Tenant-context fallback (TAG-10)
   // Claude-researched per-tenant defaults for verified single-domain companies.
