@@ -3345,7 +3345,7 @@ const CANADA_PROVINCE_ABBR = new Set([
 function hasCanadaLocation(locationStr) {
   if (!locationStr) return false;
 
-  if (/\b(canada|canadian|remote canada|virtual canada)\b/i.test(locationStr)) {
+  if (/\b(remote canada|virtual canada)\b/i.test(locationStr) || /\b(canada|canadian)\b(?!\s+square)\b/i.test(locationStr)) {
     return true;
   }
 
@@ -3484,7 +3484,9 @@ function tagLocations(job) {
     let stateAbbrM;
     let hasStateAbbr = false;
     while ((stateAbbrM = stateAbbrRe.exec(locationStr)) !== null) {
-      if (US_STATE_ABBR.has(stateAbbrM[1])) { hasStateAbbr = true; break; }
+      const code = stateAbbrM[1].toLowerCase();
+      if (code === 'ca' && hasCanada) continue;
+      if (US_STATE_ABBR.has(code)) { hasStateAbbr = true; break; }
     }
 
     // that aren't caught by delimiter-prefixed patterns ('- usa', ', usa')
