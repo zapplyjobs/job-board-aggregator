@@ -6277,6 +6277,20 @@
       "slug": "jpmorgan-chase",
       "base_url": "https://jpmc.fa.oraclecloud.com",
       "site_number": "CX_1",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Quant Analytics\\b",
+            "result": "finance",
+            "reason": "JPMorgan Oracle quant analytics titles are finance/risk analytics roles; the phrase is too employer-specific to promote globally."
+          },
+          {
+            "pattern": "^Senior Associate, Customer Lifecycle Marketing$",
+            "result": "marketing",
+            "reason": "JPMorgan customer lifecycle marketing is a marketing function; keep it company-specific instead of broadening generic associate or lifecycle terms."
+          }
+        ]
+      },
       "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
     },
     {
