@@ -6421,6 +6421,46 @@
             "pattern": "^International Payments Associate - Commercial Bank$",
             "result": "finance",
             "reason": "JPMorgan international payments associate titles are bank payments roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Asset Based Lending Field Examination - Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan asset based lending field examination titles are lending/risk roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Asset Based Lending Loan Origination Associate$",
+            "result": "finance",
+            "reason": "JPMorgan asset based lending loan origination titles are lending operations roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Commercial & Investment Bank Credit Risk - Associate \\(Energy\\)$",
+            "result": "finance",
+            "reason": "JPMorgan credit risk associate titles are finance/risk roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Business Banking Virtual Specialist$",
+            "result": "finance",
+            "reason": "JPMorgan business banking virtual specialist is a banking client-services role serving business financial products; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^AWM Trading Services Associate$",
+            "result": "finance",
+            "reason": "JPMorgan trading services associate is a trading operations role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Client Service Analyst – Futures and Options$",
+            "result": "finance",
+            "reason": "JPMorgan futures and options client service analyst is a markets/clearing role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Commercial & Investment Bank - Expense Management Associate$",
+            "result": "operations",
+            "reason": "JPMorgan expense management associate is an internal expense-controls and workflow role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Associate, Card Risk Strategy$",
+            "result": "finance",
+            "reason": "JPMorgan card risk strategy associate is a credit-risk role inside banking; keep the match exact and company-scoped."
           }
         ]
       },
