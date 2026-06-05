@@ -6516,6 +6516,20 @@
       "slug": "sherwin-williams",
       "base_url": "https://ejhp.fa.us6.oraclecloud.com",
       "site_number": "CX_2",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Assistant Store Manager$",
+            "result": "retail",
+            "reason": "Sherwin-Williams assistant store manager titles are retail store leadership roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Store Manager$",
+            "result": "retail",
+            "reason": "Sherwin-Williams store manager titles are retail store leadership roles; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "notes": "Paint/coatings. Vanshb03: R&D Product Engineering Co-Op (Cleveland, OH)."
     },
     {
