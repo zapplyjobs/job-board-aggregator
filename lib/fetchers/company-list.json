@@ -4125,6 +4125,20 @@
       "domains": [
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Project Manager \\(Heavy Civil Construction\\)$",
+            "result": "operations",
+            "reason": "Granite heavy civil construction project manager title is a construction operations/project-delivery role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Safety & Health Specialist III$",
+            "result": "operations",
+            "reason": "Granite safety and health specialist title is a site safety / construction operations role; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "default_domain": "general"
     },
     {
