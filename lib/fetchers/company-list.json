@@ -3208,6 +3208,35 @@
       "domains": [
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Assistant Broker$",
+            "result": "finance",
+            "reason": "Brown & Brown assistant broker titles are insurance brokerage roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^RV Mechanical Claims Adjustor$",
+            "result": "finance",
+            "reason": "Brown & Brown RV mechanical claims adjustor titles are insurance claims roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Agency Bill Invoicing Analyst$",
+            "result": "finance",
+            "reason": "Brown & Brown agency bill invoicing analyst is an insurance finance/billing role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Financial Operations Audit Analyst$",
+            "result": "finance",
+            "reason": "Brown & Brown financial operations audit analyst is a finance/audit role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Strategic Claims Consultant$",
+            "result": "finance",
+            "reason": "Brown & Brown strategic claims consultant is an insurance claims role; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "default_domain": "general"
     },
     {
