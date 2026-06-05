@@ -6636,6 +6636,20 @@
       "slug": "wsp",
       "base_url": "https://emit.fa.ca3.oraclecloud.com",
       "site_number": "CX_2001",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Assistant Construction Materials Testing Laboratory Technician$",
+            "result": "hardware",
+            "reason": "WSP construction materials testing laboratory technician title is an engineering/materials testing role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Early Professional Geologist$",
+            "result": "hardware",
+            "reason": "WSP early professional geologist title is an earth-science / engineering field role; keep the match exact and company-scoped."
+          }
+        ]
+      },
       "notes": "Engineering consultancy. Vanshb03: Software Developer Intern (Dallas, TX)."
     }
   ]
