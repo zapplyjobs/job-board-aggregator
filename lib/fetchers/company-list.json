@@ -1313,6 +1313,35 @@
         ]
       }
     },
+
+    {
+      "slug": "microsoft",
+      "name": "Microsoft",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Environmental Health & Safety Manager$",
+            "result": "operations",
+            "reason": "Microsoft environmental health and safety manager titles are site safety / operations roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Group Collections Manager, LATAM Finance$",
+            "result": "finance",
+            "reason": "Microsoft group collections manager titles are finance/collections roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Logistics Manager - Outbound$",
+            "result": "logistics",
+            "reason": "Microsoft outbound logistics manager title is a logistics/distribution role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Data Center Project Manager$",
+            "result": "operations",
+            "reason": "Microsoft data center project manager title is data center operations/infrastructure delivery work; keep the match exact and company-scoped."
+          }
+        ]
+      }
+    },
     {
       "name": "Squarepoint Capital",
       "slug": "squarepointcapital"
