@@ -6341,6 +6341,26 @@
             "pattern": "^CSI Regional Control Officer$",
             "result": "finance",
             "reason": "Citizens Financial Group regional control officer titles are bank risk/control functions; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^1st LOD Risk Manager - Data & Analytics$",
+            "result": "finance",
+            "reason": "Citizens first-line risk manager titles are bank risk/governance roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Community Development Investment Manager$",
+            "result": "finance",
+            "reason": "Citizens community development investment manager title is a banking/investment role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Business Banking Relationship Mgr\\. II$",
+            "result": "finance",
+            "reason": "Citizens business banking relationship manager title is a banking relationship role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Trade Desk Specialist$",
+            "result": "finance",
+            "reason": "Citizens trade desk specialist title is a banking/markets operations role; keep the match exact and company-scoped."
           }
         ]
       },
