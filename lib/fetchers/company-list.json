@@ -4167,6 +4167,16 @@
             "pattern": "^Healthcare Technology Consultant \\(Epic/Meditech Revenue Cycle\\)$",
             "result": "healthcare",
             "reason": "Guidehouse Epic/Meditech revenue-cycle consultant title is healthcare-domain work; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Data Management/Governance Specialist$",
+            "result": "software",
+            "reason": "Guidehouse data management and governance specialist title is an enterprise data / information governance role, not a general consulting listing; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^IT System Assessor$",
+            "result": "software",
+            "reason": "Guidehouse IT System Assessor is a cybersecurity / IT assessment role; keep the match exact and company-scoped."
           }
         ]
       },
