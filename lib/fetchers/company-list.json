@@ -6566,6 +6566,116 @@
             "pattern": "^Associate, Card Risk Strategy$",
             "result": "finance",
             "reason": "JPMorgan card risk strategy associate is a credit-risk role inside banking; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Financial Analysis Associate - Connected Commerce$",
+            "result": "finance",
+            "reason": "JPMorgan connected-commerce financial analysis is a bank finance role; exact company-scoped title avoids broadening generic analysis titles."
+          },
+          {
+            "pattern": "^Financial Analysis - Card PXT - Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan card PXT financial analysis is a finance planning/reporting role; exact company-scoped title avoids broadening PXT terms."
+          },
+          {
+            "pattern": "^Corporate Finance Analytics, Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan corporate finance analytics is a finance analytics role; exact company-scoped title avoids global analytics overreach."
+          },
+          {
+            "pattern": "^Senior Associate, Consumer & Community Banking Finance Data Ecosystem$",
+            "result": "finance",
+            "reason": "JPMorgan CCB finance data ecosystem is a finance data role; exact company-scoped title avoids generic data ecosystem matches."
+          },
+          {
+            "pattern": "^Trade Support - Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan trade support analyst is markets/trading operations; exact company-scoped title avoids broad support analyst matches."
+          },
+          {
+            "pattern": "^Chase Card SMB Acquisitions – Credit Strategy – Associate$",
+            "result": "finance",
+            "reason": "JPMorgan card acquisitions credit strategy is a banking/credit-risk role; exact company-scoped title avoids broad strategy matches."
+          },
+          {
+            "pattern": "^Risk Management - Capital Risk Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan capital risk management is a finance/risk role; exact company-scoped title avoids broad risk management matches."
+          },
+          {
+            "pattern": "^Financial Analysis - Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan financial analysis senior associate is a finance role; exact company-scoped title avoids broad analysis matches."
+          },
+          {
+            "pattern": "^Global Technology Financial Planning & Analysis - Associate$",
+            "result": "finance",
+            "reason": "JPMorgan technology FP&A is a finance planning role despite technology in the title; exact company scope prevents software misrouting."
+          },
+          {
+            "pattern": "^Corporate Controller - Financial Accounting - Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan financial accounting controller is a finance/accounting role; exact company scope avoids broad controller matches."
+          },
+          {
+            "pattern": "^Equity Capital Markets Business Management – Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan equity capital markets business management is a markets finance role; exact company scope avoids broad business management matches."
+          },
+          {
+            "pattern": "^Institutional Equity Sales Desk - Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan institutional equity sales desk is a markets finance role; exact company scope avoids broad sales desk matches."
+          },
+          {
+            "pattern": "^Firmwide Financial Controller - Equities - Associate$",
+            "result": "finance",
+            "reason": "JPMorgan equities financial controller is a finance/accounting role; exact company scope avoids broad controller matches."
+          },
+          {
+            "pattern": "^Payments - Cross Currency- Product Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan cross-currency payments product analyst is a banking/payments role; exact company scope avoids broad product analyst matches."
+          },
+          {
+            "pattern": "^Finance & Business Management Associate$",
+            "result": "finance",
+            "reason": "JPMorgan finance and business management associate is a finance function title; exact company scope avoids unrelated business management roles."
+          },
+          {
+            "pattern": "^Finance & Business Management$",
+            "result": "finance",
+            "reason": "JPMorgan finance and business management is an internal finance function title; exact company scope avoids unrelated business management roles."
+          },
+          {
+            "pattern": "^External Reporting Controller - Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan external reporting controller is a finance/reporting role; exact company scope avoids broad reporting matches."
+          },
+          {
+            "pattern": "^Investment Banking - Healthcare - Associate$",
+            "result": "finance",
+            "reason": "JPMorgan investment banking healthcare associate is a finance role serving the healthcare sector; exact company scope prevents healthcare misrouting."
+          },
+          {
+            "pattern": "^Quantitative Analytics Manager$",
+            "result": "finance",
+            "reason": "JPMorgan quantitative analytics manager is a bank risk/finance analytics role; exact company scope avoids global quantitative analytics broadening."
+          },
+          {
+            "pattern": "^Public Finance - Infrastructure Team - Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan public finance infrastructure analyst is a finance role; exact company scope avoids broad infrastructure matches."
+          },
+          {
+            "pattern": "^Equities Market Risk Reporting$",
+            "result": "finance",
+            "reason": "JPMorgan equities market risk reporting is a markets/risk finance role; exact company scope avoids broad reporting matches."
+          },
+          {
+            "pattern": "^Global Real Estate Financial Controller – Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan real-estate financial controller is a finance/accounting role; exact company scope avoids broad real-estate matches."
           }
         ]
       },
