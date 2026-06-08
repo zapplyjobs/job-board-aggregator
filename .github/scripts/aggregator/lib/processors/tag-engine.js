@@ -664,6 +664,10 @@ function tagDomains(job, options) {
     'detection engineering',        // 2 gen, 0 FP — Principal Associate Detection Engineering (Capital One), Security Engineer Detection Engineering (Asana)
     'cyber controls',               // 1 gen, 0 FP — Cyber Controls Monitoring Analyst (Capital One)
     'it security',                  // 3 gen→1 gen, 2 already-sw — Engineer IT Security (Northrop Grumman), IT Security Engineer (Jane Street x2)
+    'pega developer',                // 1 current gen, 0 FP — AFS Pega developer
+    'react developer',               // 1 current gen, 0 FP — AFS React developer
+    'ux/ui developer',               // 1 current gen, 0 FP — AFS full-stack UX/UI developer
+    'adc engineer, aws database services', // 1 current gen, 0 FP — AWS database services engineering
     'network communications administrator', // 1 gen, 0 FP — Network Communications Administrator (Northrop Grumman)
     'cyber sys engineer',           // 3 gen→2 gen, 1 already-sw — Cyber Sys Engineer (Northrop Grumman)
     'it infrastructure administrator', // 1 gen, 0 FP — IT Infrastructure Administrator (Northrop Grumman)
