@@ -6786,6 +6786,41 @@
             "pattern": "^Margin&Collateral Manager III$",
             "result": "finance",
             "reason": "JPMorgan margin and collateral manager is a markets/risk finance role; exact company scope avoids broad collateral matches."
+          },
+          {
+            "pattern": "^Client Success Senior Associate - Tech/Startup Banking$",
+            "result": "finance",
+            "reason": "JPMorgan client success in tech/startup banking is a banking relationship role; exact company scope avoids broad client-success matches."
+          },
+          {
+            "pattern": "^Consumer Direct Home Lending Manager$",
+            "result": "finance",
+            "reason": "JPMorgan home lending manager is a banking/lending role; exact company scope avoids broad lending-manager matches."
+          },
+          {
+            "pattern": "^Home Lending Assistant, Chicago IL$",
+            "result": "finance",
+            "reason": "JPMorgan home lending assistant is a banking/mortgage support role; exact company scope avoids broad assistant matches."
+          },
+          {
+            "pattern": "^Insurance Svc Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan insurance service analyst is a financial-services support role; exact company scope avoids broad analyst matches."
+          },
+          {
+            "pattern": "^J\\.P\\. Morgan Wealth Management – Select Growth Advisor - Boca Raton or Miami, FL$",
+            "result": "finance",
+            "reason": "JPMorgan wealth management advisor roles are finance/wealth roles; exact company scope avoids broad advisor matches."
+          },
+          {
+            "pattern": "^J\\.P\\. Morgan Wealth Management – Select Growth Advisor - Seattle, WA \\(Northgate Way\\)$",
+            "result": "finance",
+            "reason": "JPMorgan wealth management advisor roles are finance/wealth roles; exact company scope avoids broad advisor matches."
+          },
+          {
+            "pattern": "^J\\.P\\. Morgan Wealth Management – Vice President, Client Welcome Group Team Lead$",
+            "result": "finance",
+            "reason": "JPMorgan wealth management client welcome leadership is a finance/wealth role; exact company scope avoids broad team-lead matches."
           }
         ]
       },
