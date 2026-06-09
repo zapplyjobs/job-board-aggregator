@@ -6487,7 +6487,6 @@
       "slug": "jpmorgan-chase",
       "base_url": "https://jpmc.fa.oraclecloud.com",
       "site_number": "CX_1",
-<<<<<<< HEAD
       "titleOverrides": {
         "domain": [
           {
@@ -7070,21 +7069,16 @@
             "result": "finance",
             "reason": "JPMorgan firmwide financial controller role is a finance/accounting controls position for equities, focused on books, records, close, and reporting integrity; exact company scope avoids broad controller-title matches."
           }
-        ]
-      },
-      "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
-=======
-      "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations).",
-      "titleOverrides": {
-        "domain": [
-          {
+          ,
+{
             "pattern": "^Client Success Officer$",
             "result": "sales",
             "reason": "TAG-AUDIT-6: repeated JPMorgan Chase exact title in live R2 is client-success/account-facing work; exact company/title scope avoids broad success/officer keywords."
           }
         ]
-      }
->>>>>>> 6c5be16 (fix(tag): add exact title overrides)
+      },
+      "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
+
     },
     {
       "name": "Nokia",
