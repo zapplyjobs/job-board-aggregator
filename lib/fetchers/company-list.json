@@ -7015,6 +7015,31 @@
             "pattern": "^Director, Data Center Cost Control Team Lead$",
             "result": "operations",
             "reason": "Oracle data-center cost-control lead manages construction controls, forecasts, procurement/delivery coordination, and governance for large data-center builds; exact company scope avoids broad cost-control matches."
+          },
+          {
+            "pattern": "^Technical Analyst 3-Support$",
+            "result": "operations",
+            "reason": "Oracle Health support role restores client systems using incident management, Linux/Unix, SQL, databases, ticketing, and live technical fixes; exact company scope keeps support roles out of software feeds."
+          },
+          {
+            "pattern": "^Technical Analyst 4-Support$",
+            "result": "operations",
+            "reason": "Oracle life-sciences support role provides technical product support for Oracle Argus Safety, Empirica Signal, and Safety One; exact company scope keeps support roles out of software feeds."
+          },
+          {
+            "pattern": "^Onsite Support Technician I$",
+            "result": "operations",
+            "reason": "Oracle onsite support technician handles end-user hardware/software support, desktop/laptop/network systems, installs, troubleshooting, and escalation; exact company scope avoids broad technician matches."
+          },
+          {
+            "pattern": "^Help Desk - Kansas City, MO$",
+            "result": "operations",
+            "reason": "Oracle help desk role provides level-two product support, configuration troubleshooting, service requests, SQL-script fixes, and support-case handling; exact company scope avoids broad help-desk matches."
+          },
+          {
+            "pattern": "^Help Desk - 1PM-9PM Shift$",
+            "result": "operations",
+            "reason": "Oracle paired help desk shift posting is the same support lane as Kansas City help desk, focused on post-sales technical support and service request resolution; exact company scope avoids broad help-desk matches."
           }
         ]
       },
