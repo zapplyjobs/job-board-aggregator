@@ -6935,6 +6935,46 @@
             "pattern": "^Principal Architect, Executive Director: Business Banking Digital$",
             "result": "software",
             "reason": "JPMorgan business banking digital architect role owns cloud-native customer-facing application architecture, data flows, code reviews, and engineering standards; exact company scope avoids broad business-banking matches."
+          },
+          {
+            "pattern": "^Community Manager - DMV - Alexandria$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Community Manager - Lakeland/Winterhaven$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Community Manager - Marin County, CA$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Community Manager - Salem, OR$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Community Manager - San Mateo County, CA$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Community Manager - Spokane Valley, WA$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Community Manager - Vallejo County, CA$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Community Manager - West Palm Beach, FL$",
+            "result": "finance",
+            "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
           }
         ]
       },
