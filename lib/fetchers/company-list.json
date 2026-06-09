@@ -7085,7 +7085,16 @@
       "slug": "nokia",
       "base_url": "https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com",
       "site_number": "CX_1",
-      "notes": "Networking/telecom. Replaces Simplify-only path. Live Oracle probe found 808 total / 122 US tech / 17 internships."
+      "notes": "Networking/telecom. Replaces Simplify-only path. Live Oracle probe found 808 total / 122 US tech / 17 internships.",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Software/QA Development Coop$",
+            "result": "software",
+            "reason": "TAG-AUDIT-6: repeated Nokia exact title in live R2 is software/QA internship work; exact company/title scope avoids broad coop or QA keywords."
+          }
+        ]
+      }
     },
     {
       "name": "onsemi",
