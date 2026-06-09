@@ -6965,6 +6965,36 @@
             "pattern": "^Clinical Informaticist - ONSITE$",
             "result": "healthcare",
             "reason": "Oracle clinical informaticist title is a healthcare-domain role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Vendor Specialist, Data Center Facilities Operations - Michigan$",
+            "result": "operations",
+            "reason": "Oracle OCI data-center vendor specialist manages facilities vendor execution, SLAs, contracts, safety, and site operations; exact company scope avoids broad data-center title overreach."
+          },
+          {
+            "pattern": "^Asset Manager - Spare Parts, Data Center Facilities - Michigan$",
+            "result": "operations",
+            "reason": "Oracle OCI data-center asset manager owns inventory, logistics, facilities assets, procurement coordination, and asset lifecycle operations; exact company scope avoids broad asset-manager matches."
+          },
+          {
+            "pattern": "^Data Center Audit Compliance Manager - Insurance, Licensing & City Inspections  - Michigan$",
+            "result": "operations",
+            "reason": "Oracle data-center audit compliance manager runs facilities compliance, licensing, inspections, permits, and operational audit readiness; exact company scope avoids broad compliance matches."
+          },
+          {
+            "pattern": "^Integrated Planning & Scheduling – Data Center Development$",
+            "result": "operations",
+            "reason": "Oracle data-center planning role schedules colocation construction, field progress, contractors, utilities, and recovery planning; exact company scope avoids broad planning-title matches."
+          },
+          {
+            "pattern": "^Data Center Integrated Planning & Scheduling$",
+            "result": "operations",
+            "reason": "Oracle data-center planning role schedules colocation construction, field progress, contractors, utilities, and recovery planning; exact company scope avoids broad scheduling-title matches."
+          },
+          {
+            "pattern": "^Director, Data Center Cost Control Team Lead$",
+            "result": "operations",
+            "reason": "Oracle data-center cost-control lead manages construction controls, forecasts, procurement/delivery coordination, and governance for large data-center builds; exact company scope avoids broad cost-control matches."
           }
         ]
       },
