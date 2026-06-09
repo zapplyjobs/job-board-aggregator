@@ -4051,8 +4051,8 @@
       }
     },
     {
-      "url": "https://gen.wd1.myworkdayjobs.com",
-      "site": "careers",
+      "url": "https://roche.wd3.myworkdayjobs.com",
+      "site": "ROG-A2O-GENE",
       "name": "Genentech"
     },
     {
@@ -7068,9 +7068,8 @@
             "pattern": "^Firmwide Financial Controller - Equities - Senior Associate$",
             "result": "finance",
             "reason": "JPMorgan firmwide financial controller role is a finance/accounting controls position for equities, focused on books, records, close, and reporting integrity; exact company scope avoids broad controller-title matches."
-          }
-          ,
-{
+          },
+          {
             "pattern": "^Client Success Officer$",
             "result": "sales",
             "reason": "TAG-AUDIT-6: repeated JPMorgan Chase exact title in live R2 is client-success/account-facing work; exact company/title scope avoids broad success/officer keywords."
@@ -7078,7 +7077,6 @@
         ]
       },
       "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
-
     },
     {
       "name": "Nokia",
