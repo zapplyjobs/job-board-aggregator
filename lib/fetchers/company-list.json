@@ -7095,6 +7095,21 @@
             "pattern": "^Help Desk - 1PM-9PM Shift$",
             "result": "operations",
             "reason": "Oracle paired help desk shift posting is the same support lane as Kansas City help desk, focused on post-sales technical support and service request resolution; exact company scope avoids broad help-desk matches."
+          },
+          {
+            "pattern": "^Oracle Health Federal Learning Consultant-100% Travel$",
+            "result": "healthcare",
+            "reason": "Oracle Health federal learning consultant supports healthcare end-user training/adoption for Oracle Health solutions, EHRM/FCM methodology, VA/federal healthcare, and clinical/revenue systems; exact company scope avoids broad consultant matches."
+          },
+          {
+            "pattern": "^Oracle Health Manager, VA End User Adoption: Training Delivery$",
+            "result": "healthcare",
+            "reason": "Oracle Health VA end-user adoption manager leads healthcare implementation/training delivery for federal health users; exact company scope avoids broad manager matches."
+          },
+          {
+            "pattern": "^Integrated Technologies Consultant – CareAware Capacity Management$",
+            "result": "healthcare",
+            "reason": "Oracle CareAware consultant works on healthcare IT implementation, patient throughput, patient flow workflows, hospital operations, Cerner Millennium, and capacity management; exact company scope avoids broad consultant matches."
           }
         ]
       },
