@@ -6975,6 +6975,21 @@
             "pattern": "^Community Manager - West Palm Beach, FL$",
             "result": "finance",
             "reason": "JPMorgan Consumer Bank community manager role drives financial health outreach, Chase banking referrals, NMLS/SAFE compliance, and community financial education; exact company scope avoids broad community-title matches."
+          },
+          {
+            "pattern": "^Control Manager$",
+            "result": "finance",
+            "reason": "JPMorgan control manager roles sit in finance/risk/control management, covering operational risk, control design, SOX/audit, compliance, governance, and financial-services controls; exact company scope avoids broad manager matches."
+          },
+          {
+            "pattern": "^Control Manager - Associate$",
+            "result": "finance",
+            "reason": "JPMorgan control manager associate roles sit in Consumer Bank risk/control management, covering compliance, operational risk, controls, audit, data reporting, and financial-services governance; exact company scope avoids broad manager matches."
+          },
+          {
+            "pattern": "^Control Manager - Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan senior control manager roles are first-line risk/control roles protecting the firm against operational, regulatory, and reputational risk; exact company scope avoids broad manager matches."
           }
         ]
       },
