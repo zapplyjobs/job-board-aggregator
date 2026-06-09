@@ -6457,7 +6457,16 @@
       "slug": "honeywell",
       "base_url": "https://ibqbjb.fa.ocs.oraclecloud.com",
       "site_number": "Honeywell",
-      "notes": "Conglomerate. Vanshb03: SE & CS Intern (US), Systems Engineering Intern."
+      "notes": "Conglomerate. Vanshb03: SE & CS Intern (US), Systems Engineering Intern.",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Traveling Mechanical Conveyer Installer$",
+            "result": "hardware",
+            "reason": "TAG-AUDIT-6: repeated Honeywell exact title in live R2 is mechanical installer work; exact company/title scope avoids broad installer keywords."
+          }
+        ]
+      }
     },
     {
       "name": "Hormel Foods",
@@ -6478,6 +6487,7 @@
       "slug": "jpmorgan-chase",
       "base_url": "https://jpmc.fa.oraclecloud.com",
       "site_number": "CX_1",
+<<<<<<< HEAD
       "titleOverrides": {
         "domain": [
           {
@@ -7063,6 +7073,18 @@
         ]
       },
       "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations)."
+=======
+      "notes": "Major US bank. Vanshb03: Software Engineer Intern (9 US locations).",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Client Success Officer$",
+            "result": "sales",
+            "reason": "TAG-AUDIT-6: repeated JPMorgan Chase exact title in live R2 is client-success/account-facing work; exact company/title scope avoids broad success/officer keywords."
+          }
+        ]
+      }
+>>>>>>> 6c5be16 (fix(tag): add exact title overrides)
     },
     {
       "name": "Nokia",
@@ -7224,7 +7246,16 @@
       "slug": "vertiv",
       "base_url": "https://egup.fa.us2.oraclecloud.com",
       "site_number": "CX",
-      "notes": "Data center infrastructure. F93: 5 US tech entry-level verified live. Oracle HCM site CX."
+      "notes": "Data center infrastructure. F93: 5 US tech entry-level verified live. Oracle HCM site CX.",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^ERS-NETA Electrical Testing Technician - Tulsa, OK$",
+            "result": "hardware",
+            "reason": "TAG-AUDIT-6: repeated Vertiv exact title in live R2 is electrical testing technician work; exact company/title scope avoids broad technician keywords."
+          }
+        ]
+      }
     },
     {
       "name": "WSP",
