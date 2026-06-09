@@ -6990,6 +6990,71 @@
             "pattern": "^Control Manager - Senior Associate$",
             "result": "finance",
             "reason": "JPMorgan senior control manager roles are first-line risk/control roles protecting the firm against operational, regulatory, and reputational risk; exact company scope avoids broad manager matches."
+          },
+          {
+            "pattern": "^Risk Management - Risk Associate$",
+            "result": "finance",
+            "reason": "JPMorgan risk associate role is a credit risk / underwriting role for financial institutions, covering credit structures, risk ratings, approvals, and portfolio monitoring; exact company scope avoids broad risk-title overreach."
+          },
+          {
+            "pattern": "^Impact Finance, Associate – Fund Investing$",
+            "result": "finance",
+            "reason": "JPMorgan impact finance fund-investing role deploys capital and evaluates fund investments as part of a finance investing mandate; exact company scope avoids broad impact-title matches."
+          },
+          {
+            "pattern": "^Associate I - Direct Lending Trade Closer$",
+            "result": "finance",
+            "reason": "JPMorgan direct lending trade closer role settles private placement and direct lending trades, reviews credit and assignment documents, and supports trading services execution; exact company scope avoids broad associate-title matches."
+          },
+          {
+            "pattern": "^Credit Admin Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan credit administration analyst role monitors loan covenants, credit agreements, and potential defaults in a credit-risk/lending context; exact company scope avoids broad admin-title matches."
+          },
+          {
+            "pattern": "^Credit Ops Analyst II$",
+            "result": "finance",
+            "reason": "JPMorgan credit ops analyst role drives card lending and credit-service initiatives, automation, controls, and lending operations strategy; exact company scope avoids broad analyst-title matches."
+          },
+          {
+            "pattern": "^Senior Associate, Financial Analysis - Business Banking Lending Finance$",
+            "result": "finance",
+            "reason": "JPMorgan financial analysis role sits in business banking lending finance, supporting pricing analysis, forecasting, lending portfolios, and finance governance; exact company scope avoids broad analysis-title matches."
+          },
+          {
+            "pattern": "^Markets Asset Servicing – Income and Corporate Action Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan markets asset-servicing role sits in securities/income/corporate-action operations for financial instruments; exact company scope avoids broad servicing-title matches."
+          },
+          {
+            "pattern": "^Trade Lifecycle Analyst$",
+            "result": "finance",
+            "reason": "JPMorgan trade lifecycle analyst role manages pre- and post-trade operations, funding, and cash movements across financial market products; exact company scope avoids broad lifecycle-title matches."
+          },
+          {
+            "pattern": "^Syndicated Loan Transaction Coordinator - Associate$",
+            "result": "finance",
+            "reason": "JPMorgan syndicated loan transaction coordinator role is a loan/trade execution and servicing position in lending markets; exact company scope avoids broad coordinator-title matches."
+          },
+          {
+            "pattern": "^Trade Lifecycle - Associate II$",
+            "result": "finance",
+            "reason": "JPMorgan trade lifecycle associate role is a financial-markets operations position handling trade processing and lifecycle execution; exact company scope avoids broad associate-title matches."
+          },
+          {
+            "pattern": "^Audit Manager \\[Multiple Positions Available\\]$",
+            "result": "finance",
+            "reason": "JPMorgan audit manager role belongs to the firm’s financial-services audit/risk/control function; exact company scope avoids broad audit-title matches."
+          },
+          {
+            "pattern": "^Corporate Controllers - Finance Control - Associate$",
+            "result": "finance",
+            "reason": "JPMorgan finance control associate role is a financial controller/accounting controls position covering GL, P&L, balance sheet, close, and reporting controls; exact company scope avoids broad control-title matches."
+          },
+          {
+            "pattern": "^Firmwide Financial Controller - Equities - Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan firmwide financial controller role is a finance/accounting controls position for equities, focused on books, records, close, and reporting integrity; exact company scope avoids broad controller-title matches."
           }
         ]
       },
