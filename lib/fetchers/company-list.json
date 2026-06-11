@@ -6250,7 +6250,7 @@
       "titleOverrides": {
         "domain": [
           {
-            "pattern": "^Manager, Process Improvement Engine – GTM Operations, LinkedIn Marketing Solutions$",
+            "pattern": "^Manager, Process Improvement Engine \u2013 GTM Operations, LinkedIn Marketing Solutions$",
             "result": "operations",
             "reason": "TAG-AUDIT-6: repeated LinkedIn exact title in live R2 is GTM operations/process-improvement work; exact company/title scope avoids broad manager or process keywords."
           }
@@ -6423,6 +6423,12 @@
       "base_url": "https://hdjq.fa.us2.oraclecloud.com",
       "site_number": "CX_1",
       "notes": "Industrial tech. Replaces Simplify-only path. Live Oracle probe found 761 total / 76 US tech / 1 internship."
+    },
+    {
+      "name": "Fortinet",
+      "base_url": "https://edel.fa.us2.oraclecloud.com",
+      "site_number": "CX_2001",
+      "notes": "Oracle direct-source replacement validated by live final proof on 2026-06-11. Existing Simplify fallback may coexist until cleanup confirms safe removal."
     },
     {
       "name": "Fortive",
