@@ -3222,6 +3222,11 @@
       "titleOverrides": {
         "domain": [
           {
+            "pattern": "^Controller$",
+            "result": "finance",
+            "reason": "TAG-AUDIT-6: repeated Brown & Brown Insurance exact title is a finance/controller role; exact company/title scope avoids broad controller keywords."
+          },
+          {
             "pattern": "^Assistant Broker$",
             "result": "finance",
             "reason": "Brown & Brown assistant broker titles are insurance brokerage roles; keep the match exact and company-scoped."
@@ -4803,6 +4808,15 @@
       "domains": [
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Scientist, Clinical Operations$",
+            "result": "healthcare",
+            "reason": "TAG-AUDIT-6: repeated Merck & Co. exact title is clinical operations work and fits TAG-PRODUCT-1 role-substance healthcare policy; exact company/title scope avoids broad clinical keywords."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
@@ -6428,7 +6442,16 @@
       "name": "Fortinet",
       "base_url": "https://edel.fa.us2.oraclecloud.com",
       "site_number": "CX_2001",
-      "notes": "Oracle direct-source replacement validated by live final proof on 2026-06-11. Existing Simplify fallback may coexist until cleanup confirms safe removal."
+      "notes": "Oracle direct-source replacement validated by live final proof on 2026-06-11. Existing Simplify fallback may coexist until cleanup confirms safe removal.",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Enterprise Major Account Manager$",
+            "result": "sales",
+            "reason": "TAG-AUDIT-6: repeated Fortinet exact title in live R2 is account-facing sales work; exact company/title scope avoids broad account manager keywords."
+          }
+        ]
+      }
     },
     {
       "name": "Fortive",
