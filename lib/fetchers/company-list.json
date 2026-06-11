@@ -6416,6 +6416,12 @@
       "notes": "Industrial tech. Replaces Simplify-only path. Live Oracle probe found 761 total / 76 US tech / 1 internship."
     },
     {
+      "name": "Fortinet",
+      "base_url": "https://edel.fa.us2.oraclecloud.com",
+      "site_number": "CX_2001",
+      "notes": "Oracle bounded candidate from Simplify replacement lane. Live probe: 124 total jobs, 6 tech-US, 3 entry-level. Existing Simplify fallback coverage should remain authoritative until final replacement proof succeeds."
+    },
+    {
       "name": "Fortive",
       "slug": "fortive",
       "base_url": "https://ejta.fa.us6.oraclecloud.com",
