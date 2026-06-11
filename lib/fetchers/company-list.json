@@ -6246,7 +6246,16 @@
       "name": "LinkedIn",
       "verified_us_jobs": 209,
       "verified_interns": 3,
-      "verified_date": "2026-03-11"
+      "verified_date": "2026-03-11",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Manager, Process Improvement Engine – GTM Operations, LinkedIn Marketing Solutions$",
+            "result": "operations",
+            "reason": "TAG-AUDIT-6: repeated LinkedIn exact title in live R2 is GTM operations/process-improvement work; exact company/title scope avoids broad manager or process keywords."
+          }
+        ]
+      }
     },
     {
       "slug": "NBCUniversal3",
