@@ -6375,6 +6375,12 @@
   ],
   "oracle": [
     {
+      "name": "ADT",
+      "base_url": "https://fa-erqb-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site_number": "CX_1",
+      "notes": "Oracle bounded candidate. Live probe: 663 total jobs, 6 tech-US, 2 tech-US early-career. No current ZJP coverage."
+    },
+    {
       "name": "Atlantic Health System",
       "slug": "atlantic-health",
       "base_url": "https://erqh.fa.us2.oraclecloud.com",
