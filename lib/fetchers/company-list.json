@@ -5046,6 +5046,12 @@
       "default_domain": "retail"
     },
     {
+      "name": "Nio",
+      "url": "https://nio.wd3.myworkdayjobs.com",
+      "site": "NIO_Careers",
+      "notes": "Workday bounded candidate. Live probe: 17 total jobs, 8 tech-US, 5 tech-US early-career. Distinct from TransUnion. No current Nio coverage."
+    },
+    {
       "name": "Nissan",
       "url": "https://alliance.wd3.myworkdayjobs.com",
       "site": "nissanjobs",
