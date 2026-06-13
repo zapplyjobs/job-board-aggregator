@@ -4642,6 +4642,12 @@
       "default_domain": "software"
     },
     {
+      "name": "LiveRamp",
+      "url": "https://liveramp.wd5.myworkdayjobs.com",
+      "site": "LiveRampCareers",
+      "notes": "Workday bounded candidate. Live probe: 80 total jobs, 30 tech-US, 11 tech-US early-career. Distinct from Ramp (Ashby). No current LiveRamp coverage."
+    },
+    {
       "name": "Logitech",
       "url": "https://logitech.wd5.myworkdayjobs.com",
       "site": "Logitech",
