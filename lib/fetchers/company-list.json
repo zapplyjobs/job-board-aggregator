@@ -3644,6 +3644,15 @@
         "data_science",
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Operations Manager$",
+            "result": "retail",
+            "reason": "TAG B80: repeated CVS exact title is CVS/pharmacy store management with sales, inventory, staffing, and customer-service leadership; exact company/title scope avoids broad operations-manager overreach."
+          }
+        ]
+      },
       "notes": "Pharmacy/healthcare. F93 Wave 4: SJ 11 US tech EL."
     },
     {
@@ -4821,6 +4830,11 @@
             "pattern": "^Scientist, Clinical Operations$",
             "result": "healthcare",
             "reason": "TAG-AUDIT-6: repeated Merck & Co. exact title is clinical operations work and fits TAG-PRODUCT-1 role-substance healthcare policy; exact company/title scope avoids broad clinical keywords."
+          },
+          {
+            "pattern": "^Specialist, Sourcing Operations \\(Hybrid\\)$",
+            "result": "operations",
+            "reason": "TAG B80: repeated Merck exact title supports sourcing workflows, CRO partner onboarding, procurement, purchase orders, invoices, and operational records; exact company/title scope avoids broad sourcing keywords."
           }
         ]
       },
@@ -7165,6 +7179,11 @@
             "reason": "Oracle facilities operations manager titles are data-center/facilities operations leadership, while the phrase is too company-specific to force globally."
           },
           {
+            "pattern": "^Operations Program Manager 5$",
+            "result": "operations",
+            "reason": "TAG B80: repeated Oracle exact title owns product-lifecycle process development and business process operations; exact company/title scope avoids broad program-manager routing."
+          },
+          {
             "pattern": "^Microsoft 365 Engineer$",
             "result": "software",
             "reason": "Oracle Microsoft 365 Engineer is a clear IT/software platform engineering title; keep the match exact and company-scoped."
@@ -7274,6 +7293,11 @@
             "pattern": "^Store Manager$",
             "result": "retail",
             "reason": "Sherwin-Williams store manager titles are retail store leadership roles; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Branch Operations Manager, Floorcovering$",
+            "result": "retail",
+            "reason": "TAG B80: repeated Sherwin-Williams exact title manages a floorcovering branch; exact company/title scope routes branch retail leadership without broad branch-operations overreach."
           }
         ]
       },
@@ -7305,6 +7329,11 @@
             "pattern": "^ERS-NETA Electrical Testing Technician - Tulsa, OK$",
             "result": "hardware",
             "reason": "TAG-AUDIT-6: repeated Vertiv exact title in live R2 is electrical testing technician work; exact company/title scope avoids broad technician keywords."
+          },
+          {
+            "pattern": "^Sales Development Program - Solutions Sales$",
+            "result": "sales",
+            "reason": "TAG B80: repeated Vertiv exact title is a sales development program for inside/outside sales; exact company/title scope avoids broad development-program overreach."
           }
         ]
       }
