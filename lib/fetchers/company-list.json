@@ -2006,6 +2006,10 @@
       "name": "Candid Health"
     },
     {
+      "slug": "centerfield",
+      "name": "Centerfield"
+    },
+    {
       "slug": "cape",
       "name": "Cape"
     },
@@ -2350,6 +2354,10 @@
     {
       "slug": "persona",
       "name": "Persona"
+    },
+    {
+      "slug": "physicalintelligence",
+      "name": "Physical Intelligence"
     },
     {
       "name": "Pinecone",
@@ -2910,6 +2918,20 @@
         "software"
       ],
       "default_domain": "healthcare"
+    },
+    {
+      "name": "Astreya",
+      "url": "https://astreya.wd5.myworkdayjobs.com",
+      "site": "life-at-astreya-opportunities",
+      "verified_jobs": 184,
+      "verified_date": "2026-06-16",
+      "domains": [
+        "software",
+        "data_science",
+        "ai",
+        "hardware"
+      ],
+      "default_domain": "software"
     },
     {
       "url": "https://athenahealth.wd1.myworkdayjobs.com",
@@ -6450,6 +6472,13 @@
       "notes": "Energy. Vanshb03: Data Science Intern (Des Moines, IA)."
     },
     {
+      "name": "Black Box",
+      "slug": "black-box",
+      "base_url": "https://eoje.fa.us2.oraclecloud.com",
+      "site_number": "CX_1001",
+      "notes": "IT infrastructure. SUP-INTERN-2 2026-06-16: live Oracle listing exposes AI Intern - Dallas, TX and AI Engineer Intern - USA."
+    },
+    {
       "name": "Citizens Financial Group",
       "slug": "citizens-financial",
       "base_url": "https://hcgn.fa.us2.oraclecloud.com",
@@ -7336,6 +7365,13 @@
         ]
       },
       "notes": "Paint/coatings. Vanshb03: R&D Product Engineering Co-Op (Cleveland, OH)."
+    },
+    {
+      "name": "Sundt",
+      "slug": "sundt",
+      "base_url": "https://eewl.fa.us6.oraclecloud.com",
+      "site_number": "CX",
+      "notes": "Construction/engineering. SUP-INTERN-2 2026-06-16: live Oracle listing exposes AI/engineering internship rows."
     },
     {
       "name": "Texas Instruments",
