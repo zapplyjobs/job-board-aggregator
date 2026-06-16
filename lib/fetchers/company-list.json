@@ -36,6 +36,16 @@
       "name": "Ada"
     },
     {
+      "name": "Aechelon Technology",
+      "slug": "aechelontechnology",
+      "verified_jobs": 15,
+      "verified_date": "2026-06-16",
+      "domains": [
+        "software"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Aevex Aerospace",
       "slug": "aevexaerospace"
     },
