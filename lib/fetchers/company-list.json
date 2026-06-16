@@ -639,10 +639,6 @@
       "name": "Geotab"
     },
     {
-      "slug": "ginkgobioworks",
-      "name": "Ginkgo Bioworks"
-    },
-    {
       "slug": "gitlab",
       "name": "GitLab",
       "titleOverrides": {
