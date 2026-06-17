@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 55;
+const TAG_ENGINE_VERSION = 56;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -1640,8 +1640,7 @@ function tagDomains(job, options) {
     // TAG-11 C56: Elanco healthcare/animal health roles
     'feed additive',                // 1 gen, 0 FP — Advisor – Feed Additive Assay & Generic Defense (Elanco; animal health feed additive testing/HPLC-MS methodology)
     // TAG-PRECISION-14: high-impact healthcare keywords
-    'scientist i',                  // 26 gen — pharma/biotech lab scientist level I (Thermo Fisher, AbbVie, Merck)
-    'scientist ii',                 // 12 gen — pharma/biotech lab scientist level II
+    // Scientist I / II use regex below so "Data Scientist Intern" does not substring-match healthcare.
     'lab scientist',                // 2 gen — lab scientist applications (Thermo Fisher)
     'postdoctoral',                 // 18 gen — postdoctoral researcher/fellow (academic/medical)
     'clinical research',            // 4 gen — clinical research coordinator/associate
@@ -1677,13 +1676,19 @@ function tagDomains(job, options) {
     'qc scientist', 'clinical scientist', 'clinical application'];
   // TAG-13: 'mental health' uses word-boundary regex — 'environmental' contains 'mental' substring
   const mentalHealthRegex = /\bmental health\b/i;
+  const healthcareScientistLevelRegex = /\bscientist\s+(?:i|ii)\b/i;
   if (
     healthcareExact.some(kw => title.includes(kw)) ||
     healthcareCredentials.test(title) ||
     healthcareOther.some(kw => title.includes(kw)) ||
-    mentalHealthRegex.test(title)
+    mentalHealthRegex.test(title) ||
+    healthcareScientistLevelRegex.test(job.title || '')
   ) {
-    const hcMatch = findMatch(healthcareExact, title) || (healthcareCredentials.test(title) ? 'credential regex' : null) || findMatch(healthcareOther, title) || (mentalHealthRegex.test(title) ? 'mental health (regex)' : null);
+    const hcMatch = findMatch(healthcareExact, title) ||
+      (healthcareCredentials.test(title) ? 'credential regex' : null) ||
+      findMatch(healthcareOther, title) ||
+      (mentalHealthRegex.test(title) ? 'mental health (regex)' : null) ||
+      (healthcareScientistLevelRegex.test(job.title || '') ? 'scientist level regex' : null);
     // TAG-PRECISION-2: Sales/ops roles at pharma/med-device companies match disease-area
     // keywords (oncology, cardiovascular, endoluminal) but are sales/ops, not clinical.
     // "Oncology Territory Manager" = pharma sales rep, not oncologist.
@@ -1914,8 +1919,8 @@ function tagDomains(job, options) {
   // Guard: DO NOT add bare 'sales engineer' or 'solutions engineer' — those are tech-adjacent
   const salesKeywords = [
     'retail sales consultant', 'field sales representative',
-    'sales development representative', 'account executive',
-    'business development representative', 'b2b sales',
+    'sales development representative', 'sales development', 'account executive',
+    'business development representative', 'inside account representative', 'b2b sales',
     'sales consultant', 'sales associate',
     'outside sales representative', 'inside sales',
     'sales account executive', 'enterprise account executive',
