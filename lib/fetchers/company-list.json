@@ -1990,6 +1990,10 @@
       "name": "Baseten"
     },
     {
+      "slug": "base-power",
+      "name": "Base Power"
+    },
+    {
       "slug": "baton",
       "name": "Baton Corporation"
     },
