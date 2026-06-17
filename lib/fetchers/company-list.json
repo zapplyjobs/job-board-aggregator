@@ -3209,9 +3209,9 @@
     {
       "name": "BP",
       "url": "https://bpinternational.wd3.myworkdayjobs.com",
-      "site": "bpEarlyCareers",
-      "verified_jobs": 5,
-      "verified_date": "2026-05-22",
+      "site": "bpPrivateExternalCareersSite",
+      "verified_jobs": 145,
+      "verified_date": "2026-06-17",
       "domains": [
         "operations",
         "data_science"
