@@ -1966,6 +1966,10 @@
       "name": "Anima"
     },
     {
+      "slug": "anterior",
+      "name": "Anterior"
+    },
+    {
       "slug": "anyscale",
       "name": "Anyscale"
     },
@@ -2156,6 +2160,10 @@
       "name": "Flock Safety"
     },
     {
+      "slug": "fundwell",
+      "name": "Fundwell"
+    },
+    {
       "slug": "garage",
       "name": "Garage"
     },
@@ -2182,6 +2190,10 @@
     {
       "slug": "gptzero",
       "name": "GPTZero"
+    },
+    {
+      "slug": "greatquestion",
+      "name": "Great Question"
     },
     {
       "slug": "handshake",
@@ -2286,6 +2298,10 @@
     {
       "slug": "modal",
       "name": "Modal"
+    },
+    {
+      "slug": "nash",
+      "name": "Nash"
     },
     {
       "slug": "N1",
@@ -2501,6 +2517,10 @@
       "name": "Sift"
     },
     {
+      "slug": "Simular",
+      "name": "Simular"
+    },
+    {
       "slug": "siftstack",
       "name": "Sift"
     },
@@ -2544,6 +2564,14 @@
     {
       "slug": "the-exploration-company",
       "name": "The Exploration Company"
+    },
+    {
+      "slug": "taaraconnect",
+      "name": "Taara"
+    },
+    {
+      "slug": "tilderesearch",
+      "name": "Tilde Research"
     },
     {
       "name": "Turbopuffer",
