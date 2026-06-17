@@ -2689,6 +2689,16 @@
       "default_domain": "software"
     },
     {
+      "name": "Agilent Technologies",
+      "url": "https://agilent.wd5.myworkdayjobs.com",
+      "site": "Agilent_Student_Careers",
+      "verified_jobs": 27,
+      "verified_date": "2026-06-17",
+      "domains": [
+        "general"
+      ]
+    },
+    {
       "name": "AeroVironment",
       "url": "https://avav.wd1.myworkdayjobs.com",
       "site": "AVAV"
@@ -5682,6 +5692,19 @@
       "domains": [
         "software",
         "hardware"
+      ]
+    },
+    {
+      "name": "Sony",
+      "url": "https://sonyglobal.wd1.myworkdayjobs.com",
+      "site": "sonyglobalcareers",
+      "verified_jobs": 89,
+      "verified_date": "2026-06-17",
+      "domains": [
+        "software",
+        "hardware",
+        "ai",
+        "general"
       ]
     },
     {
