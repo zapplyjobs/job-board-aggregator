@@ -2352,6 +2352,10 @@
       "name": "Patreon"
     },
     {
+      "slug": "pebl",
+      "name": "Pebl"
+    },
+    {
       "slug": "perplexity",
       "name": "Perplexity"
     },
@@ -2431,6 +2435,10 @@
           }
         ]
       }
+    },
+    {
+      "slug": "rivianvw.tech",
+      "name": "Rivian and Volkswagen Group Technologies"
     },
     {
       "slug": "reframesystems",
