@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 57;
+const TAG_ENGINE_VERSION = 58;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -3500,8 +3500,6 @@ function tagLocations(job) {
       'thousand oaks', 'princeton', 'parsippany', 'hackensack', 'morristown',
       // Additional Workday tenant cities
       'lehi', 'waltham', 'irving',
-      // GE Aerospace multi-location postings expose these US cities without state.
-      'dayton', 'evendale', 'grand rapids',
       // Explicit US remote indicators — bare "Remote" alone is NOT sufficient
       'united states', '- usa', ', usa', '(usa)', 'u.s.a', '- us', ', us',
  // AGG-8: patterns missed by audit (Mozilla "Remote US", DataCamp multi-country, etc.)
@@ -3535,7 +3533,11 @@ function tagLocations(job) {
 
     // that aren't caught by delimiter-prefixed patterns ('- usa', ', usa')
     const hasUsaWord = /\busa\b/i.test(locationStr);
-    const hasUsKeyword = usKeywords.some(s => locationStr.includes(s)) || hasStateAbbr || hasUsaWord;
+    const companyStr = `${job.company_name || ''} ${job.company || ''} ${job.company_slug || ''}`.toLowerCase();
+    const geBareUsCity = /(^|[^a-z])(dayton|evendale|grand rapids)([^a-z]|$)/i.test(locationStr) &&
+      /\+\s*\d+\s+more\b/i.test(locationStr) &&
+      /ge aerospace/.test(companyStr);
+    const hasUsKeyword = usKeywords.some(s => locationStr.includes(s)) || hasStateAbbr || hasUsaWord || geBareUsCity;
 
     if (hasUsKeyword) {
       // signal is a real country match or just a substring collision.
@@ -3555,9 +3557,10 @@ function tagLocations(job) {
         const hasCollisionNonUS = !hasRealNonUSCountry && hasNonUS;
 
         if (hasRealNonUSCountry) {
-          // Real non-US country present. Only tag US if explicit US country signal too (multi-country).
-          const hasExplicitUSCountry = /\bunited states\b|\busa\b|\bus\s*[&;\/]|\b(?:remote|hybrid)\s+us\b|,\s*us\b/i.test(locationStr);
-          if (hasExplicitUSCountry) {
+          // Real non-US country present. Only tag US if explicit US signal too (multi-country
+          // or explicit US state evidence like "Greece, NY").
+          const hasExplicitUSSignal = hasStateAbbr || /\bunited states\b|\busa\b|\bus\s*[&;\/]|\b(?:remote|hybrid)\s+us\b|,\s*us\b/i.test(locationStr);
+          if (hasExplicitUSSignal) {
             tags.push('us'); // Multi-country
           }
           // else: non-US country wins over city/state match
