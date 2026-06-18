@@ -5128,6 +5128,19 @@
       "name": "NCR Voyix"
     },
     {
+      "name": "Neighborly",
+      "url": "https://neighborlybrands.wd1.myworkdayjobs.com",
+      "site": "neighborly",
+      "verified_jobs": 34,
+      "verified_date": "2026-06-18",
+      "domains": [
+        "software",
+        "ai",
+        "operations"
+      ],
+      "default_domain": "software"
+    },
+    {
       "name": "Nelnet",
       "url": "https://nelnet.wd1.myworkdayjobs.com",
       "site": "MyNelnet",
