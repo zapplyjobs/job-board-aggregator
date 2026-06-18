@@ -112,7 +112,8 @@ jobs:
             lib/src/data/global-dedupe-manager.js \
             lib/src/data/posted-jobs-manager-v2.js \
             .github/scripts/aggregator/lib/processors/tag-engine.js \
-            .github/scripts/aggregator/lib/processors/wd-family-domain-map.json
+            .github/scripts/aggregator/lib/processors/wd-family-domain-map.json \
+            .github/scripts/aggregator/lib/fetchers/company-list.json
           do
             if [ ! -f "$FILE" ]; then
               echo "::error file=$FILE::Critical file missing: $FILE"
@@ -138,7 +139,9 @@ jobs:
             package.json \
             lib/processors/onet-unified-lookup.json \
             lib/processors/wd-family-domain-map.json \
-            .github/scripts/aggregator/lib/processors/wd-family-domain-map.json
+            lib/fetchers/company-list.json \
+            .github/scripts/aggregator/lib/processors/wd-family-domain-map.json \
+            .github/scripts/aggregator/lib/fetchers/company-list.json
           do
             if [ -f "$FILE" ]; then
               if ! node -e "JSON.parse(require('fs').readFileSync('$FILE','utf8'))" 2>/dev/null; then
