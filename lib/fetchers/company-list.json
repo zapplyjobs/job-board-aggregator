@@ -4,7 +4,7 @@
     "last_updated": "2026-06-16",
     "verified": "All slugs verified live with entry-level job counts as of date noted in notes",
     "notes": "Session 57: Added 12 Greenhouse boards. Session 60: Added SpaceX/Anduril/Lucid/Palantir. Session 97: Added Workday section (21 tenants verified 2026-02-28). RTX confirmed on Workday (globalhr.wd5/rec_rtx_ext_gateway, 3745 jobs) \u2014 WD-1 research was wrong about Phenom. WD-4 (2026-02-28 S98): 9 hospital tenants added (CCF, VUMC, Intermountain, MGB, Geisinger, Ochsner, SaintLukes, Montefiore, Sharp). CCF+Montefiore have us_only=true (campus/address-only locations). Kaiser/HCA/Mayo not yet verified (JS-rendered career pages). S107: 4 quant/trading GH tenants added (Jane Street 229, IMC 149, Akuna Capital 33, Jump Trading 67). Finance domain tag added to tag-engine.js. S112 ATS-EXP: +62 GH, +42 Lever, +51 Ashby, +20 Workday (176 companies total, all verified 2026-03-01). S147: +7 GH (Klaviyo, Asana, Squarespace, DoorDash, Pinterest, CockroachLabs, Starburst) \u2014 verified entry-level eng roles exist. 10 others from research batch rejected. S147: +2 Workday (Snap/myworkdaysite.com, Morgan Stanley). +3 Eightfold section (AmEx 493, John Deere 184, Zebra 266) \u2014 new ATS platform. S148: +10 Workday (Fidelity, Analog Devices, Stryker, State Street, KLA, Moog, Entegris, Rolls-Royce, LPL Financial \u2014 all verified live 2026-03-11). Discovered via SimplifyJobs WD tenant analysis. Goldman Sachs/SBD/Comcast/Expedia/Amgen excluded (non-standard domain, wrong site, or non-tech noise). S154: SmartRecruiters section added (17 companies, 256 total interns verified 2026-03-11). Slugs discovered from speedyapply/pittcsc/cvrve competitor repos + API testing. Low-intern slugs (RaytheonTechnologies/EVERSANA1/WellmarkInc) kept for new-grad volume. S167: SUPPLY-NEW-COMPANIES \u2014 removed 9 WD duplicates (ASML/Broadcom/Northrop/Cisco/Disney/HP/Marvell/Proofpoint/Stryker). GH +19 (CoreWeave/Rubrik/OscarHealth/Canonical/Appian/Anaplan/SoFi/Nuro/Formlabs/Qualtrics/IXLLearning/AlphaSights/Figure/SamsungResearchAmerica/LatitudeAI/AlphaFMC/Oklo/UnderdogFantasy/Loop). WD +40 (Microsoft/Rivian/Deloitte/EA/Zipline/Qorvo/Keysight/PGE/Westinghouse/XDev/CadenceUniv/BlackRock/GM/HPEUniv/Abbott/Southwest/SBD/ResMed/Ciena/SiliconLabs/FLIR/Aptiv/BostonDynamics/Expedia/Lumentum/InterDigital/Rockwell/Moderna/ThomsonReuters/Elevance/TMobile/Allstate/Philips/Etsy/PNC/Travelers/USAA/Cox/FactSet/TransUnion). GH: 126\u2192145. WD: 79\u2192110. S192 Phase3b: +12 GH (CLEAR/Arcesium/SharkNinja/CZBiohub/Personalis/TeleTracking/ReachFinancial/Blueprint/Tudor/StevensCap/Freeform/ExtraHop) +6 Lever (AHEAD/MBRDNA/Wolverine/LifeChurch/BHGFinancial/Symmetry) +5 Ashby (Vultr/1Password/Replicant/Genies/Radiant). GH: 169 Lever: 58 Ashby: 80. S293F: +12 GH (Algolia/BeyondTrust/JFrog/KnowBe4/Lattice/NozomiNetworks/OrcaSecurity/PingIdentity/Planet/PlanetScale/RedwoodMaterials/Speechify) \u2014 all verified live with US entry-level tech roles. Discovered via systematic GH API scan. F45: Added AI Fund (Lever), Magna (WD), Tencent (WD). Removed Coinbase (GH board 404). F73: +3 GH (Alo Yoga, XPENG Motors, The New York Times), +1 Lever (Actian). Found via SimplifyJs gap analysis. All verified live with US tech entry-level yield. F76: Oracle HCM section added (2 companies: Oracle Corp + Texas Instruments). Refactored oracle.js from single-company to multi-company.",
-    "workday_count": 298
+    "workday_count": 299
   },
   "greenhouse": [
     {
@@ -300,6 +300,10 @@
     {
       "slug": "bridgewater89",
       "name": "Bridgewater Associates"
+    },
+    {
+      "slug": "bugcrowd",
+      "name": "Bugcrowd"
     },
     {
       "name": "Canonical",
@@ -738,6 +742,10 @@
       "name": "Hudl"
     },
     {
+      "slug": "human-computer-lab",
+      "name": "Human Computer Lab"
+    },
+    {
       "name": "iCapital Network",
       "slug": "icapitalnetwork"
     },
@@ -1163,6 +1171,10 @@
     {
       "slug": "radixuniversity",
       "name": "Radix Trading"
+    },
+    {
+      "slug": "rackner",
+      "name": "Rackner"
     },
     {
       "slug": "reach",
@@ -2324,6 +2336,10 @@
       "name": "Modal"
     },
     {
+      "name": "Mariana Minerals",
+      "slug": "marianaminerals"
+    },
+    {
       "slug": "nash",
       "name": "Nash"
     },
@@ -2517,6 +2533,10 @@
       "slug": "runway"
     },
     {
+      "slug": "saronic",
+      "name": "Saronic Technologies"
+    },
+    {
       "slug": "SecondDinner",
       "name": "Second Dinner"
     },
@@ -2600,6 +2620,10 @@
     {
       "slug": "unify",
       "name": "Unify"
+    },
+    {
+      "slug": "vendelux",
+      "name": "Vendelux"
     },
     {
       "slug": "vanta",
@@ -5357,8 +5381,8 @@
     {
       "name": "Occidental Petroleum",
       "url": "https://oxy.wd5.myworkdayjobs.com",
-      "site": "Corporate",
-      "verified_jobs": 47,
+      "site": "UniversityRelations",
+      "verified_jobs": 3,
       "verified_date": "2026-05-22",
       "domains": [
         "operations",
@@ -5923,7 +5947,7 @@
     },
     {
       "url": "https://synchronyfinancial.wd5.myworkdayjobs.com",
-      "site": "careers",
+      "site": "University",
       "name": "Synchrony"
     },
     {
@@ -6078,6 +6102,12 @@
         "data_science"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "Thornton Tomasetti",
+      "url": "https://tt.wd503.myworkdayjobs.com",
+      "site": "thorntontomasetti",
+      "notes": "Workday bounded candidate. Live funnel: 102 total jobs, 45 all-US, 13 tech-US, 4 all-US internships, 4 tech-US internships. No current final R2 coverage."
     },
     {
       "name": "Transamerica",
@@ -6466,6 +6496,14 @@
       "default_domain": "software"
     },
     {
+      "name": "Codeage",
+      "slug": "Codeage",
+      "verified_us_jobs": 3,
+      "verified_interns": 3,
+      "verified_date": "2026-06-19",
+      "default_domain": "software"
+    },
+    {
       "name": "Eurofins",
       "slug": "Eurofins",
       "verified_us_jobs": 0,
@@ -6614,6 +6652,12 @@
       }
     },
     {
+      "name": "Wash U",
+      "url": "https://wustl.wd1.myworkdayjobs.com",
+      "site": "external",
+      "notes": "Workday bounded candidate. Live funnel: 606 total jobs, 471 all-US, 8 tech-US, 3 all-US internships, 1 tech-US internship. No current final R2 coverage."
+    },
+    {
       "slug": "WellmarkInc",
       "name": "Wellmark",
       "verified_us_jobs": 44,
@@ -6651,6 +6695,13 @@
           }
         ]
       }
+    },
+    {
+      "name": "Boston Properties",
+      "slug": "boston-properties",
+      "base_url": "https://edxn.fa.us2.oraclecloud.com",
+      "site_number": "CX_5001",
+      "notes": "Oracle bounded candidate. Live funnel: 35 all-US jobs, 3 all-US internships, 1 tech-US internship. No current final R2 coverage."
     },
     {
       "name": "Citizens Financial Group",
@@ -7538,6 +7589,13 @@
         ]
       },
       "notes": "Oracle Corp HCM Cloud. ~560 US positions. Verified live F21 (2026-04-30)."
+    },
+    {
+      "name": "SHEIN",
+      "slug": "shein",
+      "base_url": "https://fa-exjq-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site_number": "SHEIN",
+      "notes": "Retail/logistics. Live Oracle probe found 23 total / 15 entry-level / 3 all-US internships / 1 tech-US internship."
     },
     {
       "name": "Sherwin-Williams",
