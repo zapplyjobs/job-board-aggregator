@@ -1861,7 +1861,8 @@
     },
     {
       "slug": "saronic",
-      "name": "Saronic Technologies"
+      "name": "Saronic Technologies",
+      "fallbackGraphQLOnEmpty": true
     },
     {
       "slug": "shieldai",
