@@ -1860,11 +1860,6 @@
       "name": "Saviynt"
     },
     {
-      "slug": "saronic",
-      "name": "Saronic Technologies",
-      "fallbackGraphQLOnEmpty": true
-    },
-    {
       "slug": "shieldai",
       "name": "Shield AI"
     },
