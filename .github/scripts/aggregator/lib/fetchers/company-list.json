@@ -7621,5 +7621,45 @@
       },
       "notes": "Engineering consultancy. Vanshb03: Software Developer Intern (Dallas, TX)."
     }
+  ],
+  "tiktok": [
+    {
+      "name": "TikTok",
+      "slug": "tiktok",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Entertainment Publishers Product Strategy & Operations Manager$",
+            "result": "product",
+            "reason": "TikTok entertainment publishers product strategy and operations manager is a product strategy/operations role; exact company/title scope avoids broad entertainment routing."
+          },
+          {
+            "pattern": "^Strategy Manager - Industry Operations - NA$",
+            "result": "operations",
+            "reason": "TikTok industry operations strategy manager is operations strategy work; exact company/title scope avoids broad strategy-manager routing."
+          },
+          {
+            "pattern": "^TikTok Shop - Business Development Manager(?:\\b|\\s*\\().*$",
+            "result": "sales",
+            "reason": "TikTok Shop business development manager variants are seller/commerce business development; company/title-prefix scope avoids broad shop-manager routing."
+          },
+          {
+            "pattern": "^TikTok Shop - Strategy & Analytics Analyst$",
+            "result": "data_science",
+            "reason": "TikTok Shop strategy and analytics analyst is analytics work; exact company/title scope avoids broad strategy-title routing."
+          },
+          {
+            "pattern": "^US Entertainment Creator Partnerships and Operations Manager$",
+            "result": "operations",
+            "reason": "TikTok creator partnerships and operations manager is partnerships/operations work; exact company/title scope avoids broad creator keyword routing."
+          },
+          {
+            "pattern": "^US News Creator Partnerships and Operations Manager$",
+            "result": "operations",
+            "reason": "TikTok news creator partnerships and operations manager is partnerships/operations work; exact company/title scope avoids broad creator keyword routing."
+          }
+        ]
+      }
+    }
   ]
 }
