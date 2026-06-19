@@ -5300,7 +5300,11 @@
         "decision": "mixed",
         "note": "B39: 19 gens. Mostly business dev, account management, program management. Edge cases: 'Developer Technology Intern' (1 SW), 'NCX Engineer AI Accelerator' (1 HW). ~17 structural, ~2 classifiable."
       },
-      "default_domain": "software"
+      "default_domain": "software",
+      "searchQueries": [
+        "internship"
+      ],
+      "searchQueryMaxJobs": 100
     },
     {
       "name": "NXP",
