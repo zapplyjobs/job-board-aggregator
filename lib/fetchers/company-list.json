@@ -6700,6 +6700,11 @@
             "pattern": "^Forensic Accounting Senior Associate \\(Construction\\)$",
             "result": "finance",
             "reason": "Grant Thornton forensic accounting senior associate is a clear accounting/advisory finance role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Financial Due Diligence Senior Associate$",
+            "result": "finance",
+            "reason": "Grant Thornton financial due diligence senior associate is a clear accounting/advisory finance role; keep the match exact and company-scoped."
           }
         ]
       },
