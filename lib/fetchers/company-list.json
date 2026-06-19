@@ -223,6 +223,11 @@
             "pattern": "^Software Technical Account Manager\\b",
             "result": "operations",
             "reason": "B39: Axon software TAM roles are customer-facing account operations, not engineering."
+          },
+          {
+            "pattern": "^Manager, Software Technical Account Managers$",
+            "result": "operations",
+            "reason": "Axon manager of software technical account managers is a customer account-operations leadership role; company/title scope avoids broad manager routing."
           }
         ]
       },
@@ -2938,7 +2943,16 @@
       "domains": [
         "hardware",
         "software"
-      ]
+      ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Strategic Account Manager$",
+            "result": "sales",
+            "reason": "Aptiv strategic account manager is a customer/sales account role; exact company/title scope avoids broad account-manager routing."
+          }
+        ]
+      }
     },
     {
       "name": "Arch Capital Group",
@@ -3528,6 +3542,11 @@
             "pattern": "^Principal Associate, Finance Risk Management$",
             "result": "finance",
             "reason": "Capital One finance risk management principal associate is a bank finance/risk role; exact company/title scope avoids broad risk keywords."
+          },
+          {
+            "pattern": "^Treasury Management Sales Officer \\(TMSO\\)$",
+            "result": "finance",
+            "reason": "Capital One treasury management sales officer is a bank treasury-product finance role; exact company/title scope avoids generic sales-title routing."
           }
         ]
       },
@@ -4492,6 +4511,11 @@
             "pattern": "^Global Enterprise Account Manager$",
             "result": "sales",
             "reason": "HP global enterprise account manager is an enterprise sales/account role; exact company/title scope avoids broad account-manager routing."
+          },
+          {
+            "pattern": "^Print Software Program Manager$",
+            "result": "software",
+            "reason": "HP print software program manager is a software program role; exact company/title scope avoids broad program-manager routing."
           }
         ]
       },
@@ -5470,6 +5494,15 @@
         "hardware",
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Patient Services Inbound Representative$",
+            "result": "healthcare",
+            "reason": "Philips patient services inbound representative is a patient-facing healthcare support role; exact company/title scope avoids broad services routing."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
@@ -6395,7 +6428,16 @@
     {
       "url": "https://zayo.wd1.myworkdayjobs.com",
       "site": "Zayo_Careers",
-      "name": "Zayo"
+      "name": "Zayo",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Project Manager, Service Delivery$",
+            "result": "operations",
+            "reason": "Zayo project manager service delivery is a service-delivery operations role; exact company/title scope avoids broad project-manager routing."
+          }
+        ]
+      }
     },
     {
       "name": "Wash U",
