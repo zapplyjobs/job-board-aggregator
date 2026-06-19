@@ -2658,7 +2658,16 @@
         "software",
         "general"
       ],
-      "default_domain": "hardware"
+      "default_domain": "hardware",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Associate Project Engineer \\(Electrical\\)$",
+            "result": "hardware",
+            "reason": "ABB associate project engineer electrical roles are hardware/electrical engineering roles; exact company/title scope avoids broad project-engineer routing."
+          }
+        ]
+      }
     },
     {
       "name": "Abbott",
@@ -3490,6 +3499,11 @@
             "pattern": "^Product Design Manager\\b",
             "result": "product",
             "reason": "Capital One product design manager titles are product/UX leadership; the exact phrase is too mixed globally."
+          },
+          {
+            "pattern": "^Principal Associate, Finance Risk Management$",
+            "result": "finance",
+            "reason": "Capital One finance risk management principal associate is a bank finance/risk role; exact company/title scope avoids broad risk keywords."
           }
         ]
       },
@@ -4449,6 +4463,11 @@
             "pattern": "^Technical and Engineering Graduate Roles\\b",
             "result": "software",
             "reason": "HP technical and engineering graduate roles in the live pool are software-only graduate postings; keep the company-specific scope instead of a global phrase."
+          },
+          {
+            "pattern": "^Global Enterprise Account Manager$",
+            "result": "sales",
+            "reason": "HP global enterprise account manager is an enterprise sales/account role; exact company/title scope avoids broad account-manager routing."
           }
         ]
       },
@@ -4658,6 +4677,11 @@
             "pattern": "^Regional Technology Specialist\\b",
             "result": "sales",
             "reason": "Johnson & Johnson MedTech regional technology specialist roles are customer-facing medtech sales/support roles, not a broad healthcare keyword case."
+          },
+          {
+            "pattern": "^Sales Training Manager$",
+            "result": "sales",
+            "reason": "Johnson & Johnson sales training manager is a sales enablement role; exact company/title scope avoids broad training-manager routing."
           }
         ]
       },
@@ -6714,6 +6738,11 @@
             "pattern": "^Financial Due Diligence Senior Associate$",
             "result": "finance",
             "reason": "Grant Thornton financial due diligence senior associate is a clear accounting/advisory finance role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^Finance Transformation Senior Associate$",
+            "result": "finance",
+            "reason": "Grant Thornton finance transformation senior associate is a clear accounting/advisory finance role; keep the match exact and company-scoped."
           }
         ]
       },
