@@ -4248,6 +4248,15 @@
         "hardware",
         "software"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Treasury Associate$",
+            "result": "finance",
+            "reason": "General Motors treasury associate is a corporate treasury finance role; exact company/title scope avoids broad treasury keywords."
+          }
+        ]
+      },
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
