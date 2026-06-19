@@ -36,6 +36,10 @@
       "name": "Ada"
     },
     {
+      "name": "Aechelon Technology",
+      "slug": "aechelontechnology"
+    },
+    {
       "name": "Aevex Aerospace",
       "slug": "aevexaerospace"
     },
@@ -706,16 +710,16 @@
       "name": "HackerRank"
     },
     {
-      "slug": "headway",
-      "name": "Headway"
-    },
-    {
       "slug": "haizelabs",
       "name": "Haize Labs"
     },
     {
       "slug": "harbingermotors",
       "name": "Harbinger Motors"
+    },
+    {
+      "slug": "headway",
+      "name": "Headway"
     },
     {
       "name": "HeyGen",
@@ -1170,12 +1174,12 @@
       "slug": "quinstreet"
     },
     {
-      "slug": "radixuniversity",
-      "name": "Radix Trading"
-    },
-    {
       "slug": "rackner",
       "name": "Rackner"
+    },
+    {
+      "slug": "radixuniversity",
+      "name": "Radix Trading"
     },
     {
       "slug": "reach",
@@ -1995,12 +1999,12 @@
       "name": "Anterior"
     },
     {
-      "slug": "apex-technology-inc",
-      "name": "Apex Technology"
-    },
-    {
       "slug": "anyscale",
       "name": "Anyscale"
+    },
+    {
+      "slug": "apex-technology-inc",
+      "name": "Apex Technology"
     },
     {
       "name": "Ashby",
@@ -2023,20 +2027,20 @@
       "name": "Auctor"
     },
     {
-      "slug": "baseten",
-      "name": "Baseten"
-    },
-    {
       "slug": "base-power",
       "name": "Base Power"
     },
     {
-      "slug": "beaconsoftware",
-      "name": "Beacon Software"
+      "slug": "baseten",
+      "name": "Baseten"
     },
     {
       "slug": "baton",
       "name": "Baton Corporation"
+    },
+    {
+      "slug": "beaconsoftware",
+      "name": "Beacon Software"
     },
     {
       "slug": "benchling",
@@ -2055,10 +2059,6 @@
       "name": "Candid Health"
     },
     {
-      "slug": "centerfield",
-      "name": "Centerfield"
-    },
-    {
       "slug": "cape",
       "name": "Cape"
     },
@@ -2069,6 +2069,10 @@
     {
       "slug": "casca",
       "name": "Casca"
+    },
+    {
+      "slug": "centerfield",
+      "name": "Centerfield"
     },
     {
       "slug": "clickup",
@@ -2245,12 +2249,12 @@
       "name": "Hinge Health"
     },
     {
-      "slug": "human-computer-lab",
-      "name": "Human Computer Lab"
-    },
-    {
       "slug": "homebase",
       "name": "Homebase"
+    },
+    {
+      "slug": "human-computer-lab",
+      "name": "Human Computer Lab"
     },
     {
       "slug": "ideogram",
@@ -2317,6 +2321,10 @@
       "slug": "mandolin"
     },
     {
+      "name": "Mariana Minerals",
+      "slug": "marianaminerals"
+    },
+    {
       "slug": "maybern",
       "name": "Maybern"
     },
@@ -2341,16 +2349,12 @@
       "name": "Modal"
     },
     {
-      "name": "Mariana Minerals",
-      "slug": "marianaminerals"
+      "slug": "N1",
+      "name": "N1"
     },
     {
       "slug": "nash",
       "name": "Nash"
-    },
-    {
-      "slug": "N1",
-      "name": "N1"
     },
     {
       "slug": "neon",
@@ -2502,10 +2506,6 @@
       }
     },
     {
-      "slug": "rivianvw.tech",
-      "name": "Rivian and Volkswagen Group Technologies"
-    },
-    {
       "slug": "reframesystems",
       "name": "Reframe Systems"
     },
@@ -2532,6 +2532,10 @@
     {
       "slug": "rilla",
       "name": "Rilla"
+    },
+    {
+      "slug": "rivianvw.tech",
+      "name": "Rivian and Volkswagen Group Technologies"
     },
     {
       "name": "Runway",
@@ -2603,16 +2607,16 @@
       }
     },
     {
+      "slug": "taaraconnect",
+      "name": "Taara"
+    },
+    {
       "slug": "talos-trading",
       "name": "Talos Trading"
     },
     {
       "slug": "the-exploration-company",
       "name": "The Exploration Company"
-    },
-    {
-      "slug": "taaraconnect",
-      "name": "Taara"
     },
     {
       "name": "Turbopuffer",
@@ -2627,16 +2631,16 @@
       "name": "Unify"
     },
     {
-      "slug": "vendelux",
-      "name": "Vendelux"
-    },
-    {
       "slug": "vanta",
       "name": "Vanta"
     },
     {
       "name": "Vapi",
       "slug": "vapi"
+    },
+    {
+      "slug": "vendelux",
+      "name": "Vendelux"
     },
     {
       "slug": "voyant-photonics",
@@ -2751,16 +2755,6 @@
       "default_domain": "software"
     },
     {
-      "name": "Agilent Technologies",
-      "url": "https://agilent.wd5.myworkdayjobs.com",
-      "site": "Agilent_Student_Careers",
-      "verified_jobs": 27,
-      "verified_date": "2026-06-17",
-      "domains": [
-        "general"
-      ]
-    },
-    {
       "name": "AeroVironment",
       "url": "https://avav.wd1.myworkdayjobs.com",
       "site": "AVAV"
@@ -2774,6 +2768,16 @@
         "decision": "mixed",
         "note": "B40: 14 gens. Energy \u2014 transmission planning modeling engineer (1, could be HW), rest are ops/project management. Mostly structural."
       }
+    },
+    {
+      "name": "Agilent Technologies",
+      "url": "https://agilent.wd5.myworkdayjobs.com",
+      "site": "Agilent_Student_Careers",
+      "verified_jobs": 27,
+      "verified_date": "2026-06-17",
+      "domains": [
+        "general"
+      ]
     },
     {
       "name": "AIG",
@@ -6374,6 +6378,12 @@
       "name": "Warner Bros. Discovery"
     },
     {
+      "name": "Wash U",
+      "url": "https://wustl.wd1.myworkdayjobs.com",
+      "site": "external",
+      "notes": "Workday bounded candidate. Live funnel: 606 total jobs, 471 all-US, 8 tech-US, 3 all-US internships, 1 tech-US internship. No current final R2 coverage."
+    },
+    {
       "name": "Wells Fargo",
       "url": "https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs",
       "site": "wellsfargojobs",
@@ -6438,12 +6448,6 @@
           }
         ]
       }
-    },
-    {
-      "name": "Wash U",
-      "url": "https://wustl.wd1.myworkdayjobs.com",
-      "site": "external",
-      "notes": "Workday bounded candidate. Live funnel: 606 total jobs, 471 all-US, 8 tech-US, 3 all-US internships, 1 tech-US internship. No current final R2 coverage."
     },
     {
       "name": "Zendesk",
