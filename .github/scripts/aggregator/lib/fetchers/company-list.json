@@ -6641,7 +6641,16 @@
       "slug": "berkshire-hathaway-energy",
       "base_url": "https://fa-essf-saasfaprod1.fa.ocs.oraclecloud.com",
       "site_number": "CX_1",
-      "notes": "Energy. Vanshb03: Data Science Intern (Des Moines, IA)."
+      "notes": "Energy. Vanshb03: Data Science Intern (Des Moines, IA).",
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "^Controls Technician 1 or Controls Technician 2$",
+            "result": "hardware",
+            "reason": "Berkshire Hathaway Energy controls technician is field/electrical utility controls work; exact company/title scope avoids broad controls routing."
+          }
+        ]
+      }
     },
     {
       "name": "Citizens Financial Group",
@@ -7371,6 +7380,21 @@
             "pattern": "^Firmwide Financial Controller - Equities - Senior Associate$",
             "result": "finance",
             "reason": "JPMorgan firmwide financial controller role is a finance/accounting controls position for equities, focused on books, records, close, and reporting integrity; exact company scope avoids broad controller-title matches."
+          },
+          {
+            "pattern": "^Compliance and Ops Risk Test Lead - Senior Associate$",
+            "result": "finance",
+            "reason": "JPMorgan compliance and operational-risk test lead is a bank risk/control role; exact company/title scope avoids broad compliance or test-lead routing."
+          },
+          {
+            "pattern": "^Product Portfolio Operations Manager\\b",
+            "result": "product",
+            "reason": "JPMorgan product portfolio operations manager owns product portfolio operations; company-scoped prefix covers paired Oracle variants without a global product-operations rule."
+          },
+          {
+            "pattern": "^Trading Services Associate II$",
+            "result": "finance",
+            "reason": "JPMorgan trading services associate is a markets/trading operations finance role; exact company/title scope avoids broad associate routing."
           },
           {
             "pattern": "^Client Success Officer$",
