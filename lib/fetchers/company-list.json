@@ -3771,6 +3771,15 @@
         "software",
         "general"
       ],
+      "titleOverrides": {
+        "domain": [
+          {
+            "pattern": "\\bAssociate Store Manager\\b",
+            "result": "retail",
+            "reason": "TAG-2026-06-20: Coca-Cola retail-store leadership (e.g., Associate Store Manager at the Disney Springs Coca-Cola Store) is retail; the global engine leaves these general. Company-scoped fill-override."
+          }
+        ]
+      },
       "notes": "Beverage/tech. F93 Wave 4: SJ 11 US tech EL."
     },
     {
@@ -7654,14 +7663,14 @@
       "titleOverrides": {
         "domain": [
           {
-            "pattern": "^Assistant Store Manager$",
+            "pattern": "^Assistant Store Manager\\b",
             "result": "retail",
-            "reason": "Sherwin-Williams assistant store manager titles are retail store leadership roles; keep the match exact and company-scoped."
+            "reason": "Sherwin-Williams assistant store manager titles are retail store leadership; company-scoped. Relaxed anchor (^...\\b) to also catch the '- Store <#>' suffix variant (was ^...$ exact, which missed them and left them general)."
           },
           {
-            "pattern": "^Store Manager$",
+            "pattern": "^Store Manager\\b",
             "result": "retail",
-            "reason": "Sherwin-Williams store manager titles are retail store leadership roles; keep the match exact and company-scoped."
+            "reason": "Sherwin-Williams store manager titles are retail store leadership; company-scoped. Relaxed anchor (^...\\b) to catch suffix variants."
           },
           {
             "pattern": "^Branch Operations Manager, Floorcovering$",
@@ -7728,6 +7737,13 @@
             "pattern": "^Sales Development Program - Solutions Sales$",
             "result": "sales",
             "reason": "TAG B80: repeated Vertiv exact title is a sales development program for inside/outside sales; exact company/title scope avoids broad development-program overreach."
+          }
+        ],
+        "domainReplace": [
+          {
+            "pattern": "\\bField Sales\\b",
+            "result": "sales",
+            "reason": "TAG-2026-06-20: Vertiv field-sales roles (e.g., Application Engineer – Field Sales) are sales positions (quota/customer acquisition), not hardware engineering; the 'application engineer' keyword mis-routes them to hardware. domainReplace (strong) routes to sales; sibling 'Application Engineer - Thermal Management' stays hardware (no Field Sales token)."
           }
         ]
       }
