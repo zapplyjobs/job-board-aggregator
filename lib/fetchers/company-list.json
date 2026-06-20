@@ -1030,6 +1030,10 @@
       "name": "Nuro"
     },
     {
+      "name": "Octaura",
+      "slug": "octaura"
+    },
+    {
       "slug": "oklo",
       "name": "Oklo"
     },
@@ -7743,7 +7747,7 @@
           {
             "pattern": "\\bField Sales\\b",
             "result": "sales",
-            "reason": "TAG-2026-06-20: Vertiv field-sales roles (e.g., Application Engineer – Field Sales) are sales positions (quota/customer acquisition), not hardware engineering; the 'application engineer' keyword mis-routes them to hardware. domainReplace (strong) routes to sales; sibling 'Application Engineer - Thermal Management' stays hardware (no Field Sales token)."
+            "reason": "TAG-2026-06-20: Vertiv field-sales roles (e.g., Application Engineer \u2013 Field Sales) are sales positions (quota/customer acquisition), not hardware engineering; the 'application engineer' keyword mis-routes them to hardware. domainReplace (strong) routes to sales; sibling 'Application Engineer - Thermal Management' stays hardware (no Field Sales token)."
           }
         ]
       }
