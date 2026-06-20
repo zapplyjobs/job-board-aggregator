@@ -4911,6 +4911,13 @@
             "result": "entry_level",
             "reason": "Lowe's retail floor supervisors and store associates, not senior roles"
           }
+        ],
+        "domainReplace": [
+          {
+            "pattern": "\\bSales (Associate|Specialist)\\b",
+            "result": "retail",
+            "reason": "TAG-2026-06-20: Lowe's Sales Associate/Specialist (Building Materials, Plumbing, Flooring, Appliances, ProServices, etc.) are in-store retail floor roles, not B2B/professional sales; the global 'sales associate' keyword mis-routes them to sales. domainReplace (strong) routes them to retail, aligning with Lowe's default_domain retail + Sherwin-Williams store-role retail precedent."
+          }
         ]
       },
       "general_note": {
