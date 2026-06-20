@@ -7688,9 +7688,19 @@
       "titleOverrides": {
         "domain": [
           {
-            "pattern": "^ERS-NETA Electrical Testing Technician - Tulsa, OK$",
+            "pattern": "\\bNETA\\b.*\\bElectrical Testing Technician\\b",
             "result": "hardware",
-            "reason": "TAG-AUDIT-6: repeated Vertiv exact title in live R2 is electrical testing technician work; exact company/title scope avoids broad technician keywords."
+            "reason": "TAG-2026-06-20: Vertiv ERS (Electrical Reliability Services) NETA electrical testing technicians test/inspect/maintain electrical power-distribution equipment, switchgear to 15kV, relays (web+row-proven across all US metros) = hands-on electrical hardware; company-scoped pattern catches every ERS/NETA Technician variant regardless of spacing/metro suffix; supersedes the narrow Tulsa-only exact match."
+          },
+          {
+            "pattern": "\\bNETA\\b.*\\b(Supervisor|Supervising)\\b",
+            "result": "hardware",
+            "reason": "TAG-2026-06-20: Vertiv ERS-NETA field-electrical supervisors/supervising engineers (Testing Supervisor, Electrical Testing Supervisor, Supervising Engineer) lead NETA electrical testing crews on power-distribution equipment = electrical hardware field leadership; company-scoped; excludes ERS managers/admins/sales (no Supervisor|Supervising token)."
+          },
+          {
+            "pattern": "\\bERS\\b.*\\bSupervising Engineer\\b",
+            "result": "hardware",
+            "reason": "TAG-2026-06-20: Vertiv ERS (Electrical Reliability Services) supervising engineers lead electrical testing/commissioning field crews = electrical hardware field engineering; company-scoped to ERS supervising-engineer titles only."
           },
           {
             "pattern": "^Sales Development Program - Solutions Sales$",
