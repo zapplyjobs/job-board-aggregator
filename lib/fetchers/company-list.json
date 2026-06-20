@@ -7703,6 +7703,21 @@
             "reason": "TAG-2026-06-20: Vertiv ERS (Electrical Reliability Services) supervising engineers lead electrical testing/commissioning field crews = electrical hardware field engineering; company-scoped to ERS supervising-engineer titles only."
           },
           {
+            "pattern": "\\bNPDI\\b.*\\bEngineer\\b",
+            "result": "hardware",
+            "reason": "TAG-2026-06-20: Vertiv NPDI (New Product Development & Introduction) Services/Turnkey engineers work on AC/DC power, medium-voltage, energy storage, microgrids = electrical power hardware (web-confirmed); company-scoped."
+          },
+          {
+            "pattern": "\\bTransformer Engineer\\b",
+            "result": "hardware",
+            "reason": "TAG-2026-06-20: Vertiv Transformer Engineer designs/tests power transformers = electrical hardware; company-scoped exact title."
+          },
+          {
+            "pattern": "\\bDVT\\b.*\\bEngineer\\b",
+            "result": "hardware",
+            "reason": "TAG-2026-06-20: Vertiv DVT (Design Verification Test) Engineers verify Vertiv power/thermal hardware products = hardware test engineering; company-scoped (DVT is hardware at a pure-hardware company)."
+          },
+          {
             "pattern": "^Sales Development Program - Solutions Sales$",
             "result": "sales",
             "reason": "TAG B80: repeated Vertiv exact title is a sales development program for inside/outside sales; exact company/title scope avoids broad development-program overreach."
