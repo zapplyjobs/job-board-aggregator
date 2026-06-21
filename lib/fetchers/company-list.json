@@ -6809,6 +6809,7 @@
       "slug": "atlantic-health",
       "base_url": "https://erqh.fa.us2.oraclecloud.com",
       "site_number": "CX_1001",
+      "default_domain": "healthcare",
       "notes": "Healthcare. Vanshb03: Systems Analyst Intern (Morristown, NJ)."
     },
     {
@@ -6839,6 +6840,7 @@
       "slug": "citizens-financial",
       "base_url": "https://hcgn.fa.us2.oraclecloud.com",
       "site_number": "CX_1",
+      "default_domain": "finance",
       "titleOverrides": {
         "domain": [
           {
@@ -6865,6 +6867,16 @@
             "pattern": "^Trade Desk Specialist$",
             "result": "finance",
             "reason": "Citizens trade desk specialist title is a banking/markets operations role; keep the match exact and company-scoped."
+          },
+          {
+            "pattern": "^solution engineer$",
+            "result": "software",
+            "reason": "TAG-2026-06-21: Citizens Solution Engineer is a technical/pre-sales software role, not finance; exception to default_domain:finance so it is not mis-routed."
+          },
+          {
+            "pattern": "\\bmarketing\\b",
+            "result": "marketing",
+            "reason": "TAG-2026-06-21: Citizens marketing-titled general rows are marketing, not finance; exception to default_domain:finance."
           }
         ]
       },
@@ -6981,8 +6993,24 @@
       "slug": "jpmorgan-chase",
       "base_url": "https://jpmc.fa.oraclecloud.com",
       "site_number": "CX_1",
+      "default_domain": "finance",
       "titleOverrides": {
         "domain": [
+          {
+            "pattern": "\\bmarketing\\b",
+            "result": "marketing",
+            "reason": "TAG-2026-06-21: JPM marketing-titled general rows (Marketing Delivery, Ultimate Rewards Marketing, Marketing Data & Capabilities) are marketing functions, not finance; exception to default_domain:finance. Fires before the tenant default (Layer 5a first-match)."
+          },
+          {
+            "pattern": "\\b(python developer|networking engineer|software engineer|software developer|application developer)\\b",
+            "result": "software",
+            "reason": "TAG-2026-06-21: JPM software/IT-titled general rows are software, not finance; exception to default_domain:finance."
+          },
+          {
+            "pattern": "^business analysis & operations",
+            "result": "operations",
+            "reason": "TAG-2026-06-21: JPM Business Analysis & Operations Lead is operations, not finance; exception to default_domain:finance."
+          },
           {
             "pattern": "^Quant Analytics\\b",
             "result": "finance",
@@ -7831,6 +7859,7 @@
       "slug": "wsp",
       "base_url": "https://emit.fa.ca3.oraclecloud.com",
       "site_number": "CX_2001",
+      "default_domain": "hardware",
       "titleOverrides": {
         "domain": [
           {
