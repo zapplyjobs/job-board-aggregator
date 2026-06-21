@@ -360,6 +360,10 @@
       "name": "Chime"
     },
     {
+      "slug": "clarityinnovates",
+      "name": "Clarity Innovations"
+    },
+    {
       "slug": "clear",
       "name": "CLEAR"
     },
@@ -549,6 +553,10 @@
     {
       "name": "Everlaw",
       "slug": "everlaw"
+    },
+    {
+      "slug": "evolver",
+      "name": "Evolver"
     },
     {
       "slug": "extrahopnetworks",
@@ -1727,6 +1735,10 @@
     {
       "slug": "gearset",
       "name": "Gearset"
+    },
+    {
+      "slug": "genbio",
+      "name": "GenBio AI"
     },
     {
       "slug": "hermeus",
