@@ -3872,6 +3872,11 @@
             "pattern": "^Operations Manager$",
             "result": "retail",
             "reason": "TAG B80: repeated CVS exact title is CVS/pharmacy store management with sales, inventory, staffing, and customer-service leadership; exact company/title scope avoids broad operations-manager overreach."
+          },
+          {
+            "pattern": "^Decision Scientist$",
+            "result": "data_science",
+            "reason": "TAG-2026-06-21: CVS Health Decision Scientist is a data-science/decision-science role (quantitative analysis, statistical modeling, ML-driven decision support) - a standard DS title; currently general only because CVS rows lack descriptions (description_count 0) so the title data_science signal never fires. Exact company/title fill-override routes to data_science; company-scoped, no global keyword."
           }
         ]
       },
@@ -7741,6 +7746,11 @@
             "pattern": "^Sales Development Program - Solutions Sales$",
             "result": "sales",
             "reason": "TAG B80: repeated Vertiv exact title is a sales development program for inside/outside sales; exact company/title scope avoids broad development-program overreach."
+          },
+          {
+            "pattern": "^Operations Project Manager$",
+            "result": "operations",
+            "reason": "TAG-2026-06-21: Vertiv Operations Project Manager manages operations projects (manufacturing/field/supply-chain operations) at Vertiv power/thermal infrastructure plants = operations domain; currently general only because Oracle rows lack descriptions (description_count 0) so the operations keyword never fires. Exact company/title fill-override routes to operations; company-scoped, no global keyword. New-grad eligibility is AGG senior-filter-owned, independent of this domain routing."
           }
         ],
         "domainReplace": [
