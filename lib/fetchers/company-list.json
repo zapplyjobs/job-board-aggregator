@@ -2225,6 +2225,10 @@
       "name": "Gecko Robotics"
     },
     {
+      "slug": "gen-digital",
+      "name": "Gen Digital"
+    },
+    {
       "slug": "genies",
       "name": "Genies"
     },
@@ -2323,6 +2327,10 @@
     {
       "slug": "Lynk",
       "name": "Lynk"
+    },
+    {
+      "slug": "mach",
+      "name": "Mach Industries"
     },
     {
       "slug": "mach9",
@@ -2443,6 +2451,10 @@
     {
       "slug": "persona",
       "name": "Persona"
+    },
+    {
+      "slug": "phia",
+      "name": "Phia"
     },
     {
       "slug": "physicalintelligence",
