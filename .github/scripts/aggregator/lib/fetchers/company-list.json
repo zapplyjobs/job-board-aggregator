@@ -2095,6 +2095,10 @@
       "name": "Centerfield"
     },
     {
+      "slug": "circleback",
+      "name": "Circleback"
+    },
+    {
       "slug": "clickup",
       "name": "ClickUp"
     },
@@ -2195,6 +2199,10 @@
     {
       "name": "Ellipsis Labs",
       "slug": "ellipsislabs"
+    },
+    {
+      "slug": "eragon",
+      "name": "Eragon"
     },
     {
       "slug": "etched",
@@ -2309,12 +2317,20 @@
       "name": "Kognitos"
     },
     {
+      "slug": "kos.ai",
+      "name": "kos.ai"
+    },
+    {
       "slug": "lambda",
       "name": "Lambda"
     },
     {
       "name": "LangChain",
       "slug": "langchain"
+    },
+    {
+      "slug": "leland",
+      "name": "Leland"
     },
     {
       "slug": "lightspark",
@@ -2483,6 +2499,10 @@
     {
       "slug": "poshmark",
       "name": "Poshmark"
+    },
+    {
+      "slug": "pravah",
+      "name": "Prav\u0101h"
     },
     {
       "name": "Prefect",
