@@ -932,6 +932,10 @@
       "slug": "mavenclinic"
     },
     {
+      "slug": "memphismeats",
+      "name": "Memphis Meats"
+    },
+    {
       "slug": "mercury",
       "name": "Mercury"
     },
@@ -1276,6 +1280,10 @@
     {
       "slug": "safariai",
       "name": "Safari AI"
+    },
+    {
+      "slug": "samayaai",
+      "name": "Samaya AI"
     },
     {
       "slug": "samsara",
