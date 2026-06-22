@@ -4320,7 +4320,12 @@
         "hardware",
         "security"
       ],
-      "default_domain": "software"
+      "default_domain": "software",
+      "titleOverrides": {
+        "domain": [
+          { "pattern": "\\b(activity security representative|program security representative|security representative|guard|firearms|training instructor|communications instructor|past performance writer|sheet.?metal|waterjet|construction surveillance|cognitive enhancement|safety assistant|courier|administrative assistant|subcontracts|uas pilot|human subjects|desk officer|tscm)\\b", "result": "operations", "reason": "TAG-MISROUTE-1 2026-06-22: GDIT default_domain=software is correct for its defense-IT roles (help desk, cyber, sysadmin, DBA — caught by title keywords before Layer 5a), but physical-security/trades/training/admin roles are general-bound and wrongly inherit software. Route these to operations. Cyber/IT roles never reach Layer 5a, so no FN risk." }
+        ]
+      }
     },
     {
       "url": "https://geaerospace.wd5.myworkdayjobs.com",
@@ -4772,7 +4777,13 @@
         "software",
         "operations"
       ],
-      "default_domain": "software"
+      "default_domain": "operations",
+      "_note_misroute1": "TAG-MISROUTE-1 2026-06-22: was 'software' — misconfiguration for a real-estate/facilities firm; 265 US facilities roles (Facility Coordinator, Operating Engineer, Concierge, Handyman, Electrician) were wrongly in the software feed. Changed to 'operations' (JLL domains already list operations). ~5 rare tech roles shift to operations (keyword-gap symptom, acceptable).",
+      "titleOverrides": {
+        "domain": [
+          { "pattern": "\\b(devfinops|cafm)\\b", "result": "software", "reason": "TAG-MISROUTE-1 2026-06-22: preserve JLL's rare genuine tech roles (DevFinOps Engineer, CAFM CAD Analyst) that are general-bound keyword-gap cases, so the software->operations default change does not FN them." }
+        ]
+      }
     },
     {
       "name": "JM Family Enterprises",
