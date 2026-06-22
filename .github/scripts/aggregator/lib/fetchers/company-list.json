@@ -3169,7 +3169,7 @@
         "software",
         "operations"
       ],
-      "default_domain": "software"
+      "default_domain": "operations"
     },
     {
       "name": "Avnet",
@@ -3632,9 +3632,10 @@
       "verified_date": "2026-05-18",
       "domains": [
         "software",
-        "general"
+        "general",
+        "healthcare"
       ],
-      "default_domain": "software"
+      "default_domain": "healthcare"
     },
     {
       "name": "Carnegie Mellon University",
@@ -4154,11 +4155,11 @@
       "url": "https://eversource.wd1.myworkdayjobs.com",
       "site": "ExternalSite",
       "verified_jobs": 30,
-      "verified_date": "2026-05-18",
       "domains": [
-        "software"
+        "software",
+        "operations"
       ],
-      "default_domain": "software"
+      "default_domain": "operations"
     },
     {
       "name": "Exact Sciences",
