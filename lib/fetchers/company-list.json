@@ -4778,7 +4778,6 @@
         "operations"
       ],
       "default_domain": "operations",
-      "_note_misroute1": "TAG-MISROUTE-1 2026-06-22: was 'software' — misconfiguration for a real-estate/facilities firm; 265 US facilities roles (Facility Coordinator, Operating Engineer, Concierge, Handyman, Electrician) were wrongly in the software feed. Changed to 'operations' (JLL domains already list operations). ~5 rare tech roles shift to operations (keyword-gap symptom, acceptable).",
       "titleOverrides": {
         "domain": [
           { "pattern": "\\b(devfinops|cafm)\\b", "result": "software", "reason": "TAG-MISROUTE-1 2026-06-22: preserve JLL's rare genuine tech roles (DevFinOps Engineer, CAFM CAD Analyst) that are general-bound keyword-gap cases, so the software->operations default change does not FN them." }
