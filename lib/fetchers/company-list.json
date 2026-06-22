@@ -4974,7 +4974,7 @@
         "software",
         "operations"
       ],
-      "default_domain": "software"
+      "default_domain": "operations"
     },
     {
       "name": "LiveRamp",
