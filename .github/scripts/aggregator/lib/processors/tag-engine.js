@@ -18,7 +18,7 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 70;
+const TAG_ENGINE_VERSION = 71;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -3370,7 +3370,7 @@ const NON_US_LOCATIONS = [
   'canada', 'mexico', 'ireland', 'united kingdom', 'uk', 'germany', 'france',
   'netherlands', 'india', 'singapore', 'japan', 'australia', 'brazil', 'spain',
   'sweden', 'denmark', 'norway', 'finland', 'switzerland', 'poland', 'czechia',
-  'romania', 'argentina', 'chile', 'colombia', 'peru', 'israel', 'turkey',
+  'romania', 'argentina', 'chile', 'colombia', 'peru', 'israel', 'morocco', 'turkey',
   'south korea', 'china', 'taiwan', 'new zealand', 'south africa', 'portugal',
   'costa rica', 'saudi arabia', 'hungary', 'ukraine', 'egypt', 'nigeria',
   'pakistan', 'bangladesh', 'vietnam', 'indonesia', 'thailand', 'malaysia',
@@ -3389,7 +3389,8 @@ const NON_US_LOCATIONS = [
   'mexico city', 'guadalajara', 'monterrey', // Mexico
   'paris', 'lyon', // France
   'stockholm', 'gothenburg', // Sweden
-  'tel aviv', 'jerusalem', // Israel
+  'tel aviv', 'jerusalem', 'petah tikva', // Israel
+  'casablanca', 'rabat', // Morocco
   'zurich', 'geneva', // Switzerland
   'warsaw', 'krakow', // Poland
   'prague', // Czechia
