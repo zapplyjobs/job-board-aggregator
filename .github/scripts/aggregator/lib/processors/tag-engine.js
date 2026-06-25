@@ -3602,7 +3602,7 @@ function tagLocations(job) {
         // Mexico needs special handling: "New Mexico" is a US state, but bare "Mexico" is non-US
         const hasMexico = /\bmexico\b/i.test(locationStr) && !/\bnew mexico\b/i.test(locationStr);
         const hasCanadaCountry = /\bcanada\b/i.test(locationStr) && !(/\bla canada\b/i.test(locationStr) && /(\bcalifornia\b|\bunited states\b|,\s*ca\b)/i.test(locationStr));
-        const hasStrongNonUS = hasMexico || hasCanadaCountry || /\buk\b|\bunited kingdom\b|\baustralia\b|\bgermany\b|\bfrance\b|\bjapan\b|\bswitzerland\b|\bsweden\b|\bnetherlands\b|\bireland\b|\bsingapore\b|\bbrazil\b|\bcolombia\b|\bspain\b|\bisrael\b|\bsouth korea\b|\bnew zealand\b|\bsouth africa\b|\bpoland\b|\bczech\b|\bdenmark\b|\bnorway\b|\bfinland\b|\bbelgium\b|\baustria\b|\bitaly\b|\bportugal\b|\bhungary\b|\bromania\b|\bturkey\b|\btaiwan\b|\bindia\b|\bcosta rica\b|\bsaudi arabia\b|\bukraine\b|\begypt\b|\bnigeria\b|\bpakistan\b|\bbangladesh\b|\bvietnam\b|\bindonesia\b|\bthailand\b|\bmalaysia\b|\bphilippines\b|\bgreece\b|\bheredia\b|\bbengaluru\b|\bbangalore\b|\bmumbai\b|\bhyderabad\b/i.test(locationStr);
+        const hasStrongNonUS = hasMexico || hasCanadaCountry || /\buk\b|\bunited kingdom\b|\baustralia\b|\bgermany\b|\bfrance\b|\bjapan\b|\bswitzerland\b|\bsweden\b|\bnetherlands\b|\bireland\b|\bsingapore\b|\bbrazil\b|\bcolombia\b|\bspain\b|\bisrael\b|\bsouth korea\b|\bnew zealand\b|\bsouth africa\b|\bpoland\b|\bczech\b|\bdenmark\b|\bnorway\b|\bfinland\b|\bbelgium\b|\baustria\b|\bitaly\b|\bportugal\b|\bhungary\b|\bromania\b|\bturkey\b|\btaiwan\b|\bindia\b|\bcosta rica\b|\bsaudi arabia\b|\bukraine\b|\begypt\b|\bnigeria\b|\bpakistan\b|\bbangladesh\b|\bvietnam\b|\bindonesia\b|\bthailand\b|\bmalaysia\b|\bphilippines\b|\bgreece\b|\bheredia\b|\bbengaluru\b|\bbangalore\b|\bmumbai\b|\bhyderabad\b|\bcasablanca\b|\brabat\b|\btel aviv\b|\bjerusalem\b|\bhaifa\b|\bpetah tikva\b/i.test(locationStr);
         // Non-US countries whose names collide with US places — only block if NOT in a US context
         // 'india' → "Indianapolis, IN" is US. "Bangalore, India" is not.
         // 'mexico' → "New Mexico" is US. "Mexico City" is not.
@@ -3612,8 +3612,10 @@ function tagLocations(job) {
 
         if (hasStrongNonUS) {
           // Real non-US signal present. Only keep US if there is explicit US country evidence
-          // or a trusted US state code like "Greece, NY". Country-code tails like ", IN"
-          const hasTrustedStateAbbr = hasStateAbbr && !/,\s*(in|de)\b/i.test(locationStr);
+          // or a trusted US state code like "Greece, NY". Country-code tails ", IN/DE/MA/IL/CA"
+          // (India/Germany/Morocco/Israel/Canada) are NOT trusted — they collide with US states
+          // (IN/DE/MA/IL/CA) when Workday emits foreign jobs as "City, CC". AGG-USTAG-LEAK-1.
+          const hasTrustedStateAbbr = hasStateAbbr && !/,\s*(in|de|ma|il|ca)\b/i.test(locationStr);
           const hasExplicitUSSignal = hasTrustedStateAbbr || /\bunited states\b|\busa\b|\bus\s*[&;\/]|\b(?:remote|hybrid)\s+us\b|,\s*us\b|[&;\/]\s*us(?:a)?\b/i.test(locationStr);
           if (hasExplicitUSSignal) {
             tags.push('us'); // Multi-country or explicit US state evidence
