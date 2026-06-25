@@ -18,7 +18,9 @@ const path = require('path');
 // TAG-DRIFT-1: Version constant for carry-forward re-validation.
 // Bump when keyword/guard/taxonomy changes alter classification behavior.
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-const TAG_ENGINE_VERSION = 71;
+// TAG-LEVELDOMAIN-FIX: v72 — mid-default for bare tech-IC titles (fix a) +
+// tenant-default non-tech guard (fix c1); carry-forward levels + domains re-tag.
+const TAG_ENGINE_VERSION = 72;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -213,12 +215,24 @@ function tagJobs(jobs) {
 
 // Regex patterns for tagEmployment — defined once at module scope, not recreated per call.
 // Entry-lock: explicit new-grad/junior title signals force entry_level before seniority checks.
-const ENTRY_LOCK_RE = /\b(new\s+grad|new\s+graduate|university\s+grad|campus\s+hire|early[\s-]career|entry[\s-]level|junior|trainee|associate\s+(?:engineer|developer|analyst|scientist|researcher)|assistant\s+(?:vice\s+president|vp)|sr\.?\s*associate|senior\s+associate|principal\s+associate|executive\s+assistant)\b/i;
+const ENTRY_LOCK_RE = /\b(new\s+grad|new\s+graduate|new\s+college\s+grad(?:uate)?|recent\s+grad(?:uate)?|university\s+grad|campus\s+hire|early[\s-]career|entry[\s-]level|junior|trainee|associate\s+(?:engineer|developer|analyst|scientist|researcher)|assistant\s+(?:vice\s+president|vp)|sr\.?\s*associate|senior\s+associate|principal\s+associate|executive\s+assistant)\b/i;
 // TAG-24: senior/principal associate — finance/consulting mid-level (2-4 yrs), not senior
 // TAG-25: executive assistant — admin/entry-level role, not senior
 // Mid-level: Roman numeral suffix II/III or explicit labels. Uses lookbehind/lookahead to avoid
 // substring matches like 'Hawaii' (ha-waii) or 'viii'. \b alone is insufficient for 'ii' at end of word.
 const MID_TITLE_RE = /(?<![a-z])(ii|iii)(?![a-z])|\b(sde\s*2|swe\s*2|l4|mid[\s-]level|intermediate)\b/i;
+// TAG-LEVELDOMAIN-FIX(a): seniority-neutral tech-IC role tokens. A title that
+// reaches tagEmployment's final default carrying one of these is treated as
+// mid_level (bare "Software Engineer"/"Data Scientist" => mid, not entry).
+const TECH_IC_TITLE_RE = /\b(engineer|developer|scientist|analyst|programmer|architect)\b/i;
+// TAG-LEVELDOMAIN-FIX(c1): broad tech-keyword presence test for the tenant-default
+// non-tech guard. If any of these appear, the title is tech-adjacent and keeps the
+// tenant default instead of being routed off the board.
+const TECH_KEYWORD_RE = /\b(software|engineer|developer|programmer|scientist|architect|analyst|data|cloud|security|cyber|machine\s+learning|artificial\s+intelligence|deep\s+learning|devops|database|algorithm|backend|frontend|fullstack|full\s+stack|infrastructure|platform|network|systems|android|ios)\b/i;
+// TAG-LEVELDOMAIN-FIX(c1): the on-board tech domains. The tenant-default non-tech
+// guard only overrides a default that is itself tech; a non-tech default
+// (healthcare/finance/general) is already off-board and must be left as-is.
+const TECH_DOMAINS_SET = new Set(['software', 'data_science', 'hardware', 'ai']);
 // Senior additions beyond existing keyword includes.
 const SENIOR_EXTRA_RE = /\b(architect|distinguished|director|vp|vice\s+president)\b/i;
 
@@ -323,6 +337,17 @@ function tagEmployment(job) {
   // Check for mid-level (word-boundary regex prevents 'ii' matching 'Hawaii' etc)
   if (title.includes('mid') || title.includes('mid-level') || title.includes('mid level') ||
       MID_TITLE_RE.test(job.title || '')) {
+    return 'mid_level';
+  }
+
+  // TAG-LEVELDOMAIN-FIX(a): mid-default for seniority-neutral tech-IC titles.
+  // By here every intern / new-grad / junior / associate-engineer (ENTRY_LOCK),
+  // company-override, senior, and explicit-mid (II/III/mid-level) path has already
+  // returned. A bare "Software Engineer" / "Data Scientist" / "Network Engineer" is
+  // overwhelmingly a 2-4yr mid role, so default tech-IC titles to mid_level.
+  // Scoped to IC (engineer|developer|scientist|analyst|programmer|architect);
+  // manager/director/lead are senior-handled above or fall through to entry_level.
+  if (TECH_IC_TITLE_RE.test(job.title || '')) {
     return 'mid_level';
   }
 
@@ -3292,7 +3317,27 @@ function tagDomains(job, options) {
       if (TENANT_DEFAULTS.has(key)) { defaultDomain = TENANT_DEFAULTS.get(key); break; }
     }
     if (defaultDomain) {
-      pushTag(defaultDomain, '(tenant: ' + (job.company_slug || job.company_name || '') + ')', 'tenant-context');
+      // TAG-LEVELDOMAIN-FIX(c1): tenant-default non-tech guard.
+      // Layer 5 only fires when no keyword/dept/O*NET/desc layer matched, so a real
+      // tech job ("Software Engineer", "Data Scientist") already exited via a keyword
+      // layer and never reaches here. Among the leftovers, route clearly-non-tech
+      // operator/floor/warehouse/clerk/technician titles to their excluded domain
+      // instead of the tech tenant default, dropping them off the tech board
+      // (manufacturing/logistics/operations/retail are not in TECH_DOMAINS).
+      // Scoped: only overrides a TECH tenant default (software/data_science/hardware/ai);
+      // a non-tech default (e.g. Oscar healthcare) is already off-board and left as-is.
+      // Belt-and-suspenders: also require no tech keyword in the title.
+      const NON_TECH_TENANT_RE = /\b(operator|assembler|assembly|connector|connecting|winder|stacker|receiver|handler|packer|picker|forklift|warehouse|clerk|custodian|cashier|stocker|merchandiser|delivery\s+driver|inspector|technician|specialist)\b/i;
+      const t5 = (job.title || '').toLowerCase();
+      if (TECH_DOMAINS_SET.has(defaultDomain) && NON_TECH_TENANT_RE.test(t5) && !TECH_KEYWORD_RE.test(t5)) {
+        let ntd = 'operations';
+        if (/\b(operator|assembler|assembly|connector|connecting|winder|stacker|inspector|technician)\b/.test(t5)) ntd = 'manufacturing';
+        else if (/\b(receiver|handler|packer|picker|forklift|warehouse|stocker)\b/.test(t5)) ntd = 'logistics';
+        else if (/\b(cashier|merchandiser)\b/.test(t5)) ntd = 'retail';
+        pushTag(ntd, '(tenant-non-tech-guard: ' + (job.company_slug || job.company_name || '') + ')', 'tenant-context');
+      } else {
+        pushTag(defaultDomain, '(tenant: ' + (job.company_slug || job.company_name || '') + ')', 'tenant-context');
+      }
     }
   }
 
