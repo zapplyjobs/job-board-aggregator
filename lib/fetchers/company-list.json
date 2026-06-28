@@ -7927,5 +7927,11 @@
         ]
       }
     }
+  ],
+  "deshaw": [
+    {
+      "name": "D. E. Shaw",
+      "slug": "deshaw"
+    }
   ]
 }

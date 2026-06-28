@@ -422,7 +422,7 @@
     },
     {
       "slug": "drweng",
-      "name": "D.E. Shaw"
+      "name": "DRW"
     },
     {
       "slug": "dashlane",
@@ -7926,6 +7926,12 @@
           }
         ]
       }
+    }
+  ],
+  "deshaw": [
+    {
+      "name": "D. E. Shaw",
+      "slug": "deshaw"
     }
   ]
 }
