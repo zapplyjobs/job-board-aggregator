@@ -3590,6 +3590,8 @@ function tagLocations(job) {
       'hialeah', 'reno', 'baton rouge', 'irvine', 'chesapeake', 'scottsdale',
       'fremont', 'gilbert', 'san bernardino', 'birmingham', 'rochester', 'spokane',
       'des moines', 'montgomery',
+      // AGG-BENCHMARK-COUNT-1 fix (2026-06-26): recover GlobalFoundries (Essex Junction VT, ~10 rows) + Ambarella (US Headquarters, ~9 rows) internships — impact-matrix verified (19 rows / ~12 internships / 2 companies, no other matches)
+      'essex junction', 'us headquarters',
       // Tech hubs / defense corridors
       'mclean', 'tysons', 'bethesda', 'herndon', 'reston', 'redmond', 'bellevue',
       'mountain view', 'sunnyvale', 'santa clara', 'cupertino', 'menlo park',
