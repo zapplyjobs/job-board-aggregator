@@ -131,10 +131,6 @@
       "name": "Appian"
     },
     {
-      "slug": "appliedintuition",
-      "name": "Applied Intuition"
-    },
-    {
       "slug": "applovin",
       "name": "AppLovin"
     },
@@ -337,11 +333,6 @@
     {
       "slug": "celonis",
       "name": "Celonis"
-    },
-    {
-      "name": "Cerebras Systems",
-      "url": "https://boards-api.greenhouse.io/v1/boards/cerebrassystems",
-      "slug": "cerebrassystems"
     },
     {
       "slug": "biohub",
@@ -734,10 +725,6 @@
       "name": "Harbinger Motors"
     },
     {
-      "slug": "headway",
-      "name": "Headway"
-    },
-    {
       "name": "HeyGen",
       "slug": "heygen"
     },
@@ -793,10 +780,6 @@
     {
       "slug": "instacart",
       "name": "Instacart"
-    },
-    {
-      "slug": "interfaceai",
-      "name": "interface.ai"
     },
     {
       "slug": "intrinsicrobotics",
@@ -930,10 +913,6 @@
     {
       "name": "Maven Clinic",
       "slug": "mavenclinic"
-    },
-    {
-      "slug": "memphismeats",
-      "name": "Memphis Meats"
     },
     {
       "slug": "mercury",
@@ -2039,6 +2018,10 @@
       "name": "Apex Technology"
     },
     {
+      "slug": "applied",
+      "name": "Applied Intuition"
+    },
+    {
       "name": "Ashby",
       "slug": "ashby"
     },
@@ -2105,6 +2088,10 @@
     {
       "slug": "centerfield",
       "name": "Centerfield"
+    },
+    {
+      "slug": "cerebras",
+      "name": "Cerebras Systems"
     },
     {
       "slug": "circleback",
@@ -2237,7 +2224,7 @@
       "name": "Fable"
     },
     {
-      "slug": "flock-safety",
+      "slug": "flock",
       "name": "Flock Safety"
     },
     {
@@ -2289,6 +2276,10 @@
       "name": "Harvey"
     },
     {
+      "slug": "headway",
+      "name": "Headway"
+    },
+    {
       "slug": "hinge-health",
       "name": "Hinge Health"
     },
@@ -2315,6 +2306,10 @@
     {
       "slug": "inductive-automation-llc",
       "name": "Inductive Automation"
+    },
+    {
+      "slug": "interface-ai",
+      "name": "interface.ai"
     },
     {
       "slug": "ironcladhq",
@@ -2693,6 +2688,10 @@
     {
       "slug": "unify",
       "name": "Unify"
+    },
+    {
+      "slug": "upside",
+      "name": "UPSIDE Foods"
     },
     {
       "slug": "vanta",
