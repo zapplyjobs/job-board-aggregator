@@ -1986,14 +1986,6 @@
     {
       "slug": "zoox",
       "name": "Zoox"
-    },
-    {
-      "slug": "cirrus",
-      "name": "Cirrus Logic"
-    },
-    {
-      "slug": "woven-by-toyota",
-      "name": "Woven"
     }
   ],
   "ashby": [
@@ -2760,10 +2752,6 @@
     {
       "slug": "skydio",
       "name": "Skydio"
-    },
-    {
-      "slug": "uncountable",
-      "name": "Uncountable"
     },
     {
       "slug": "tessera-labs",
@@ -6551,64 +6539,14 @@
       "default_domain": "software"
     },
     {
-      "name": "University of Texas at Austin",
-      "url": "https://utaustin.wd1.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
-      "name": "Air Liquide",
-      "url": "https://airliquidehr.wd3.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
-      "name": "Penn State University",
-      "url": "https://psu.wd1.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
-      "name": "McKesson",
-      "url": "https://mckesson.wd3.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
       "name": "The Federal Reserve System",
       "url": "https://rb.wd5.myworkdayjobs.com",
       "site": "FRS"
     },
     {
-      "name": "PNC Financial Services",
-      "url": "https://pnc.wd5.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
       "name": "LexisNexis Risk Solutions",
       "url": "https://relx.wd3.myworkdayjobs.com",
       "site": "RiskSolutions"
-    },
-    {
-      "name": "Cox",
-      "url": "https://cox.wd1.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
-      "name": "Teledyne",
-      "url": "https://flir.wd1.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
-      "name": "Hewlett Packard (HP)",
-      "url": "https://hp.wd5.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
-      "name": "Stryker",
-      "url": "https://stryker.wd1.myworkdayjobs.com",
-      "site": "job"
-    },
-    {
-      "name": "Varian",
-      "url": "https://onehealthineers.wd3.myworkdayjobs.com",
-      "site": "job"
     }
   ],
   "smartrecruiters": [
@@ -6830,10 +6768,6 @@
       "verified_us_jobs": 106,
       "verified_interns": 14,
       "verified_date": "2026-03-11"
-    },
-    {
-      "slug": "BoschGroup",
-      "name": "Robert Bosch Venture Capital"
     }
   ],
   "oracle": [
