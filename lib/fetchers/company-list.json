@@ -1647,6 +1647,10 @@
     {
       "slug": "relaypro",
       "name": "Relay"
+    },
+    {
+      "slug": "cirruslogic",
+      "name": "Cirrus Logic"
     }
   ],
   "lever": [
@@ -1986,6 +1990,10 @@
     {
       "slug": "zoox",
       "name": "Zoox"
+    },
+    {
+      "slug": "woven-by-toyota",
+      "name": "Woven"
     }
   ],
   "ashby": [
@@ -2756,6 +2764,10 @@
     {
       "slug": "tessera-labs",
       "name": "Tessera Labs"
+    },
+    {
+      "slug": "uncountable",
+      "name": "Uncountable"
     }
   ],
   "workday": [
@@ -6547,6 +6559,11 @@
       "name": "LexisNexis Risk Solutions",
       "url": "https://relx.wd3.myworkdayjobs.com",
       "site": "RiskSolutions"
+    },
+    {
+      "name": "PNC Financial Services",
+      "url": "https://pnc.wd5.myworkdayjobs.com",
+      "site": "External"
     }
   ],
   "smartrecruiters": [
