@@ -6569,6 +6569,26 @@
       "name": "Penn State University",
       "url": "https://psu.wd1.myworkdayjobs.com",
       "site": "Student"
+    },
+    {
+      "name": "University of Texas at Austin",
+      "url": "https://utaustin.wd1.myworkdayjobs.com",
+      "site": "UTstaff"
+    },
+    {
+      "name": "Air Liquide",
+      "url": "https://airliquidehr.wd3.myworkdayjobs.com",
+      "site": "AirLiquideExternalCareer"
+    },
+    {
+      "name": "Cox",
+      "url": "https://cox.wd1.myworkdayjobs.com",
+      "site": "Cox_External_Career_Site_1"
+    },
+    {
+      "name": "Teledyne",
+      "url": "https://flir.wd1.myworkdayjobs.com",
+      "site": "flircareers"
     }
   ],
   "smartrecruiters": [
