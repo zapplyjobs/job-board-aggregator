@@ -3,7 +3,7 @@
     "description": "Curated list of tech companies using Greenhouse, Lever, Ashby, Workday, Eightfold, and SmartRecruiters ATS platforms",
     "last_updated": "2026-06-16",
     "verified": "All slugs verified live with entry-level job counts as of date noted in notes",
-    "notes": "Session 57: Added 12 Greenhouse boards. Session 60: Added SpaceX/Anduril/Lucid/Palantir. Session 97: Added Workday section (21 tenants verified 2026-02-28). RTX confirmed on Workday (globalhr.wd5/rec_rtx_ext_gateway, 3745 jobs) \u2014 WD-1 research was wrong about Phenom. WD-4 (2026-02-28 S98): 9 hospital tenants added (CCF, VUMC, Intermountain, MGB, Geisinger, Ochsner, SaintLukes, Montefiore, Sharp). CCF+Montefiore have us_only=true (campus/address-only locations). Kaiser/HCA/Mayo not yet verified (JS-rendered career pages). S107: 4 quant/trading GH tenants added (Jane Street 229, IMC 149, Akuna Capital 33, Jump Trading 67). Finance domain tag added to tag-engine.js. S112 ATS-EXP: +62 GH, +42 Lever, +51 Ashby, +20 Workday (176 companies total, all verified 2026-03-01). S147: +7 GH (Klaviyo, Asana, Squarespace, DoorDash, Pinterest, CockroachLabs, Starburst) \u2014 verified entry-level eng roles exist. 10 others from research batch rejected. S147: +2 Workday (Snap/myworkdaysite.com, Morgan Stanley). +3 Eightfold section (AmEx 493, John Deere 184, Zebra 266) \u2014 new ATS platform. S148: +10 Workday (Fidelity, Analog Devices, Stryker, State Street, KLA, Moog, Entegris, Rolls-Royce, LPL Financial \u2014 all verified live 2026-03-11). Discovered via SimplifyJobs WD tenant analysis. Goldman Sachs/SBD/Comcast/Expedia/Amgen excluded (non-standard domain, wrong site, or non-tech noise). S154: SmartRecruiters section added (17 companies, 256 total interns verified 2026-03-11). Slugs discovered from speedyapply/pittcsc/cvrve competitor repos + API testing. Low-intern slugs (RaytheonTechnologies/EVERSANA1/WellmarkInc) kept for new-grad volume. S167: SUPPLY-NEW-COMPANIES \u2014 removed 9 WD duplicates (ASML/Broadcom/Northrop/Cisco/Disney/HP/Marvell/Proofpoint/Stryker). GH +19 (CoreWeave/Rubrik/OscarHealth/Canonical/Appian/Anaplan/SoFi/Nuro/Formlabs/Qualtrics/IXLLearning/AlphaSights/Figure/SamsungResearchAmerica/LatitudeAI/AlphaFMC/Oklo/UnderdogFantasy/Loop). WD +40 (Microsoft/Rivian/Deloitte/EA/Zipline/Qorvo/Keysight/PGE/Westinghouse/XDev/CadenceUniv/BlackRock/GM/HPEUniv/Abbott/Southwest/SBD/ResMed/Ciena/SiliconLabs/FLIR/Aptiv/BostonDynamics/Expedia/Lumentum/InterDigital/Rockwell/Moderna/ThomsonReuters/Elevance/TMobile/Allstate/Philips/Etsy/PNC/Travelers/USAA/Cox/FactSet/TransUnion). GH: 126\u2192145. WD: 79\u2192110. S192 Phase3b: +12 GH (CLEAR/Arcesium/SharkNinja/CZBiohub/Personalis/TeleTracking/ReachFinancial/Blueprint/Tudor/StevensCap/Freeform/ExtraHop) +6 Lever (AHEAD/MBRDNA/Wolverine/LifeChurch/BHGFinancial/Symmetry) +5 Ashby (Vultr/1Password/Replicant/Genies/Radiant). GH: 169 Lever: 58 Ashby: 80. S293F: +12 GH (Algolia/BeyondTrust/JFrog/KnowBe4/Lattice/NozomiNetworks/OrcaSecurity/PingIdentity/Planet/PlanetScale/RedwoodMaterials/Speechify) \u2014 all verified live with US entry-level tech roles. Discovered via systematic GH API scan. F45: Added AI Fund (Lever), Magna (WD), Tencent (WD). Removed Coinbase (GH board 404). F73: +3 GH (Alo Yoga, XPENG Motors, The New York Times), +1 Lever (Actian). Found via SimplifyJs gap analysis. All verified live with US tech entry-level yield. F76: Oracle HCM section added (2 companies: Oracle Corp + Texas Instruments). Refactored oracle.js from single-company to multi-company.",
+    "notes": "Session 57: Added 12 Greenhouse boards. Session 60: Added SpaceX/Anduril/Lucid/Palantir. Session 97: Added Workday section (21 tenants verified 2026-02-28). RTX confirmed on Workday (globalhr.wd5/rec_rtx_ext_gateway, 3745 jobs) — WD-1 research was wrong about Phenom. WD-4 (2026-02-28 S98): 9 hospital tenants added (CCF, VUMC, Intermountain, MGB, Geisinger, Ochsner, SaintLukes, Montefiore, Sharp). CCF+Montefiore have us_only=true (campus/address-only locations). Kaiser/HCA/Mayo not yet verified (JS-rendered career pages). S107: 4 quant/trading GH tenants added (Jane Street 229, IMC 149, Akuna Capital 33, Jump Trading 67). Finance domain tag added to tag-engine.js. S112 ATS-EXP: +62 GH, +42 Lever, +51 Ashby, +20 Workday (176 companies total, all verified 2026-03-01). S147: +7 GH (Klaviyo, Asana, Squarespace, DoorDash, Pinterest, CockroachLabs, Starburst) — verified entry-level eng roles exist. 10 others from research batch rejected. S147: +2 Workday (Snap/myworkdaysite.com, Morgan Stanley). +3 Eightfold section (AmEx 493, John Deere 184, Zebra 266) — new ATS platform. S148: +10 Workday (Fidelity, Analog Devices, Stryker, State Street, KLA, Moog, Entegris, Rolls-Royce, LPL Financial — all verified live 2026-03-11). Discovered via SimplifyJobs WD tenant analysis. Goldman Sachs/SBD/Comcast/Expedia/Amgen excluded (non-standard domain, wrong site, or non-tech noise). S154: SmartRecruiters section added (17 companies, 256 total interns verified 2026-03-11). Slugs discovered from speedyapply/pittcsc/cvrve competitor repos + API testing. Low-intern slugs (RaytheonTechnologies/EVERSANA1/WellmarkInc) kept for new-grad volume. S167: SUPPLY-NEW-COMPANIES — removed 9 WD duplicates (ASML/Broadcom/Northrop/Cisco/Disney/HP/Marvell/Proofpoint/Stryker). GH +19 (CoreWeave/Rubrik/OscarHealth/Canonical/Appian/Anaplan/SoFi/Nuro/Formlabs/Qualtrics/IXLLearning/AlphaSights/Figure/SamsungResearchAmerica/LatitudeAI/AlphaFMC/Oklo/UnderdogFantasy/Loop). WD +40 (Microsoft/Rivian/Deloitte/EA/Zipline/Qorvo/Keysight/PGE/Westinghouse/XDev/CadenceUniv/BlackRock/GM/HPEUniv/Abbott/Southwest/SBD/ResMed/Ciena/SiliconLabs/FLIR/Aptiv/BostonDynamics/Expedia/Lumentum/InterDigital/Rockwell/Moderna/ThomsonReuters/Elevance/TMobile/Allstate/Philips/Etsy/PNC/Travelers/USAA/Cox/FactSet/TransUnion). GH: 126→145. WD: 79→110. S192 Phase3b: +12 GH (CLEAR/Arcesium/SharkNinja/CZBiohub/Personalis/TeleTracking/ReachFinancial/Blueprint/Tudor/StevensCap/Freeform/ExtraHop) +6 Lever (AHEAD/MBRDNA/Wolverine/LifeChurch/BHGFinancial/Symmetry) +5 Ashby (Vultr/1Password/Replicant/Genies/Radiant). GH: 169 Lever: 58 Ashby: 80. S293F: +12 GH (Algolia/BeyondTrust/JFrog/KnowBe4/Lattice/NozomiNetworks/OrcaSecurity/PingIdentity/Planet/PlanetScale/RedwoodMaterials/Speechify) — all verified live with US entry-level tech roles. Discovered via systematic GH API scan. F45: Added AI Fund (Lever), Magna (WD), Tencent (WD). Removed Coinbase (GH board 404). F73: +3 GH (Alo Yoga, XPENG Motors, The New York Times), +1 Lever (Actian). Found via SimplifyJs gap analysis. All verified live with US tech entry-level yield. F76: Oracle HCM section added (2 companies: Oracle Corp + Texas Instruments). Refactored oracle.js from single-company to multi-company.",
     "workday_count": 295
   },
   "greenhouse": [
@@ -13,7 +13,7 @@
     },
     {
       "slug": "8451",
-      "name": "84.51\u00b0"
+      "name": "84.51°"
     },
     {
       "slug": "abnormalsecurity",
@@ -114,7 +114,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B40: 37 gens. Defense tech \u2014 RF product techs, teleop operators, wire bonding techs, connectivity engineers (1), PLM engineers (1). 5% general rate (37/734). \"Connectivity Engineer\" and \"PLM Engineer\" are borderline HW/SW. Mostly structural (technicians, ops)."
+        "note": "B40: 37 gens. Defense tech — RF product techs, teleop operators, wire bonding techs, connectivity engineers (1), PLM engineers (1). 5% general rate (37/734). \"Connectivity Engineer\" and \"PLM Engineer\" are borderline HW/SW. Mostly structural (technicians, ops)."
       }
     },
     {
@@ -681,7 +681,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B39: 13 gens. All 'AI Outcomes Manager' and 'AI Success Manager' \u2014 customer success/account management for AI product."
+        "note": "B39: 13 gens. All 'AI Outcomes Manager' and 'AI Success Manager' — customer success/account management for AI product."
       }
     },
     {
@@ -803,7 +803,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 41 gens. Education \u2014 math curriculum designers, district partnership specialists, professional learning specialists. 100% structural education (domain not in taxonomy)."
+        "note": "B38: 41 gens. Education — math curriculum designers, district partnership specialists, professional learning specialists. 100% structural education (domain not in taxonomy)."
       }
     },
     {
@@ -981,7 +981,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "keyword_gap",
-        "note": "B34: 14 gen (70%). 7 are Principal Engineer Team Lead (motion/trajectory planning, prediction/ML) \u2014 SW/AI keyword gaps. 4 are ops (correctly general). Future: add motion planning, trajectory planning keywords."
+        "note": "B34: 14 gen (70%). 7 are Principal Engineer Team Lead (motion/trajectory planning, prediction/ML) — SW/AI keyword gaps. 4 are ops (correctly general). Future: add motion planning, trajectory planning keywords."
       }
     },
     {
@@ -1059,7 +1059,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 74 gens. Engineering consulting \u2014 surveyors, construction techs, environmental geologists, admin coordinators. Water Resources engineers correctly blocked by civil guard. 100% structural civil/consulting. SM31: tenant default added (77 G1, 80% hardware)."
+        "note": "B38: 74 gens. Engineering consulting — surveyors, construction techs, environmental geologists, admin coordinators. Water Resources engineers correctly blocked by civil guard. 100% structural civil/consulting. SM31: tenant default added (77 G1, 80% hardware)."
       }
     },
     {
@@ -1093,7 +1093,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "defaulted",
-        "note": "B34: 26 gen (25%). Member care specialists, escalation leads, quality management. Health insurance \u2014 all ambiguous jobs are healthcare. Added default_domain: healthcare."
+        "note": "B34: 26 gen (25%). Member care specialists, escalation leads, quality management. Health insurance — all ambiguous jobs are healthcare. Added default_domain: healthcare."
       }
     },
     {
@@ -1314,7 +1314,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
-        "note": "B34: 14 gen (24%). Demo chefs, marketing interns, tech co-ops. Mixed \u2014 no single domain."
+        "note": "B34: 14 gen (24%). Demo chefs, marketing interns, tech co-ops. Mixed — no single domain."
       }
     },
     {
@@ -1487,7 +1487,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B39: 11 gens. IT consulting \u2014 'Engineer: Tier 1/2' is helpdesk. Project managers, consulting associates."
+        "note": "B39: 11 gens. IT consulting — 'Engineer: Tier 1/2' is helpdesk. Project managers, consulting associates."
       }
     },
     {
@@ -1556,7 +1556,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 18 gens. Sales \u2014 regional sales managers, channel managers. Correctly general (sales)."
+        "note": "B40: 18 gens. Sales — regional sales managers, channel managers. Correctly general (sales)."
       }
     },
     {
@@ -1605,7 +1605,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B40: 22 gens. Data center \u2014 gas pipeline engineers, construction managers. \"Gas Pipeline Engineer\" is infrastructure, not SWE. Mostly structural (facilities, construction)."
+        "note": "B40: 22 gens. Data center — gas pipeline engineers, construction managers. \"Gas Pipeline Engineer\" is infrastructure, not SWE. Mostly structural (facilities, construction)."
       }
     },
     {
@@ -1639,6 +1639,18 @@
     {
       "slug": "zscaler",
       "name": "Zscaler"
+    },
+    {
+      "slug": "integra",
+      "name": "Integra FEC"
+    },
+    {
+      "slug": "relaypro",
+      "name": "Relay"
+    },
+    {
+      "slug": "cirruslogic",
+      "name": "Cirrus Logic"
     }
   ],
   "lever": [
@@ -1978,6 +1990,10 @@
     {
       "slug": "zoox",
       "name": "Zoox"
+    },
+    {
+      "slug": "woven-by-toyota",
+      "name": "Woven"
     }
   ],
   "ashby": [
@@ -2509,7 +2525,7 @@
     },
     {
       "slug": "pravah",
-      "name": "Prav\u0101h"
+      "name": "Pravāh"
     },
     {
       "name": "Prefect",
@@ -2740,6 +2756,18 @@
     {
       "slug": "zip",
       "name": "Zip"
+    },
+    {
+      "slug": "skydio",
+      "name": "Skydio"
+    },
+    {
+      "slug": "tessera-labs",
+      "name": "Tessera Labs"
+    },
+    {
+      "slug": "uncountable",
+      "name": "Uncountable"
     }
   ],
   "workday": [
@@ -2778,7 +2806,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "mixed",
-        "note": "B34: 24 gen (19%). Equipment operators, packaging, lab assistants, finance supervisor. Manufacturing/ops mix. Domains [HW,gen] \u2014 no safe default."
+        "note": "B34: 24 gen (19%). Equipment operators, packaging, lab assistants, finance supervisor. Manufacturing/ops mix. Domains [HW,gen] — no safe default."
       },
       "default_domain": "healthcare"
     },
@@ -2829,7 +2857,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B40: 14 gens. Energy \u2014 transmission planning modeling engineer (1, could be HW), rest are ops/project management. Mostly structural."
+        "note": "B40: 14 gens. Energy — transmission planning modeling engineer (1, could be HW), rest are ops/project management. Mostly structural."
       }
     },
     {
@@ -2867,7 +2895,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 17 gens. Manufacturing \u2014 design technicians, control point coordinators, service technicians. 68% manufacturing. Correctly general."
+        "note": "B40: 17 gens. Manufacturing — design technicians, control point coordinators, service technicians. 68% manufacturing. Correctly general."
       },
       "default_domain": "manufacturing"
     },
@@ -2950,7 +2978,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 14 gens. Financial services \u2014 client engagement managers, financial advisors. Correctly general (finance)."
+        "note": "B40: 14 gens. Financial services — client engagement managers, financial advisors. Correctly general (finance)."
       },
       "default_domain": "finance"
     },
@@ -3207,7 +3235,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
-        "note": "B34: Domains [hardware,general]. Oilfield services \u2014 ambiguous jobs are field operations, not hardware engineering."
+        "note": "B34: Domains [hardware,general]. Oilfield services — ambiguous jobs are field operations, not hardware engineering."
       }
     },
     {
@@ -3318,7 +3346,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B38: 91 gens. Aerospace \u2014 technicians, program managers, configurators. Notable: System Engineer III (3, borderline HW), Electrical Integration Tech (2, HW). ~85% structural, ~15% potentially HW."
+        "note": "B38: 91 gens. Aerospace — technicians, program managers, configurators. Notable: System Engineer III (3, borderline HW), Electrical Integration Tech (2, HW). ~85% structural, ~15% potentially HW."
       },
       "default_domain": "hardware"
     },
@@ -3535,7 +3563,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B38: 100 gens. Defense ops \u2014 planners, team leads, data validators. Notable: AWS Engineer (fixed PRECISION-20), BeyondTrust Engineer (fixed PRECISION-20), WordPress Full-Stack Developer (fixed PRECISION-20). ~90% structural, ~10% keyword gaps (now fixed)."
+        "note": "B38: 100 gens. Defense ops — planners, team leads, data validators. Notable: AWS Engineer (fixed PRECISION-20), BeyondTrust Engineer (fixed PRECISION-20), WordPress Full-Stack Developer (fixed PRECISION-20). ~90% structural, ~10% keyword gaps (now fixed)."
       },
       "default_domain": "software"
     },
@@ -3620,7 +3648,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 77 gens. Banking \u2014 product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
+        "note": "B38: 77 gens. Banking — product design managers, process managers, finance risk, marketing. 100% structural finance/ops."
       }
     },
     {
@@ -3681,7 +3709,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
-        "note": "B34: Domains [hardware]. Heavy machinery. Ambiguous jobs may be manufacturing/ops, not hardware. Deferred \u2014 needs job sampling."
+        "note": "B34: Domains [hardware]. Heavy machinery. Ambiguous jobs may be manufacturing/ops, not hardware. Deferred — needs job sampling."
       },
       "default_domain": "manufacturing"
     },
@@ -3741,7 +3769,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 38 gens. Healthcare \u2014 enrollment reps, sales ops analysts, workforce management, medical records. 100% structural healthcare/ops."
+        "note": "B38: 38 gens. Healthcare — enrollment reps, sales ops analysts, workforce management, medical records. 100% structural healthcare/ops."
       },
       "default_domain": "healthcare"
     },
@@ -3797,7 +3825,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "defaulted",
-        "note": "B34: 9 gen (17%). Equity research, credit analyst, market risk \u2014 all finance. Added default_domain: finance."
+        "note": "B34: 9 gen (17%). Equity research, credit analyst, market risk — all finance. Added default_domain: finance."
       }
     },
     {
@@ -3866,7 +3894,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
-        "note": "B33: 40+ gen. Mixed co-ops (marketing, finance, HR, some network eng). Domains [software,general]. Borderline \u2014 ambiguous co-ops are not reliably software."
+        "note": "B33: 40+ gen. Mixed co-ops (marketing, finance, HR, some network eng). Domains [software,general]. Borderline — ambiguous co-ops are not reliably software."
       },
       "default_domain": "sales"
     },
@@ -3877,7 +3905,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 22 gens. Auto salvage \u2014 management trainees, cosmetic inspectors, general managers. 36% operations, 18% logistics. Correctly general."
+        "note": "B40: 22 gens. Auto salvage — management trainees, cosmetic inspectors, general managers. 36% operations, 18% logistics. Correctly general."
       }
     },
     {
@@ -3915,7 +3943,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 25 gens. Defense manufacturing \u2014 PC interns, facilities supervisors, project managers, purchasing supervisors. 66% manufacturing. Correctly general."
+        "note": "B40: 25 gens. Defense manufacturing — PC interns, facilities supervisors, project managers, purchasing supervisors. 66% manufacturing. Correctly general."
       },
       "default_domain": "manufacturing"
     },
@@ -4311,7 +4339,11 @@
       "default_domain": "software",
       "titleOverrides": {
         "domain": [
-          { "pattern": "\\b(activity security representative|program security representative|security representative|guard|firearms|training instructor|communications instructor|past performance writer|sheet.?metal|waterjet|construction surveillance|cognitive enhancement|safety assistant|courier|administrative assistant|subcontracts|uas pilot|human subjects|desk officer|tscm)\\b", "result": "operations", "reason": "TAG-MISROUTE-1 2026-06-22: GDIT default_domain=software is correct for its defense-IT roles (help desk, cyber, sysadmin, DBA — caught by title keywords before Layer 5a), but physical-security/trades/training/admin roles are general-bound and wrongly inherit software. Route these to operations. Cyber/IT roles never reach Layer 5a, so no FN risk." }
+          {
+            "pattern": "\\b(activity security representative|program security representative|security representative|guard|firearms|training instructor|communications instructor|past performance writer|sheet.?metal|waterjet|construction surveillance|cognitive enhancement|safety assistant|courier|administrative assistant|subcontracts|uas pilot|human subjects|desk officer|tscm)\\b",
+            "result": "operations",
+            "reason": "TAG-MISROUTE-1 2026-06-22: GDIT default_domain=software is correct for its defense-IT roles (help desk, cyber, sysadmin, DBA — caught by title keywords before Layer 5a), but physical-security/trades/training/admin roles are general-bound and wrongly inherit software. Route these to operations. Cyber/IT roles never reach Layer 5a, so no FN risk."
+          }
         ]
       }
     },
@@ -4346,7 +4378,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B40: 20 gens. Energy \u2014 lean administrators, mechanical engineers, system engineers. \"System Engineer\" title is ambiguous (could be SW or systems). Mostly structural manufacturing/ops."
+        "note": "B40: 20 gens. Energy — lean administrators, mechanical engineers, system engineers. \"System Engineer\" title is ambiguous (could be SW or systems). Mostly structural manufacturing/ops."
       }
     },
     {
@@ -4367,7 +4399,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 17 gens. Manufacturing \u2014 regional development managers. Correctly general."
+        "note": "B40: 17 gens. Manufacturing — regional development managers. Correctly general."
       }
     },
     {
@@ -4392,7 +4424,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
-        "note": "B34: 21 gen (29%). Plant managers, material flow, supervisors. Manufacturing/operations. Domains [HW,SW] \u2014 no safe default."
+        "note": "B34: 21 gen (29%). Plant managers, material flow, supervisors. Manufacturing/operations. Domains [HW,SW] — no safe default."
       }
     },
     {
@@ -4618,7 +4650,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B39: 17 gens. Same profile as HPE \u2014 courseware developers, commodity managers. Customer-facing."
+        "note": "B39: 17 gens. Same profile as HPE — courseware developers, commodity managers. Customer-facing."
       }
     },
     {
@@ -4739,7 +4771,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 60 gens. Manufacturing \u2014 electronic technicians, receiving inspectors, work cell managers, diagnostic techs. 59% of classified jobs are manufacturing. All correctly general."
+        "note": "B40: 60 gens. Manufacturing — electronic technicians, receiving inspectors, work cell managers, diagnostic techs. 59% of classified jobs are manufacturing. All correctly general."
       },
       "default_domain": "manufacturing"
     },
@@ -4756,7 +4788,11 @@
       "default_domain": "operations",
       "titleOverrides": {
         "domain": [
-          { "pattern": "\\b(devfinops|cafm)\\b", "result": "software", "reason": "TAG-MISROUTE-1 2026-06-22: preserve JLL's rare genuine tech roles (DevFinOps Engineer, CAFM CAD Analyst) that are general-bound keyword-gap cases, so the software->operations default change does not FN them." }
+          {
+            "pattern": "\\b(devfinops|cafm)\\b",
+            "result": "software",
+            "reason": "TAG-MISROUTE-1 2026-06-22: preserve JLL's rare genuine tech roles (DevFinOps Engineer, CAFM CAD Analyst) that are general-bound keyword-gap cases, so the software->operations default change does not FN them."
+          }
         ]
       }
     },
@@ -4804,7 +4840,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "mixed",
-        "note": "B34: 28 gen (32%). Admin assistants, facilities, co-ops (finance, digital art, medtech). Multi-domain [HC,SW] \u2014 borderline for HC default but co-ops span domains."
+        "note": "B34: 28 gen (32%). Admin assistants, facilities, co-ops (finance, digital art, medtech). Multi-domain [HC,SW] — borderline for HC default but co-ops span domains."
       }
     },
     {
@@ -4820,7 +4856,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
-        "note": "B34: 61 gen (51% rate). HVAC/fire/security technicians and service roles. Trades/operations \u2014 no domain match. Structural general."
+        "note": "B34: 61 gen (51% rate). HVAC/fire/security technicians and service roles. Trades/operations — no domain match. Structural general."
       },
       "default_domain": "manufacturing"
     },
@@ -4851,7 +4887,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 92 gens. Defense ops \u2014 engineering SMEs, knowledge managers, admin. Civil/Structural Designer (2) borderline HW. 97% structural."
+        "note": "B38: 92 gens. Defense ops — engineering SMEs, knowledge managers, admin. Civil/Structural Designer (2) borderline HW. 97% structural."
       }
     },
     {
@@ -4868,7 +4904,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 33 gens. Banking \u2014 relationship officers, cash management advisors, ops specialists. 87% finance. Correctly general."
+        "note": "B40: 33 gens. Banking — relationship officers, cash management advisors, ops specialists. 87% finance. Correctly general."
       },
       "default_domain": "finance"
     },
@@ -4922,7 +4958,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 126 gens. Defense ops \u2014 task order managers, capture managers, security specialists. Business Systems Analyst (2) blocked by BSA guard (correct). 100% structural."
+        "note": "B38: 126 gens. Defense ops — task order managers, capture managers, security specialists. Business Systems Analyst (2) blocked by BSA guard (correct). 100% structural."
       },
       "default_domain": "software"
     },
@@ -4991,7 +5027,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 80 gens. Retail ops \u2014 operations managers, BDC support supervisors, MST ASM. 100% structural retail."
+        "note": "B38: 80 gens. Retail ops — operations managers, BDC support supervisors, MST ASM. 100% structural retail."
       },
       "default_domain": "retail"
     },
@@ -5030,7 +5066,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B39: 84 gens. Automotive manufacturing \u2014 robotic technicians, operators, EHS, electricians, quality auditors. German postings included."
+        "note": "B39: 84 gens. Automotive manufacturing — robotic technicians, operators, EHS, electricians, quality auditors. German postings included."
       },
       "default_domain": "manufacturing"
     },
@@ -5097,7 +5133,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "mixed",
-        "note": "B34: 11 gen (16%). Financial analyst, design tech, safety specialist, sales rep, contract analyst. Mixed finance/ops/sales/QA \u2014 no single default."
+        "note": "B34: 11 gen (16%). Financial analyst, design tech, safety specialist, sales rep, contract analyst. Mixed finance/ops/sales/QA — no single default."
       }
     },
     {
@@ -5149,7 +5185,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 43 gens. Pharma \u2014 ops specialists, scientists (molecular/biology discovery), animal techs, IT AV support. 100% structural pharma/ops."
+        "note": "B38: 43 gens. Pharma — ops specialists, scientists (molecular/biology discovery), animal techs, IT AV support. 100% structural pharma/ops."
       }
     },
     {
@@ -5159,7 +5195,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B40: 22 gens. Semiconductor \u2014 associate fellows, interns, \"Engineer I - IT Systems\" (1, borderline). Mostly manufacturing/ops. \"Associate Fellow - Architecture\" is chip architecture (HW-adjacent but too ambiguous for keyword)."
+        "note": "B40: 22 gens. Semiconductor — associate fellows, interns, \"Engineer I - IT Systems\" (1, borderline). Mostly manufacturing/ops. \"Associate Fellow - Architecture\" is chip architecture (HW-adjacent but too ambiguous for keyword)."
       }
     },
     {
@@ -5421,7 +5457,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "mixed",
-        "note": "B34: 45 gen (21%). Mix: admin/ops/security (structural) + some SW keyword gaps (engineer software quality, emulator). Multi-domain [HW,SW,gen] \u2014 no safe default."
+        "note": "B34: 45 gen (21%). Mix: admin/ops/security (structural) + some SW keyword gaps (engineer software quality, emulator). Multi-domain [HW,SW,gen] — no safe default."
       }
     },
     {
@@ -5509,7 +5545,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 27 gens. Defense manufacturing \u2014 business development, paint technicians, welders. Correctly general."
+        "note": "B40: 27 gens. Defense manufacturing — business development, paint technicians, welders. Correctly general."
       },
       "default_domain": "manufacturing"
     },
@@ -5526,7 +5562,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B40: 21 gens. Cybersecurity \u2014 domain consultants (3x), MDR analysts (2x), SAP admin. \"Domain Consultant\" is pre-sales cybersecurity, not SWE. 69% sales. \"MDR Shift Analyst\" is SOC monitoring. Correctly general \u2014 these are security operations, not software engineering."
+        "note": "B40: 21 gens. Cybersecurity — domain consultants (3x), MDR analysts (2x), SAP admin. \"Domain Consultant\" is pre-sales cybersecurity, not SWE. 69% sales. \"MDR Shift Analyst\" is SOC monitoring. Correctly general — these are security operations, not software engineering."
       },
       "default_domain": "software"
     },
@@ -5597,7 +5633,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B39: 12 gens. Manufacturing \u2014 quality auditors, maintenance, shipping, CAE engineer, robot operator."
+        "note": "B39: 12 gens. Manufacturing — quality auditors, maintenance, shipping, CAE engineer, robot operator."
       },
       "default_domain": "manufacturing"
     },
@@ -5800,7 +5836,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 249 gens. Ops managers (6x Material Program Manager), contracts managers, admin. 2x Associate Engineer \u2014 ambiguous but volume too low for keyword. 95%+ structural general."
+        "note": "B38: 249 gens. Ops managers (6x Material Program Manager), contracts managers, admin. 2x Associate Engineer — ambiguous but volume too low for keyword. 95%+ structural general."
       }
     },
     {
@@ -5870,7 +5906,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 16 gens. Defense \u2014 program managers. Correctly general."
+        "note": "B40: 16 gens. Defense — program managers. Correctly general."
       }
     },
     {
@@ -5895,7 +5931,7 @@
         "software",
         "general"
       ],
-      "notes": "myworkdaysite.com domain \u2014 tenant extracted from path, not hostname",
+      "notes": "myworkdaysite.com domain — tenant extracted from path, not hostname",
       "default_domain": "software"
     },
     {
@@ -5940,7 +5976,7 @@
       "general_note": {
         "date": "2026-05-12",
         "decision": "structural",
-        "note": "B34: Domains [software,general]. Airline operations \u2014 ambiguous jobs are operations/admin, not software. No safe default."
+        "note": "B34: Domains [software,general]. Airline operations — ambiguous jobs are operations/admin, not software. No safe default."
       }
     },
     {
@@ -5999,7 +6035,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 41 gens. Financial services \u2014 alternative investment ops, expense services, client analysts, compliance. 100% structural finance ops."
+        "note": "B38: 41 gens. Financial services — alternative investment ops, expense services, client analysts, compliance. 100% structural finance ops."
       },
       "default_domain": "finance"
     },
@@ -6101,9 +6137,72 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 121 gens. Banking \u2014 assistant store managers, customer experience associates, marketing targeting. 100% structural retail/banking."
+        "note": "B38: 121 gens. Banking — assistant store managers, customer experience associates, marketing targeting. 100% structural retail/banking."
       },
       "default_domain": "finance"
+    },
+    {
+      "name": "CIBC",
+      "url": "https://cibc.wd3.myworkdayjobs.com",
+      "site": "search",
+      "domains": [
+        "finance",
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Site 'search' verified via Node cxs (200). Mirrors TD Bank config. Canada-tech yield TBD at first production fetch (TD proxy: 19 canada-tech)."
+      },
+      "default_domain": "finance"
+    },
+    {
+      "name": "BMO",
+      "url": "https://bmo.wd3.myworkdayjobs.com",
+      "site": "External",
+      "domains": [
+        "finance",
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Site 'External' verified via Node cxs (200) + DDGS /External/job/ URLs (Montreal QC). Mirrors TD Bank config. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "finance"
+    },
+    {
+      "name": "BlackBerry",
+      "url": "https://bb.wd3.myworkdayjobs.com",
+      "site": "BlackBerry",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant bb.wd3, site 'BlackBerry' verified via blackberry.com/careers -> /BlackBerry/jobs link. Canada's flagship security/QNX tech co. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "software"
+    },
+    {
+      "name": "OpenText",
+      "url": "https://opentext.wd1.myworkdayjobs.com",
+      "site": "opentext",
+      "domains": [
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant opentext.wd1, site 'opentext' verified via browser network (opentext.wd1.myworkdayjobs.com/opentext hit). Canada's largest software co. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "software"
     },
     {
       "name": "TD Synnex",
@@ -6169,7 +6268,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 110 gens. Lab/manufacturing \u2014 operators, formulation techs, business dev, procurement. Assistant Scientist (25) borderline DS. 95% structural."
+        "note": "B38: 110 gens. Lab/manufacturing — operators, formulation techs, business dev, procurement. Assistant Scientist (25) borderline DS. 95% structural."
       },
       "default_domain": "manufacturing"
     },
@@ -6288,7 +6387,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B40: 24 gens. Insurance/banking \u2014 claims adjusters, property specialists, executive assistants, partnership managers. 65% classified as finance. Correctly general."
+        "note": "B40: 24 gens. Insurance/banking — claims adjusters, property specialists, executive assistants, partnership managers. 65% classified as finance. Correctly general."
       },
       "default_domain": "finance"
     },
@@ -6299,7 +6398,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B40: 26 gens. Mostly finance/investment \u2014 CMDB admin, comms consultant, go-to-market strategist. 1 \"Application Security Pentester\" is genuine SW but not caught by keywords (24 gens structural, 1-2 borderline). Correctly general for most."
+        "note": "B40: 26 gens. Mostly finance/investment — CMDB admin, comms consultant, go-to-market strategist. 1 \"Application Security Pentester\" is genuine SW but not caught by keywords (24 gens structural, 1-2 borderline). Correctly general for most."
       }
     },
     {
@@ -6375,7 +6474,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "mixed",
-        "note": "B39: 17 gens. Mostly finance/product strategy. KEYWORD GAP: 'SW Engineer' (2 jobs) \u2014 abbreviated SW not in keywords. 'Analyst - Cloud FinOps' is ambiguous."
+        "note": "B39: 17 gens. Mostly finance/product strategy. KEYWORD GAP: 'SW Engineer' (2 jobs) — abbreviated SW not in keywords. 'Analyst - Cloud FinOps' is ambiguous."
       }
     },
     {
@@ -6513,6 +6612,84 @@
         "software"
       ],
       "default_domain": "software"
+    },
+    {
+      "name": "The Federal Reserve System",
+      "url": "https://rb.wd5.myworkdayjobs.com",
+      "site": "FRS",
+      "domains": [
+        "finance",
+        "general"
+      ],
+      "default_domain": "finance"
+    },
+    {
+      "name": "LexisNexis Risk Solutions",
+      "url": "https://relx.wd3.myworkdayjobs.com",
+      "site": "RiskSolutions",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "PNC Financial Services",
+      "url": "https://pnc.wd5.myworkdayjobs.com",
+      "site": "External",
+      "domains": [
+        "finance",
+        "software"
+      ],
+      "default_domain": "finance"
+    },
+    {
+      "name": "Penn State University",
+      "url": "https://psu.wd1.myworkdayjobs.com",
+      "site": "Student",
+      "domains": [
+        "general"
+      ],
+      "default_domain": "general"
+    },
+    {
+      "name": "University of Texas at Austin",
+      "url": "https://utaustin.wd1.myworkdayjobs.com",
+      "site": "UTstaff",
+      "domains": [
+        "general"
+      ],
+      "default_domain": "general"
+    },
+    {
+      "name": "Air Liquide",
+      "url": "https://airliquidehr.wd3.myworkdayjobs.com",
+      "site": "AirLiquideExternalCareer",
+      "domains": [
+        "hardware",
+        "general"
+      ],
+      "default_domain": "hardware"
+    },
+    {
+      "name": "Cox",
+      "url": "https://cox.wd1.myworkdayjobs.com",
+      "site": "Cox_External_Career_Site_1",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "default_domain": "software"
+    },
+    {
+      "name": "Teledyne",
+      "url": "https://flir.wd1.myworkdayjobs.com",
+      "site": "flircareers",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
     }
   ],
   "smartrecruiters": [
@@ -6525,7 +6702,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B38: 123 gens (SmartRecruiters). Pharma \u2014 aesthetic sales reps, manufacturing techs, patient care coordinators, procurement managers. Analyst, Data Systems (1) borderline DS. 99% structural pharma/ops."
+        "note": "B38: 123 gens (SmartRecruiters). Pharma — aesthetic sales reps, manufacturing techs, patient care coordinators, procurement managers. Analyst, Data Systems (1) borderline DS. 99% structural pharma/ops."
       },
       "default_domain": "healthcare"
     },
@@ -6627,7 +6804,7 @@
       "titleOverrides": {
         "domain": [
           {
-            "pattern": "^Manager, Process Improvement Engine \u2013 GTM Operations, LinkedIn Marketing Solutions$",
+            "pattern": "^Manager, Process Improvement Engine – GTM Operations, LinkedIn Marketing Solutions$",
             "result": "operations",
             "reason": "TAG-AUDIT-6: repeated LinkedIn exact title in live R2 is GTM operations/process-improvement work; exact company/title scope avoids broad manager or process keywords."
           }
@@ -6643,7 +6820,7 @@
       "general_note": {
         "date": "2026-05-13",
         "decision": "structural",
-        "note": "B39: 56 gens. Media \u2014 streaming managers, photojournalists, page coordinators. Entertainment/media ops."
+        "note": "B39: 56 gens. Media — streaming managers, photojournalists, page coordinators. Entertainment/media ops."
       },
       "default_domain": "operations"
     },
@@ -7031,7 +7208,7 @@
             "reason": "JPMorgan trading services associate is a trading operations role; keep the match exact and company-scoped."
           },
           {
-            "pattern": "^Client Service Analyst \u2013 Futures and Options$",
+            "pattern": "^Client Service Analyst – Futures and Options$",
             "result": "finance",
             "reason": "JPMorgan futures and options client service analyst is a markets/clearing role; keep the match exact and company-scoped."
           },
@@ -7071,7 +7248,7 @@
             "reason": "JPMorgan trade support analyst is markets/trading operations; exact company-scoped title avoids broad support analyst matches."
           },
           {
-            "pattern": "^Chase Card SMB Acquisitions \u2013 Credit Strategy \u2013 Associate$",
+            "pattern": "^Chase Card SMB Acquisitions – Credit Strategy – Associate$",
             "result": "finance",
             "reason": "JPMorgan card acquisitions credit strategy is a banking/credit-risk role; exact company-scoped title avoids broad strategy matches."
           },
@@ -7096,7 +7273,7 @@
             "reason": "JPMorgan financial accounting controller is a finance/accounting role; exact company scope avoids broad controller matches."
           },
           {
-            "pattern": "^Equity Capital Markets Business Management \u2013 Analyst$",
+            "pattern": "^Equity Capital Markets Business Management – Analyst$",
             "result": "finance",
             "reason": "JPMorgan equity capital markets business management is a markets finance role; exact company scope avoids broad business management matches."
           },
@@ -7151,7 +7328,7 @@
             "reason": "JPMorgan equities market risk reporting is a markets/risk finance role; exact company scope avoids broad reporting matches."
           },
           {
-            "pattern": "^Global Real Estate Financial Controller \u2013 Analyst$",
+            "pattern": "^Global Real Estate Financial Controller – Analyst$",
             "result": "finance",
             "reason": "JPMorgan real-estate financial controller is a finance/accounting role; exact company scope avoids broad real-estate matches."
           },
@@ -7176,7 +7353,7 @@
             "reason": "JPMorgan accounts receivable team lead is a finance operations role; exact company scope avoids broad travel-team matches."
           },
           {
-            "pattern": "^Consumer & Community Bank - Financial Controller \u2013 Associate$",
+            "pattern": "^Consumer & Community Bank - Financial Controller – Associate$",
             "result": "finance",
             "reason": "JPMorgan financial controller titles are finance/accounting roles; exact company scope avoids broad controller matches."
           },
@@ -7221,7 +7398,7 @@
             "reason": "JPMorgan fund servicing is a finance/funds operations role; exact company scope avoids broad servicing matches."
           },
           {
-            "pattern": "^Global Equities - Futures & Derivatives Clearing, Execution Connectivity \u2013 Associate$",
+            "pattern": "^Global Equities - Futures & Derivatives Clearing, Execution Connectivity – Associate$",
             "result": "finance",
             "reason": "JPMorgan futures and derivatives clearing is a markets finance role; exact company scope avoids broad connectivity matches."
           },
@@ -7286,17 +7463,17 @@
             "reason": "JPMorgan insurance service analyst is a financial-services support role; exact company scope avoids broad analyst matches."
           },
           {
-            "pattern": "^J\\.P\\. Morgan Wealth Management \u2013 Select Growth Advisor - Boca Raton or Miami, FL$",
+            "pattern": "^J\\.P\\. Morgan Wealth Management – Select Growth Advisor - Boca Raton or Miami, FL$",
             "result": "finance",
             "reason": "JPMorgan wealth management advisor roles are finance/wealth roles; exact company scope avoids broad advisor matches."
           },
           {
-            "pattern": "^J\\.P\\. Morgan Wealth Management \u2013 Select Growth Advisor - Seattle, WA \\(Northgate Way\\)$",
+            "pattern": "^J\\.P\\. Morgan Wealth Management – Select Growth Advisor - Seattle, WA \\(Northgate Way\\)$",
             "result": "finance",
             "reason": "JPMorgan wealth management advisor roles are finance/wealth roles; exact company scope avoids broad advisor matches."
           },
           {
-            "pattern": "^J\\.P\\. Morgan Wealth Management \u2013 Vice President, Client Welcome Group Team Lead$",
+            "pattern": "^J\\.P\\. Morgan Wealth Management – Vice President, Client Welcome Group Team Lead$",
             "result": "finance",
             "reason": "JPMorgan wealth management client welcome leadership is a finance/wealth role; exact company scope avoids broad team-lead matches."
           },
@@ -7311,7 +7488,7 @@
             "reason": "JPMorgan PricingDirect fixed-income evaluator is a markets finance role; exact company scope avoids broad evaluator matches."
           },
           {
-            "pattern": "^PricingDirect Evaluator \u2013 Investment Grade Fixed Income \u2013 Associate$",
+            "pattern": "^PricingDirect Evaluator – Investment Grade Fixed Income – Associate$",
             "result": "finance",
             "reason": "JPMorgan PricingDirect fixed-income evaluator is a markets finance role; exact company scope avoids broad evaluator matches."
           },
@@ -7336,7 +7513,7 @@
             "reason": "JPMorgan market risk VaR and capital group analyst is a finance/risk role; exact company scope avoids broad risk/analyst matches."
           },
           {
-            "pattern": "^Securities Operations \u2013 Client Delivery Services \u2013 Senior Associate$",
+            "pattern": "^Securities Operations – Client Delivery Services – Senior Associate$",
             "result": "finance",
             "reason": "JPMorgan securities operations client delivery is a markets operations role; exact company scope avoids broad client-delivery matches."
           },
@@ -7346,12 +7523,12 @@
             "reason": "JPMorgan tax reporting business analysis is a finance/tax role; exact company scope avoids broad reporting matches."
           },
           {
-            "pattern": "^Trade & Working Capital \u2013 Trade Finance Client Management & Sales - Senior Associate$",
+            "pattern": "^Trade & Working Capital – Trade Finance Client Management & Sales - Senior Associate$",
             "result": "finance",
             "reason": "JPMorgan trade finance client management is a banking finance role; exact company scope avoids broad sales matches."
           },
           {
-            "pattern": "^U\\.S\\. Private Bank \u2013 Lending Specialist - Associate$",
+            "pattern": "^U\\.S\\. Private Bank – Lending Specialist - Associate$",
             "result": "finance",
             "reason": "JPMorgan private-bank lending specialist is a finance/wealth role; exact company scope avoids broad lending-specialist matches."
           },
@@ -7386,7 +7563,7 @@
             "reason": "JPMorgan data-domain architect paired posting is a data-platform role; exact company scope avoids broad architect matches."
           },
           {
-            "pattern": "^Product Delivery Manager, Data Products \u2013 Interactions Core$",
+            "pattern": "^Product Delivery Manager, Data Products – Interactions Core$",
             "result": "data_science",
             "reason": "JPMorgan data-products delivery role owns Kafka/Data Lake sourcing for AI/ML, analytics, reporting, and personalization; exact company scope avoids broad product-title matches."
           },
@@ -7471,7 +7648,7 @@
             "reason": "JPMorgan risk associate role is a credit risk / underwriting role for financial institutions, covering credit structures, risk ratings, approvals, and portfolio monitoring; exact company scope avoids broad risk-title overreach."
           },
           {
-            "pattern": "^Impact Finance, Associate \u2013 Fund Investing$",
+            "pattern": "^Impact Finance, Associate – Fund Investing$",
             "result": "finance",
             "reason": "JPMorgan impact finance fund-investing role deploys capital and evaluates fund investments as part of a finance investing mandate; exact company scope avoids broad impact-title matches."
           },
@@ -7496,7 +7673,7 @@
             "reason": "JPMorgan financial analysis role sits in business banking lending finance, supporting pricing analysis, forecasting, lending portfolios, and finance governance; exact company scope avoids broad analysis-title matches."
           },
           {
-            "pattern": "^Markets Asset Servicing \u2013 Income and Corporate Action Analyst$",
+            "pattern": "^Markets Asset Servicing – Income and Corporate Action Analyst$",
             "result": "finance",
             "reason": "JPMorgan markets asset-servicing role sits in securities/income/corporate-action operations for financial instruments; exact company scope avoids broad servicing-title matches."
           },
@@ -7518,7 +7695,7 @@
           {
             "pattern": "^Audit Manager \\[Multiple Positions Available\\]$",
             "result": "finance",
-            "reason": "JPMorgan audit manager role belongs to the firm\u2019s financial-services audit/risk/control function; exact company scope avoids broad audit-title matches."
+            "reason": "JPMorgan audit manager role belongs to the firm’s financial-services audit/risk/control function; exact company scope avoids broad audit-title matches."
           },
           {
             "pattern": "^Corporate Controllers - Finance Control - Associate$",
@@ -7630,7 +7807,7 @@
             "reason": "Oracle data migration engineer designs, builds, validates, and loads healthcare data migrations using ETL, SQL, Linux, Python/C#, FHIR/HL7, and database technologies; exact company scope avoids broad migration-title matches."
           },
           {
-            "pattern": "^Integrated Planning & Scheduling \u2013 Data Center Development$",
+            "pattern": "^Integrated Planning & Scheduling – Data Center Development$",
             "result": "operations",
             "reason": "Oracle data-center planning role schedules colocation construction, field progress, contractors, utilities, and recovery planning; exact company scope avoids broad planning-title matches."
           },
@@ -7680,7 +7857,7 @@
             "reason": "Oracle Health VA end-user adoption manager leads healthcare implementation/training delivery for federal health users; exact company scope avoids broad manager matches."
           },
           {
-            "pattern": "^Integrated Technologies Consultant \u2013 CareAware Capacity Management$",
+            "pattern": "^Integrated Technologies Consultant – CareAware Capacity Management$",
             "result": "healthcare",
             "reason": "Oracle CareAware consultant works on healthcare IT implementation, patient throughput, patient flow workflows, hospital operations, Cerner Millennium, and capacity management; exact company scope avoids broad consultant matches."
           }
@@ -7788,7 +7965,7 @@
           {
             "pattern": "\\bField Sales\\b",
             "result": "sales",
-            "reason": "TAG-2026-06-20: Vertiv field-sales roles (e.g., Application Engineer \u2013 Field Sales) are sales positions (quota/customer acquisition), not hardware engineering; the 'application engineer' keyword mis-routes them to hardware. domainReplace (strong) routes to sales; sibling 'Application Engineer - Thermal Management' stays hardware (no Field Sales token)."
+            "reason": "TAG-2026-06-20: Vertiv field-sales roles (e.g., Application Engineer – Field Sales) are sales positions (quota/customer acquisition), not hardware engineering; the 'application engineer' keyword mis-routes them to hardware. domainReplace (strong) routes to sales; sibling 'Application Engineer - Thermal Management' stays hardware (no Field Sales token)."
           }
         ]
       }
@@ -7814,6 +7991,27 @@
         ]
       },
       "notes": "Engineering consultancy. Vanshb03: Software Developer Intern (Dallas, TX)."
+    },
+    {
+      "name": "JP Morgan Chase",
+      "slug": "jpmc",
+      "base_url": "https://jpmc.fa.oraclecloud.com",
+      "site_number": "CX_1001",
+      "default_domain": "finance"
+    },
+    {
+      "name": "Hunt Oil Company",
+      "slug": "fa-eqcd-saasfaprod1",
+      "base_url": "https://fa-eqcd-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site_number": "CX_1",
+      "default_domain": "general"
+    },
+    {
+      "name": "Stantec",
+      "slug": "hdhl",
+      "base_url": "https://hdhl.fa.us6.oraclecloud.com",
+      "site_number": "CX_1",
+      "default_domain": "general"
     }
   ],
   "tiktok": [
