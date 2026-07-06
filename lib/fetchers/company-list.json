@@ -6236,6 +6236,22 @@
       "default_domain": "software"
     },
     {
+      "name": "Canadian Tire",
+      "url": "https://canadiantirecorporation.wd3.myworkdayjobs.com",
+      "site": "Enterprise_External_Careers_Site",
+      "domains": [
+        "retail",
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday canadiantirecorporation.wd3, site 'Enterprise_External_Careers_Site' verified via canadiantirecareers.com link. Major Canadian retailer (Canada credibility + some tech/e-comm roles). Likely retail-dominant (low tech yield, cost-guardrail watch) — yield TBD at first fetch."
+      },
+      "default_domain": "retail"
+    },
+    {
       "name": "TD Synnex",
       "url": "https://synnex.wd5.myworkdayjobs.com",
       "site": "tdsynnexcareers",
