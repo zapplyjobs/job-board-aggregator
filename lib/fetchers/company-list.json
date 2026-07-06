@@ -6553,42 +6553,80 @@
     {
       "name": "The Federal Reserve System",
       "url": "https://rb.wd5.myworkdayjobs.com",
-      "site": "FRS"
+      "site": "FRS",
+      "domains": [
+        "finance",
+        "general"
+      ],
+      "default_domain": "finance"
     },
     {
       "name": "LexisNexis Risk Solutions",
       "url": "https://relx.wd3.myworkdayjobs.com",
-      "site": "RiskSolutions"
+      "site": "RiskSolutions",
+      "domains": [
+        "software",
+        "data_science"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "PNC Financial Services",
       "url": "https://pnc.wd5.myworkdayjobs.com",
-      "site": "External"
+      "site": "External",
+      "domains": [
+        "finance",
+        "software"
+      ],
+      "default_domain": "finance"
     },
     {
       "name": "Penn State University",
       "url": "https://psu.wd1.myworkdayjobs.com",
-      "site": "Student"
+      "site": "Student",
+      "domains": [
+        "general"
+      ],
+      "default_domain": "general"
     },
     {
       "name": "University of Texas at Austin",
       "url": "https://utaustin.wd1.myworkdayjobs.com",
-      "site": "UTstaff"
+      "site": "UTstaff",
+      "domains": [
+        "general"
+      ],
+      "default_domain": "general"
     },
     {
       "name": "Air Liquide",
       "url": "https://airliquidehr.wd3.myworkdayjobs.com",
-      "site": "AirLiquideExternalCareer"
+      "site": "AirLiquideExternalCareer",
+      "domains": [
+        "hardware",
+        "general"
+      ],
+      "default_domain": "hardware"
     },
     {
       "name": "Cox",
       "url": "https://cox.wd1.myworkdayjobs.com",
-      "site": "Cox_External_Career_Site_1"
+      "site": "Cox_External_Career_Site_1",
+      "domains": [
+        "software",
+        "general"
+      ],
+      "default_domain": "software"
     },
     {
       "name": "Teledyne",
       "url": "https://flir.wd1.myworkdayjobs.com",
-      "site": "flircareers"
+      "site": "flircareers",
+      "domains": [
+        "hardware",
+        "software"
+      ],
+      "default_domain": "hardware"
     }
   ],
   "smartrecruiters": [
@@ -7895,19 +7933,22 @@
       "name": "JP Morgan Chase",
       "slug": "jpmc",
       "base_url": "https://jpmc.fa.oraclecloud.com",
-      "site_number": "CX_1001"
+      "site_number": "CX_1001",
+      "default_domain": "finance"
     },
     {
       "name": "Hunt Oil Company",
       "slug": "fa-eqcd-saasfaprod1",
       "base_url": "https://fa-eqcd-saasfaprod1.fa.ocs.oraclecloud.com",
-      "site_number": "CX_1"
+      "site_number": "CX_1",
+      "default_domain": "general"
     },
     {
       "name": "Stantec",
       "slug": "hdhl",
       "base_url": "https://hdhl.fa.us6.oraclecloud.com",
-      "site_number": "CX_1"
+      "site_number": "CX_1",
+      "default_domain": "general"
     }
   ],
   "tiktok": [
