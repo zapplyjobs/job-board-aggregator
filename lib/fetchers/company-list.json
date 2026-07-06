@@ -6174,6 +6174,37 @@
       "default_domain": "finance"
     },
     {
+      "name": "BlackBerry",
+      "url": "https://bb.wd3.myworkdayjobs.com",
+      "site": "BlackBerry",
+      "domains": [
+        "software",
+        "hardware"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant bb.wd3, site 'BlackBerry' verified via blackberry.com/careers -> /BlackBerry/jobs link. Canada's flagship security/QNX tech co. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "software"
+    },
+    {
+      "name": "OpenText",
+      "url": "https://opentext.wd1.myworkdayjobs.com",
+      "site": "opentext",
+      "domains": [
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant opentext.wd1, site 'opentext' verified via browser network (opentext.wd1.myworkdayjobs.com/opentext hit). Canada's largest software co. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "software"
+    },
+    {
       "name": "TD Synnex",
       "url": "https://synnex.wd5.myworkdayjobs.com",
       "site": "tdsynnexcareers",
