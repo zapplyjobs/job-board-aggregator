@@ -1651,6 +1651,14 @@
     {
       "slug": "cirruslogic",
       "name": "Cirrus Logic"
+    },
+    {
+      "slug": "coinbase",
+      "name": "Coinbase"
+    },
+    {
+      "slug": "reddit",
+      "name": "Reddit"
     }
   ],
   "lever": [
