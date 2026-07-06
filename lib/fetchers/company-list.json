@@ -6205,6 +6205,37 @@
       "default_domain": "software"
     },
     {
+      "name": "Manulife",
+      "url": "https://manulife.wd3.myworkdayjobs.com",
+      "site": "MFCJH_Jobs",
+      "domains": [
+        "finance",
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant manulife.wd3, site 'MFCJH_Jobs' verified via careers.manulife.com -> manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs link. Big-5 insurance. Previously CSV-rejected as 0-US-tech (Canada-only) — re-evaluated for Canada lane. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "finance"
+    },
+    {
+      "name": "CGI",
+      "url": "https://cgi.wd3.myworkdayjobs.com",
+      "site": "CGI",
+      "domains": [
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant cgi.wd3, site 'CGI' verified via browser network (cgi.wd3.myworkdayjobs.com/CGI loaded). Canadian-founded IT services giant. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "software"
+    },
+    {
       "name": "TD Synnex",
       "url": "https://synnex.wd5.myworkdayjobs.com",
       "site": "tdsynnexcareers",
