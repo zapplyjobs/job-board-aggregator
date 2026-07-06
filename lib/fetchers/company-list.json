@@ -6142,6 +6142,38 @@
       "default_domain": "finance"
     },
     {
+      "name": "CIBC",
+      "url": "https://cibc.wd3.myworkdayjobs.com",
+      "site": "search",
+      "domains": [
+        "finance",
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Site 'search' verified via Node cxs (200). Mirrors TD Bank config. Canada-tech yield TBD at first production fetch (TD proxy: 19 canada-tech)."
+      },
+      "default_domain": "finance"
+    },
+    {
+      "name": "BMO",
+      "url": "https://bmo.wd3.myworkdayjobs.com",
+      "site": "External",
+      "domains": [
+        "finance",
+        "software"
+      ],
+      "verified_date": "2026-07-06",
+      "general_note": {
+        "date": "2026-07-06",
+        "decision": "canada-lane",
+        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Site 'External' verified via Node cxs (200) + DDGS /External/job/ URLs (Montreal QC). Mirrors TD Bank config. Canada-tech yield TBD at first production fetch."
+      },
+      "default_domain": "finance"
+    },
+    {
       "name": "TD Synnex",
       "url": "https://synnex.wd5.myworkdayjobs.com",
       "site": "tdsynnexcareers",
