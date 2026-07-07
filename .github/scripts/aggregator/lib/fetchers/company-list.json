@@ -1523,10 +1523,6 @@
       "name": "Underdog Fantasy"
     },
     {
-      "slug": "unity3d",
-      "name": "Unity"
-    },
-    {
       "name": "Upstart",
       "slug": "upstart"
     },
@@ -2663,10 +2659,6 @@
     {
       "slug": "snowflake",
       "name": "Snowflake"
-    },
-    {
-      "name": "Statsig",
-      "slug": "statsig"
     },
     {
       "name": "Stytch",
@@ -6202,21 +6194,6 @@
       "default_domain": "software"
     },
     {
-      "name": "OpenText",
-      "url": "https://opentext.wd1.myworkdayjobs.com",
-      "site": "opentext",
-      "domains": [
-        "software"
-      ],
-      "verified_date": "2026-07-06",
-      "general_note": {
-        "date": "2026-07-06",
-        "decision": "canada-lane",
-        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant opentext.wd1, site 'opentext' verified via browser network (opentext.wd1.myworkdayjobs.com/opentext hit). Canada's largest software co. Canada-tech yield TBD at first production fetch."
-      },
-      "default_domain": "software"
-    },
-    {
       "name": "Manulife",
       "url": "https://manulife.wd3.myworkdayjobs.com",
       "site": "MFCJH_Jobs",
@@ -6231,21 +6208,6 @@
         "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant manulife.wd3, site 'MFCJH_Jobs' verified via careers.manulife.com -> manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs link. Big-5 insurance. Previously CSV-rejected as 0-US-tech (Canada-only) — re-evaluated for Canada lane. Canada-tech yield TBD at first production fetch."
       },
       "default_domain": "finance"
-    },
-    {
-      "name": "CGI",
-      "url": "https://cgi.wd3.myworkdayjobs.com",
-      "site": "CGI",
-      "domains": [
-        "software"
-      ],
-      "verified_date": "2026-07-06",
-      "general_note": {
-        "date": "2026-07-06",
-        "decision": "canada-lane",
-        "note": "F218 SUP-CANADASUPPLY-1: Canada lane add. Workday tenant cgi.wd3, site 'CGI' verified via browser network (cgi.wd3.myworkdayjobs.com/CGI loaded). Canadian-founded IT services giant. Canada-tech yield TBD at first production fetch."
-      },
-      "default_domain": "software"
     },
     {
       "name": "Canadian Tire",
