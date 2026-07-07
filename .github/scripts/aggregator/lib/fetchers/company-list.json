@@ -899,10 +899,6 @@
       "name": "Lyft"
     },
     {
-      "slug": "maintainx",
-      "name": "MaintainX"
-    },
-    {
       "slug": "marqeta",
       "name": "Marqeta"
     },
@@ -2780,6 +2776,10 @@
     {
       "slug": "uncountable",
       "name": "Uncountable"
+    },
+    {
+      "slug": "maintainx",
+      "name": "MaintainX"
     }
   ],
   "workday": [
