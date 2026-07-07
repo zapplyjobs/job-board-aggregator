@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+# pre-commit — proactively sync deployment-parity mirrors so source + mirror
+# always land in the same commit. Prevents the recurring CI deployment-parity
+# drift (tag-engine.js mirror falling behind its source). INF-CI-7.
+#
+# Enable once per clone:  git config core.hooksPath .githooks
+# (the deployment-parity.test.js CI gate remains the reactive backstop.)
+set -eu
+
+ROOT="$(git rev-parse --show-toplevel)"
+sh "$ROOT/scripts/sync-deployment-parity.sh"
+
+# stage any mirrors that changed so source + mirror commit together
+cd "$ROOT"
+git add \
+  .github/scripts/aggregator/lib/processors/tag-engine.js \
+  .github/scripts/aggregator/lib/processors/wd-family-domain-map.json \
+  .github/scripts/aggregator/lib/fetchers/company-list.json \
+  2>/dev/null || true
