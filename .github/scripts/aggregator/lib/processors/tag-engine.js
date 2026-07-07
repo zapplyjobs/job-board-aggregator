@@ -3500,6 +3500,11 @@ function hasCanadaLocation(locationStr) {
     const code = commaProv[1].toLowerCase();
     if (CANADA_PROVINCE_ABBR.has(code)) return true;
   }
+  // AGG-CANADAFIX-1: city-name fallback. Exclude when location has a strong non-Canadian
+  // country indicator. Fixes: "Melbourne, Victoria, Australia" was tagged canada because
+  // "Victoria" is in the city list (Victoria, BC) — but here it's an Australian state.
+  const nonCaCountry = /\b(australia|new zealand|united kingdom|\buk\b|england|scotland|wales|northern ireland|ireland|germany|france|japan|china|india|brazil|south africa|netherlands|sweden|norway|denmark|finland|spain|italy|portugal|switzerland|austria|belgium|czech|romania|turkey|greece|russia|ukraine|poland|hungary|mexico|argentina|chile|colombia|saudi arabia|singapore|malaysia|thailand|vietnam|philippines|indonesia|south korea|taiwan|hong kong|pakistan|bangladesh|israel|lebanon|jordan|kuwait|qatar|uae|oman|bahrain|costa rica|panama|ecuador|peru|morocco|egypt|kenya|nigeria|ghana)\b/i;
+  if (nonCaCountry.test(locationStr)) return false;
 
   return /\b(toronto|vancouver|montreal|montréal|ottawa|calgary|edmonton|mississauga|markham|burnaby|victoria|halifax|kitchener)\b/i.test(locationStr);
 }
