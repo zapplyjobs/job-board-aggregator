@@ -1651,6 +1651,10 @@
     {
       "slug": "reddit",
       "name": "Reddit"
+    },
+    {
+      "slug": "d2l",
+      "name": "D2L"
     }
   ],
   "lever": [
@@ -2772,6 +2776,14 @@
     {
       "slug": "maintainx",
       "name": "MaintainX"
+    },
+    {
+      "slug": "hopper",
+      "name": "Hopper"
+    },
+    {
+      "slug": "zayzoon",
+      "name": "ZayZoon"
     }
   ],
   "workday": [
