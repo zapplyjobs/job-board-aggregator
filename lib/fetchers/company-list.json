@@ -1655,6 +1655,10 @@
     {
       "slug": "d2l",
       "name": "D2L"
+    },
+    {
+      "slug": "flipp",
+      "name": "Flipp"
     }
   ],
   "lever": [
