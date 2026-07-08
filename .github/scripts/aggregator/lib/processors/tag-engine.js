@@ -20,7 +20,7 @@ const path = require('path');
 // The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
 // TAG-LEVELDOMAIN-FIX: v72 — mid-default for bare tech-IC titles (fix a) +
 // tenant-default non-tech guard (fix c1); carry-forward levels + domains re-tag.
-const TAG_ENGINE_VERSION = 72;
+const TAG_ENGINE_VERSION = 73;
 
 // Layer 5: Tenant-context defaults from company-list.json (TAG-10)
 // Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
@@ -241,6 +241,44 @@ const SENIOR_EXTRA_RE = /\b(architect|distinguished|director|vp|vice\s+president
 // people-managers of engineering/technical teams are senior.
 const SENIOR_MANAGER_RE = /\b(engineering\s+manager|software\s+engineering\s+manager|ml\s+manager|machine\s+learning\s+manager|manager,?\s+(?:software\s+)?engineering|data\s+engineering\s+manager|solution\s+engineering\s+manager|sales\s+engineering\s+manager)\b(?!.*\bI\b)/i;
 
+// ─── TAG-EXPAND-MISLABEL-1 (Option D Phase 0): reconcile tagger senior detection with ──────
+// senior-filter.js. The tagger was missing senior leadership (head of / C-suite), industry
+// managers, industrial supervisors, and specialty engineering managers that the senior filter
+// catches. Under Option D the pipeline senior filter is REMOVED, so tags.employment becomes
+// the sole consumer gate — the tagger must carry the filter's "not new-grad" judgment.
+// Ported with word-boundary precision: the filter's includes() over-matched 'architectural'
+// and 'avp'; the tagger's \b forms (already in SENIOR_EXTRA_RE) are kept as the correct bar.
+
+// Senior leadership: "Head of X", "Global Head, X", "Chief X Officer". C-suite ACRONYMS
+// (CTO/CIO/…) are handled in tagEmployment via SENIOR_CSUITE_ACRONYM_RE (below), NOT here — a
+// bare \b test over-matches role codes "(CMO)" = Computerized Machine Operator and org refs
+// "Sales Analyst, … Institutional COO". The acronym check scopes to the first comma segment
+// (paren-stripped) + rejects support-role suffixes. The filter's includes('chief') also caught
+// "Survey Crew Chief"; the Chief-X-Officer form avoids that FP.
+// ENTRY_LOCK_RE already exempts "assistant vice president", so AVP stays non-senior.
+const SENIOR_LEADERSHIP_RE = /\bheads?\s+of\b|\bhead\b\s*,|\bchief\s+(?:\w+\s+){1,3}officer\b/i;
+// C-suite acronym — see tagEmployment for the first-segment + support-role guard logic.
+const SENIOR_CSUITE_ACRONYM_RE = /\b(?:cto|cio|ceo|coo|cfo|ciso|chro|cmo|cpo|cro|cso)\b/i;
+
+// Specialty engineering/technical managers the narrow SENIOR_MANAGER_RE misses: "Manager, ML
+// Engineering", "Manager of Engineering/Propulsion", "Software Development Manager", "Group
+// Product Manager". All are people-managers of technical teams — genuinely senior, never
+// new-grad. (?!.*\bI\b) preserves "Manager I" (junior) like the original.
+const SENIOR_TECH_MANAGER_RE = /manager(?:,|\s+of)\s+(?:\w+\s+){0,4}engineering\b|\b(?:software|ml|machine\s+learning|ai|data|platform|infrastructure|site\s+reliability|sre|security|cloud|propulsion)\s+(?:development\s+)?manager\b|\bgroup\s+(?:product|program)\s+manager\b(?!.*\bI\b)/i;
+
+// Senior industry-management + industrial-supervisor patterns — ported verbatim from
+// senior-filter.js (live-measured 0-FP there WITH the associate/rotational guards below).
+// Clearly mid/senior professional managers / line supervisors that are NOT new-grad.
+const SENIOR_INDUSTRY_MANAGER_RE = /\b(?:general manager|store manager|retail manager|tax manager|accounting manager|finance manager|risk manager|plant manager|warehouse manager|facilities manager|procurement manager|supply chain manager|operations manager|marketing manager|hr manager|human resources manager|compensation manager|benefits manager|branch manager|site manager)\b/i;
+const SENIOR_INDUSTRY_SUPERVISOR_RE = /\b(?:production|manufacturing|warehouse|maintenance|quality|distribution|safety|operations|shift|field service|retail|store|floor|center|logistics|materials|shipping|assembly|lab|ramp|cargo|metrology|radiological|mechanic|molding|switchgear|neta|iron|meter|ehs|nurse|clinical|phlebotomy|culinary|food|restaurant|beverage|security|training|accounting|accounts receivable|revenue cycle|billing|cash posting|finance|customer service|customer support|customer success|client services?|community response|complaint|it service|service delivery|application support|technical service|dispatch|risk|aml|compliance|tariff|hr ops|human resources|employee benefits|administrative|payroll|office|audit|project|e-discovery|ediscovery)\b.{0,30}\bsupervisor\b|\bsupervisor\b.{0,30}\b(?:production|manufacturing|warehouse|maintenance|quality|distribution|safety|operations|shift|field service|retail|store|floor|center|logistics|materials|shipping|assembly|lab|ramp|cargo|metrology|radiological|mechanic|molding|switchgear|neta|iron|meter|ehs|nurse|clinical|phlebotomy|culinary|food|restaurant|beverage|security|training|accounting|accounts receivable|revenue cycle|billing|cash posting|finance|customer service|customer support|customer success|client services?|community response|complaint|it service|service delivery|application support|technical service|dispatch|risk|aml|compliance|tariff|hr ops|human resources|employee benefits|administrative|payroll|office|audit|project|e-discovery|ediscovery)\b|\bsupervisory\s+(?:accountant|accounting|clerk|clerical)\b/i;
+
+// Guards for the new patterns ONLY (not applied to existing director/vp/architect detections,
+// which keep their current SENIOR_GUARD_PATTERNS). Industry-manager/supervisor/leadership titles
+// have legitimate associate/assistant/junior/rotational variants ("Associate Operations Manager",
+// "Operations Manager, Rotational Program") that ARE new-grad. Ported from senior-filter.js
+// ENTRY_LEVEL_GUARDS + ROTATIONAL_GUARD.
+const SENIOR_INDUSTRY_GUARD_RE = /\b(?:associate|assistant|junior|entry[- ]level|trainee|rotational|development program|leadership program|graduate program|management trainee)\b/i;
+
 // AGG-36: Per-company employment override map (set by tagJobs, read by tagEmployment).
 // Format: Map<companyName_lowercase, { regex: RegExp, result: string }[]>
 let _companyOverrideMap = null;
@@ -329,6 +367,33 @@ function tagEmployment(job) {
     }
     // Architect guards: pre-sales/consulting roles are mid-level professionals (3-5 yrs exp),
     // not entry-level. Other guards (staffing, shift lead, etc.) correctly default to entry_level.
+    if (ARCHISTECT_GUARD_RE.test(job.title || '')) {
+      return 'mid_level';
+    }
+  }
+
+  // TAG-EXPAND-MISLABEL-1: reconciled patterns (senior leadership / industry manager /
+  // industrial supervisor / specialty tech manager). These use the broader
+  // SENIOR_INDUSTRY_GUARD_RE (associate/assistant/junior/rotational variants) in addition to
+  // the original guards. The existing director/vp/architect detections above are deliberately
+  // NOT subject to the broad guard — preserves "Associate Director" → senior (OUT-SENIOR-1).
+  // C-suite acronym (CTO/CIO/…): scope to the first comma segment with parentheticals stripped
+  // so role codes "(CMO)" = Computerized Machine Operator and org refs "Analyst, … COO" don't
+  // match, and reject support-role suffixes ("COO Analyst" = analyst to the COO, not the COO).
+  const firstSegment = (job.title || '').split(',')[0].replace(/\s*\([^)]*\)/g, '');
+  const csuiteAcronym = SENIOR_CSUITE_ACRONYM_RE.test(firstSegment) &&
+      !/\b(?:cto|cio|ceo|coo|cfo|ciso|chro|cmo|cpo|cro|cso)\b\s*(?:analyst|assistant|coordinator|specialist|associate|intern|secretary|advisor|aide|support)/i.test(firstSegment);
+  const matchedReconciled = (SENIOR_LEADERSHIP_RE.test(job.title || '') || csuiteAcronym ||
+      SENIOR_INDUSTRY_MANAGER_RE.test(job.title || '') ||
+      SENIOR_INDUSTRY_SUPERVISOR_RE.test(job.title || '') ||
+      SENIOR_TECH_MANAGER_RE.test(job.title || ''));
+
+  if (matchedReconciled) {
+    const guarded = SENIOR_GUARD_PATTERNS.some(pat => pat.test(job.title || '')) ||
+        SENIOR_INDUSTRY_GUARD_RE.test(job.title || '');
+    if (!guarded) {
+      return 'senior';
+    }
     if (ARCHISTECT_GUARD_RE.test(job.title || '')) {
       return 'mid_level';
     }
