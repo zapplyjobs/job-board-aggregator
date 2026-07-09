@@ -1659,6 +1659,10 @@
     {
       "slug": "flipp",
       "name": "Flipp"
+    },
+    {
+      "slug": "stackadapt",
+      "name": "StackAdapt"
     }
   ],
   "lever": [
@@ -2006,6 +2010,10 @@
     {
       "slug": "xsolla",
       "name": "Xsolla"
+    },
+    {
+      "slug": "policyme",
+      "name": "PolicyMe"
     }
   ],
   "ashby": [
@@ -2796,6 +2804,14 @@
     {
       "slug": "loopio",
       "name": "Loopio"
+    },
+    {
+      "slug": "nabucasa",
+      "name": "Nabu Casa"
+    },
+    {
+      "slug": "facilityos",
+      "name": "FacilityOS"
     }
   ],
   "workday": [
