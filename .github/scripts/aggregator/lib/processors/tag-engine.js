@@ -3582,6 +3582,13 @@ function hasCanadaLocation(locationStr) {
   // "Victoria" is in the city list (Victoria, BC) — but here it's an Australian state.
   const nonCaCountry = /\b(australia|new zealand|united kingdom|\buk\b|england|scotland|wales|northern ireland|ireland|germany|france|japan|china|india|brazil|south africa|netherlands|sweden|norway|denmark|finland|spain|italy|portugal|switzerland|austria|belgium|czech|romania|turkey|greece|russia|ukraine|poland|hungary|mexico|argentina|chile|colombia|saudi arabia|singapore|malaysia|thailand|vietnam|philippines|indonesia|south korea|taiwan|hong kong|pakistan|bangladesh|israel|lebanon|jordan|kuwait|qatar|uae|oman|bahrain|costa rica|panama|ecuador|peru|morocco|egypt|kenya|nigeria|ghana)\b/i;
   if (nonCaCountry.test(locationStr)) return false;
+  // OUT-CANADACONTAM-2: non-Canadian city indicator. When the country name is stripped
+  // from the location string (e.g. WD normalizer stores "Melbourne, Victoria" without
+  // "Australia"), nonCaCountry above can't fire. These unambiguous non-Canadian cities
+  // close the gap. "Victoria" alone is ambiguous (Victoria BC vs Victoria AU state) but
+  // Melbourne/Scoresby/Brisbane/etc. only appear in non-Canadian locations.
+  const nonCaCity = /\b(melbourne|scoresby|brisbane|adelaide|canberra|hobart|darwin|geelong|ballarat|wollongong|auckland|wellington)\b/i;
+  if (nonCaCity.test(locationStr)) return false;
 
   return /\b(toronto|vancouver|montreal|montréal|ottawa|calgary|edmonton|mississauga|markham|burnaby|victoria|halifax|kitchener)\b/i.test(locationStr);
 }

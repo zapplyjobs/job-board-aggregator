@@ -1659,6 +1659,22 @@
     {
       "slug": "flipp",
       "name": "Flipp"
+    },
+    {
+      "slug": "stackadapt",
+      "name": "StackAdapt"
+    },
+    {
+      "slug": "tribalscale",
+      "name": "TribalScale"
+    },
+    {
+      "slug": "boostedai",
+      "name": "Boosted.ai"
+    },
+    {
+      "slug": "figment",
+      "name": "Figment"
     }
   ],
   "lever": [
@@ -2006,6 +2022,22 @@
     {
       "slug": "xsolla",
       "name": "Xsolla"
+    },
+    {
+      "slug": "policyme",
+      "name": "PolicyMe"
+    },
+    {
+      "slug": "pointclickcare",
+      "name": "PointClickCare"
+    },
+    {
+      "slug": "shyftlabs",
+      "name": "ShyftLabs"
+    },
+    {
+      "slug": "baselane",
+      "name": "Baselane"
     }
   ],
   "ashby": [
@@ -2796,6 +2828,26 @@
     {
       "slug": "loopio",
       "name": "Loopio"
+    },
+    {
+      "slug": "nabucasa",
+      "name": "Nabu Casa"
+    },
+    {
+      "slug": "facilityos",
+      "name": "FacilityOS"
+    },
+    {
+      "slug": "wealthsimple",
+ "name": "Wealthsimple"
+    },
+    {
+      "slug": "nox-metals",
+      "name": "Nox Metals"
+    },
+    {
+      "slug": "flaglerhealth",
+      "name": "Flagler Health"
     }
   ],
   "workday": [
