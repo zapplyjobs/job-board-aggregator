@@ -2839,7 +2839,7 @@
     },
     {
       "slug": "wealthsimple",
- "name": "Wealthsimple"
+      "name": "Wealthsimple"
     },
     {
       "slug": "nox-metals",
@@ -2848,6 +2848,10 @@
     {
       "slug": "flaglerhealth",
       "name": "Flagler Health"
+    },
+    {
+      "slug": "magical",
+      "name": "Magical"
     }
   ],
   "workday": [
