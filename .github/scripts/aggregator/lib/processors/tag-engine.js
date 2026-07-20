@@ -1,4078 +1,6225 @@
-/**
- * Tag Engine - Multi-layer job tagging
- *
- * Classification layers (in priority order):
- * 1. Department/team-based classification (highest confidence — company's own categorization)
- * 1b. WD jobFamilyGroup exact-match lookup (TAG-FAMILY-1 — fallback when Layer 1 regex misses)
- * 2. Title keyword matching (primary — all 16 domains)
- * 3. O*NET taxonomy lookup (fallback for general-tagged jobs — 28,486 title variants, parenthetical-stripped matching)
- * 4. Description phrase matching (fallback for GH/Lever/Ashby jobs with descriptions)
- * 5. Tenant-context defaults (per-company default_domain for verified single-domain companies)
- * 6. Default to 'general' if no layer matches
- *
- * Also tags: employment type, locations, experience level, special companies.
- */
-
-const path = require('path');
-
-// TAG-DRIFT-1: Version constant for carry-forward re-validation.
-// Bump when keyword/guard/taxonomy changes alter classification behavior.
-// The pipeline compares this to carry-forward jobs' tag version — if stale, re-tags domains.
-// TAG-LEVELDOMAIN-FIX: v72 — mid-default for bare tech-IC titles (fix a) +
-// tenant-default non-tech guard (fix c1); carry-forward levels + domains re-tag.
-const TAG_ENGINE_VERSION = 74;
-
-// Layer 5: Tenant-context defaults from company-list.json (TAG-10)
-// Claude-researched per-tenant domain assignments. Only for verified single-domain companies.
-// Fires ONLY when all other layers (dept, keywords, O*NET, desc-fallback) produce no match.
-const TENANT_DEFAULTS = (() => {
-  try {
-    const cl = require(path.join(__dirname, '..', 'fetchers', 'company-list.json'));
-    const map = new Map();
-    for (const ats of Object.values(cl)) {
-      if (!Array.isArray(ats)) continue;
-      for (const entry of ats) {
-        if (entry.default_domain) {
-          // TAG-2026-06-21: key by name (raw AND slugified) AND slug so default_domain resolves regardless
-          // of how the fetcher identifies the company. Oracle rows carry company_name (no company_slug) ->
-          // match raw name; WD rows carry slugified company_slug with no entry.slug -> match slugified name;
-          // GH/Lever/etc. carry company_slug == entry.slug -> match slug. Runtime resolves via overrideKeys.
-          // (Previously slug-only -> silently no-op'd for Oracle companies like JPM/Citizens/Atlantic/WSP.)
-          const ddKeys = new Set();
-          if (entry.name) { ddKeys.add(entry.name.toLowerCase()); ddKeys.add(entry.name.toLowerCase().replace(/\s+/g, '-')); }
-          if (entry.slug) ddKeys.add(entry.slug.toLowerCase());
-          for (const key of ddKeys) map.set(key, entry.default_domain);
-        }
-      }
-    }
-    return map;
-  } catch {
-    return new Map();
-  }
-})();
-
-// Layer 5a: Per-company domain title overrides from company-list.json.
-// Use only for high-confidence company/title combinations where global keywords are too risky.
-const DOMAIN_TITLE_OVERRIDES = (() => {
-  try {
-    const cl = require(path.join(__dirname, '..', 'fetchers', 'company-list.json'));
-    const map = new Map();
-    for (const ats of Object.values(cl)) {
-      if (!Array.isArray(ats)) continue;
-      for (const entry of ats) {
-        const overrides = entry?.titleOverrides?.domain;
-        if (!Array.isArray(overrides) || overrides.length === 0) continue;
-        const compiled = [];
-        for (const rule of overrides) {
-          try {
-            compiled.push({ regex: new RegExp(rule.pattern, 'i'), result: rule.result, reason: rule.reason || null });
-          } catch (err) {
-            console.warn(`tag-engine: invalid domain override regex for ${entry.name}: ${rule.pattern} — ${err.message}`);
-          }
-        }
-        if (compiled.length === 0) continue;
-        const keys = new Set();
-        if (entry?.name) keys.add(entry.name.toLowerCase());
-        if (entry?.slug) keys.add(entry.slug.toLowerCase());
-        if (!entry?.slug && entry?.name) keys.add(entry.name.toLowerCase().replace(/\s+/g, '-'));
-        for (const key of keys) map.set(key, compiled);
-      }
-    }
-    return map;
-  } catch {
-    return new Map();
-  }
-})();
-// TAG-2026-06-20: Per-company domain REPLACE overrides (STRONG — pre-empts keyword/dept/O*NET layers).
-// Same shape as titleOverrides.domain, but under titleOverrides.domainReplace, and applied as an early
-// short-circuit in tagDomains (returns [result]). Use to CORRECT mis-routes where a global keyword wrongly
-// tags a title for a specific company (e.g., Lowe's "Sales Associate" -> sales, should be retail).
-// titleOverrides.domain (fill-only fallback) is unchanged; this only fires for explicit domainReplace entries.
-const DOMAIN_TITLE_REPLACE_OVERRIDES = (() => {
-  try {
-    const cl = require(path.join(__dirname, '..', 'fetchers', 'company-list.json'));
-    const map = new Map();
-    for (const ats of Object.values(cl)) {
-      if (!Array.isArray(ats)) continue;
-      for (const entry of ats) {
-        const overrides = entry?.titleOverrides?.domainReplace;
-        if (!Array.isArray(overrides) || overrides.length === 0) continue;
-        const compiled = [];
-        for (const rule of overrides) {
-          try { compiled.push({ regex: new RegExp(rule.pattern, 'i'), result: rule.result, reason: rule.reason || null }); }
-          catch (err) { console.warn(`tag-engine: invalid domainReplace regex for ${entry.name}: ${rule.pattern} — ${err.message}`); }
-        }
-        if (!compiled.length) continue;
-        const keys = new Set();
-        if (entry?.name) keys.add(entry.name.toLowerCase());
-        if (entry?.slug) keys.add(entry.slug.toLowerCase());
-        if (!entry?.slug && entry?.name) keys.add(entry.name.toLowerCase().replace(/\s+/g, '-'));
-        for (const key of keys) map.set(key, compiled);
-      }
-    }
-    return map;
-  } catch {
-    return new Map();
-  }
-})();
-
-// O*NET unified domain lookup — 28,486 title variants mapped to our domains via SOC codes.
-// Source: O*NET v29.1 (public domain, CC BY 4.0). See TAG_CLASSIFICATION_RESEARCH_.md.
-// Two matching methods: substring for 3+ word titles, word-boundary regex for 2-word titles.
-// Word-indexed for fast candidate filtering.
-const ONET = (() => {
-  try {
-    const data = require(path.join(__dirname, 'onet-unified-lookup.json'));
-    const STRIP_PARENS = (s) => s.replace(/\s*\([^)]*\)/g, '').replace(/\s+/g, ' ').trim();
-
-    // 3+ word titles: substring matching, word-indexed on cleaned (no-paren) titles
-    const substringEntries = data.substring || [];
-    const cleanedSubstringTitles = substringEntries.map(([title]) => STRIP_PARENS(title));
-    const substringWordIndex = new Map();
-    cleanedSubstringTitles.forEach((title, idx) => {
-      for (const word of title.split(/\s+/)) {
-        if (word.length < 4) continue;
-        if (!substringWordIndex.has(word)) substringWordIndex.set(word, []);
-        substringWordIndex.get(word).push(idx);
-      }
-    });
-
-    // 2-word titles: word-boundary regex, first-word-indexed
-    const regexEntries = [];
-    const regexWordIndex = new Map();
-    for (const [title, domain] of (data.regex || [])) {
-      const re = new RegExp('\\b' + title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
-      const idx = regexEntries.length;
-      regexEntries.push({ title, domain, re });
-      const firstWord = title.split(/\s+/).find(w => w.length >= 4) || title.split(/\s+/)[0];
-      if (!regexWordIndex.has(firstWord)) regexWordIndex.set(firstWord, []);
-      regexWordIndex.get(firstWord).push(idx);
-    }
-
-    return { substringEntries, cleanedSubstringTitles, substringWordIndex, regexEntries, regexWordIndex, STRIP_PARENS };
-  } catch {
-    console.warn('tag-engine: onet-unified-lookup.json not found — O*NET fallback disabled');
-    return { substringEntries: [], cleanedSubstringTitles: [], substringWordIndex: new Map(), regexEntries: [], regexWordIndex: new Map(), STRIP_PARENS: (s) => s };
-  }
-})();
-
-// TAG-FAMILY-1: WD jobFamilyGroup → domain mapping (AGG-WD-DEPT-1 provides departments[]).
-// Exact-match lookup for 1,497 WD family names curated by B69/B72.
-// Fires when Layer 1 dept regex rules don't match — more reliable than regex for known family names.
-const WD_FAMILY_MAP = (() => {
-  try {
-    const data = require(path.join(__dirname, 'wd-family-domain-map.json'));
-    const map = new Map();
-    for (const [family, domain] of Object.entries(data)) {
-      if (domain && domain !== 'UNMAPPED') {
-        map.set(family.toLowerCase(), domain);
-      }
-    }
-    return map;
-  } catch {
-    return new Map();
-  }
-})();
-
-/**
- * Tag a single job with all tag categories
- * @param {Object} job - Normalized job object
- * @returns {Object} - Job with tags property added
- */
-function tagJob(job) {
-  const taggedJob = { ...job };
-
-  const employment = tagEmployment(job);
-  taggedJob.tags = {
-    employment,
-    domains: tagDomains(job),
-    locations: tagLocations(job),
-    // Internships default to entry_level — description context ("our team has 5+ years")
-    // causes false senior/mid tags on intern jobs via year-mention detection
-    experience: employment === 'internship' ? 'entry_level' : tagExperience(job),
-    special: tagSpecial(job),
-    tag_engine_version: TAG_ENGINE_VERSION,
-  };
-
-  return taggedJob;
-}
-
-/**
- * Tag an array of jobs
- * @param {Array} jobs - Job array
- * @returns {Array} - Jobs with tags
- */
-function tagJobs(jobs) {
-  if (!Array.isArray(jobs)) {
-    console.warn('tagJobs: Expected array, got', typeof jobs);
-    return [];
-  }
-
-  // TAG-LAYER4-BUG-1: Reset Layer 4 diagnostic counters for this run.
-  _layer4Stats = { total_reached: 0, has_desc: 0, hp_hits: 0, std_hits: 0, no_match: 0, short_desc: 0, by_source: {} };
-  return jobs.map(job => tagJob(job));
-}
-
-// Regex patterns for tagEmployment — defined once at module scope, not recreated per call.
-// Entry-lock: explicit new-grad/junior title signals force entry_level before seniority checks.
-const ENTRY_LOCK_RE = /\b(new\s+grad|new\s+graduate|new\s+college\s+grad(?:uate)?|recent\s+grad(?:uate)?|university\s+grad|campus\s+hire|early[\s-]career|entry[\s-]level|junior|trainee|associate\s+(?:engineer|developer|analyst|scientist|researcher)|assistant\s+(?:vice\s+president|vp)|sr\.?\s*associate|senior\s+associate|principal\s+associate|executive\s+assistant)\b/i;
-// TAG-24: senior/principal associate — finance/consulting mid-level (2-4 yrs), not senior
-// TAG-25: executive assistant — admin/entry-level role, not senior
-// Mid-level: Roman numeral suffix II/III or explicit labels. Uses lookbehind/lookahead to avoid
-// substring matches like 'Hawaii' (ha-waii) or 'viii'. \b alone is insufficient for 'ii' at end of word.
-const MID_TITLE_RE = /(?<![a-z])(ii|iii)(?![a-z])|\b(sde\s*2|swe\s*2|l4|mid[\s-]level|intermediate)\b/i;
-// TAG-LEVELDOMAIN-FIX(a): seniority-neutral tech-IC role tokens. A title that
-// reaches tagEmployment's final default carrying one of these is treated as
-// mid_level (bare "Software Engineer"/"Data Scientist" => mid, not entry).
-const TECH_IC_TITLE_RE = /\b(engineer|developer|scientist|analyst|programmer|architect)\b/i;
-// TAG-LEVELDOMAIN-FIX(c1): broad tech-keyword presence test for the tenant-default
-// non-tech guard. If any of these appear, the title is tech-adjacent and keeps the
-// tenant default instead of being routed off the board.
-const TECH_KEYWORD_RE = /\b(software|engineer|developer|programmer|scientist|architect|analyst|data|cloud|security|cyber|machine\s+learning|artificial\s+intelligence|deep\s+learning|devops|database|algorithm|backend|frontend|fullstack|full\s+stack|infrastructure|platform|network|systems|android|ios)\b/i;
-// TAG-LEVELDOMAIN-FIX(c1): the on-board tech domains. The tenant-default non-tech
-// guard only overrides a default that is itself tech; a non-tech default
-// (healthcare/finance/general) is already off-board and must be left as-is.
-const TECH_DOMAINS_SET = new Set(['software', 'data_science', 'hardware', 'ai']);
-// Senior additions beyond existing keyword includes.
-const SENIOR_EXTRA_RE = /\b(architect|distinguished|director|vp|vice\s+president)\b/i;
-
-// TAG-KEYWORD-7: Senior engineering management — reconciled with senior-filter.js.
-// "manager" alone is NOT senior (Account Manager, Product Manager, etc.). Only
-// people-managers of engineering/technical teams are senior.
-const SENIOR_MANAGER_RE = /\b(engineering\s+manager|software\s+engineering\s+manager|ml\s+manager|machine\s+learning\s+manager|manager,?\s+(?:software\s+)?engineering|data\s+engineering\s+manager|solution\s+engineering\s+manager|sales\s+engineering\s+manager)\b(?!.*\bI\b)/i;
-
-// ─── TAG-EXPAND-MISLABEL-1 (Option D Phase 0): reconcile tagger senior detection with ──────
-// senior-filter.js. The tagger was missing senior leadership (head of / C-suite), industry
-// managers, industrial supervisors, and specialty engineering managers that the senior filter
-// catches. Under Option D the pipeline senior filter is REMOVED, so tags.employment becomes
-// the sole consumer gate — the tagger must carry the filter's "not new-grad" judgment.
-// Ported with word-boundary precision: the filter's includes() over-matched 'architectural'
-// and 'avp'; the tagger's \b forms (already in SENIOR_EXTRA_RE) are kept as the correct bar.
-
-// Senior leadership: "Head of X", "Global Head, X", "Chief X Officer", and senior technical
-// IC authority "Chief Engineer/Scientist/Technologist" (top technical lead on a program —
-// distinct from C-suite "Chief X Officer"; never entry-level). C-suite ACRONYMS (CTO/CIO/…)
-// are handled in tagEmployment via SENIOR_CSUITE_ACRONYM_RE (below), NOT here — a bare \b test
-// over-matches role codes "(CMO)" = Computerized Machine Operator and org refs "Sales Analyst,
-// … Institutional COO". The acronym check scopes to the first comma segment (paren-stripped) +
-// rejects support-role suffixes. The filter's includes('chief') also caught "Survey Crew Chief";
-// the Chief-X-Officer / Chief-Engineer forms avoid that FP.
-// ENTRY_LOCK_RE already exempts "assistant vice president", so AVP stays non-senior.
-const SENIOR_LEADERSHIP_RE = /\bheads?\s+of\b|\bhead\b\s*,|\bchief\s+(?:\w+\s+){1,3}officer\b|\bchief\s+(?:engineer|scientist|technologist)\b/i;
-// C-suite acronym — see tagEmployment for the first-segment + support-role guard logic.
-const SENIOR_CSUITE_ACRONYM_RE = /\b(?:cto|cio|ceo|coo|cfo|ciso|chro|cmo|cpo|cro|cso)\b/i;
-
-// Specialty engineering/technical managers the narrow SENIOR_MANAGER_RE misses: "Manager, ML
-// Engineering", "Manager of Engineering/Propulsion", "Software Development Manager", "Group
-// Product Manager". All are people-managers of technical teams — genuinely senior, never
-// new-grad. (?!.*\bI\b) preserves "Manager I" (junior) like the original.
-const SENIOR_TECH_MANAGER_RE = /manager(?:,|\s+of)\s+(?:\w+\s+){0,4}engineering\b|\b(?:software|ml|machine\s+learning|ai|data|platform|infrastructure|site\s+reliability|sre|security|cloud|propulsion)\s+(?:development\s+)?manager\b|\bgroup\s+(?:product|program)\s+manager\b(?!.*\bI\b)/i;
-
-// Senior industry-management + industrial-supervisor patterns — ported verbatim from
-// senior-filter.js (live-measured 0-FP there WITH the associate/rotational guards below).
-// Clearly mid/senior professional managers / line supervisors that are NOT new-grad.
-const SENIOR_INDUSTRY_MANAGER_RE = /\b(?:general manager|store manager|retail manager|tax manager|accounting manager|finance manager|risk manager|plant manager|warehouse manager|facilities manager|procurement manager|supply chain manager|operations manager|marketing manager|hr manager|human resources manager|compensation manager|benefits manager|branch manager|site manager)\b/i;
-const SENIOR_INDUSTRY_SUPERVISOR_RE = /\b(?:production|manufacturing|warehouse|maintenance|quality|distribution|safety|operations|shift|field service|retail|store|floor|center|logistics|materials|shipping|assembly|lab|ramp|cargo|metrology|radiological|mechanic|molding|switchgear|neta|iron|meter|ehs|nurse|clinical|phlebotomy|culinary|food|restaurant|beverage|security|training|accounting|accounts receivable|revenue cycle|billing|cash posting|finance|customer service|customer support|customer success|client services?|community response|complaint|it service|service delivery|application support|technical service|dispatch|risk|aml|compliance|tariff|hr ops|human resources|employee benefits|administrative|payroll|office|audit|project|e-discovery|ediscovery)\b.{0,30}\bsupervisor\b|\bsupervisor\b.{0,30}\b(?:production|manufacturing|warehouse|maintenance|quality|distribution|safety|operations|shift|field service|retail|store|floor|center|logistics|materials|shipping|assembly|lab|ramp|cargo|metrology|radiological|mechanic|molding|switchgear|neta|iron|meter|ehs|nurse|clinical|phlebotomy|culinary|food|restaurant|beverage|security|training|accounting|accounts receivable|revenue cycle|billing|cash posting|finance|customer service|customer support|customer success|client services?|community response|complaint|it service|service delivery|application support|technical service|dispatch|risk|aml|compliance|tariff|hr ops|human resources|employee benefits|administrative|payroll|office|audit|project|e-discovery|ediscovery)\b|\bsupervisory\s+(?:accountant|accounting|clerk|clerical)\b/i;
-
-// Guards for the new patterns ONLY (not applied to existing director/vp/architect detections,
-// which keep their current SENIOR_GUARD_PATTERNS). Industry-manager/supervisor/leadership titles
-// have legitimate associate/assistant/junior/rotational variants ("Associate Operations Manager",
-// "Operations Manager, Rotational Program") that ARE new-grad. Ported from senior-filter.js
-// ENTRY_LEVEL_GUARDS + ROTATIONAL_GUARD.
-const SENIOR_INDUSTRY_GUARD_RE = /\b(?:associate|assistant|junior|entry[- ]level|trainee|rotational|development program|leadership program|graduate program|management trainee)\b/i;
-
-// AGG-36: Per-company employment override map (set by tagJobs, read by tagEmployment).
-// Format: Map<companyName_lowercase, { regex: RegExp, result: string }[]>
-let _companyOverrideMap = null;
-
-/**
- * AGG-36: Set per-company override map. Called by pipeline before tagJobs.
- * Map format: Map<companyName_lowercase, { regex: RegExp, result: string }[]>
- */
-function setCompanyOverrideMap(overrideMap) {
-  _companyOverrideMap = overrideMap;
-}
-
-/**
- * Tag employment type (mutually exclusive)
- * Priority: internship > entry_lock > senior > mid_level > entry_level
- *
- * entry_lock fires before senior/mid so "Junior Architect" stays entry_level.
- * mid_level uses word-boundary regex (not includes) so 'ii' doesn't match 'Hawaii'.
- */
-function tagEmployment(job) {
-  const title = (job.title || '').toLowerCase();
-  const description = (job.description || '').toLowerCase();
-  const employmentType = (job.employment_type || '').toLowerCase();
-
-  // Check for internship (highest priority)
-  // INTERN-DETECT-1: expanded to catch co-op, graduate engineer, seasonal programs
-  // Uses word boundary \b to avoid "Internal Medicine" matching "intern"
-  const internWordRegex = /\b(interns?|internships?|co-ops?|coops?)\b/i;
-  const seasonalRegex = /\b(summer|fall|spring|winter)\s+20\d{2}\b/i;
-  const seasonalGrad = /\b(summer|fall|spring|winter)\s+20\d{2}\s+graduate\b/i;
-
-  if (internWordRegex.test(job.title || '') || seasonalRegex.test(job.title || '') || seasonalGrad.test(job.title || '')) {
-    // Filter fake internships: senior-level title + "intern" is contradictory
-    const fakePatterns = ['senior intern', 'sr. intern', 'principal intern', 'intern conversion'];
-    const isFakeIntern = fakePatterns.some(pattern => title.includes(pattern));
-
-    if (!isFakeIntern) {
-      return 'internship';
-    }
-  }
-
-  // Entry-lock: explicit new-grad/junior signals override seniority detection
-  if (ENTRY_LOCK_RE.test(job.title || '')) {
-    return 'entry_level';
-  }
-
-  // AGG-36: Per-company title override (between entry-lock and global senior keywords).
-  // If a company-specific pattern matches, use that result instead of global rules.
-  if (_companyOverrideMap && job.company_name) {
-    const rules = _companyOverrideMap.get(job.company_name.toLowerCase());
-    if (rules) {
-      for (const rule of rules) {
-        if (rule.regex.test(job.title || '')) {
-          return rule.result;
-        }
-      }
-    }
-  }
-
-  // TAG-PRECISION-6: Entry-level guards for ambiguous senior keywords.
-  // Reconciled with senior-filter.js ENTRY_LEVEL_GUARDS (same patterns, same logic).
-  // These override a senior keyword match when the title context is actually entry/mid-level.
-  const SENIOR_GUARD_PATTERNS = [
-    /\bstaffing\b/i,                       // "Staffing Coordinator" — not "Staff Engineer"
-    /\blead\s+generation\b/i,              // marketing role, not leadership
-    /\bshift\s+lead\b/i,                   // hourly production roles
-    /\bteam\s+lead\b(?!.*(?:engineer|software|developer|architect))/i,  // mfg/retail team leads, not "Team Lead - Software"
-    /\b(solution|solutions|business|sales|presales|pre-sales)\s+architect\b/i,  // pre-sales/consulting — mid-level professional
-    /\barchitect\b.*\b(solution|solutions|business|sales|presales|pre-sales)\b/i,  // "Architect, Solutions" variant
-  ];
-  // Architect-specific guards produce mid_level (professional role with experience requirements).
-  // Other guards (staffing, lead gen, shift lead, team lead) produce entry_level (admin/hourly roles).
-  const ARCHISTECT_GUARD_RE = /\b(solution|solutions|business|sales|presales|pre-sales)\s+architect\b|\barchitect\b.*\b(solution|solutions|business|sales|presales|pre-sales)\b/i;
-
-  // Check for senior level
-  const matchedSenior = (title.includes('senior') || title.includes('sr.') || title.includes('sr ') ||
-      title.includes('principal') || (title.includes('staff') && !title.includes('staffing')) || title.includes('lead') ||
-      SENIOR_EXTRA_RE.test(job.title || '') ||
-      SENIOR_MANAGER_RE.test(job.title || ''));
-
-  if (matchedSenior) {
-    // Check guards — if any match, this is NOT a senior title
-    const guarded = SENIOR_GUARD_PATTERNS.some(pat => pat.test(job.title || ''));
-    if (!guarded) {
-      return 'senior';
-    }
-    // Architect guards: pre-sales/consulting roles are mid-level professionals (3-5 yrs exp),
-    // not entry-level. Other guards (staffing, shift lead, etc.) correctly default to entry_level.
-    if (ARCHISTECT_GUARD_RE.test(job.title || '')) {
-      return 'mid_level';
-    }
-  }
-
-  // TAG-EXPAND-MISLABEL-1: reconciled patterns (senior leadership / industry manager /
-  // industrial supervisor / specialty tech manager). These use the broader
-  // SENIOR_INDUSTRY_GUARD_RE (associate/assistant/junior/rotational variants) in addition to
-  // the original guards. The existing director/vp/architect detections above are deliberately
-  // NOT subject to the broad guard — preserves "Associate Director" → senior (OUT-SENIOR-1).
-  // C-suite acronym (CTO/CIO/…): scope to the first comma segment with parentheticals stripped
-  // so role codes "(CMO)" = Computerized Machine Operator and org refs "Analyst, … COO" don't
-  // match, and reject support-role suffixes ("COO Analyst" = analyst to the COO, not the COO).
-  const firstSegment = (job.title || '').split(',')[0].replace(/\s*\([^)]*\)/g, '');
-  const csuiteAcronym = SENIOR_CSUITE_ACRONYM_RE.test(firstSegment) &&
-      !/\b(?:cto|cio|ceo|coo|cfo|ciso|chro|cmo|cpo|cro|cso)\b\s*(?:analyst|assistant|coordinator|specialist|associate|intern|secretary|advisor|aide|support)/i.test(firstSegment);
-  const matchedReconciled = (SENIOR_LEADERSHIP_RE.test(job.title || '') || csuiteAcronym ||
-      SENIOR_INDUSTRY_MANAGER_RE.test(job.title || '') ||
-      SENIOR_INDUSTRY_SUPERVISOR_RE.test(job.title || '') ||
-      SENIOR_TECH_MANAGER_RE.test(job.title || ''));
-
-  if (matchedReconciled) {
-    const guarded = SENIOR_GUARD_PATTERNS.some(pat => pat.test(job.title || '')) ||
-        SENIOR_INDUSTRY_GUARD_RE.test(job.title || '');
-    if (!guarded) {
-      return 'senior';
-    }
-    if (ARCHISTECT_GUARD_RE.test(job.title || '')) {
-      return 'mid_level';
-    }
-  }
-
-  // Check for mid-level (word-boundary regex prevents 'ii' matching 'Hawaii' etc)
-  if (title.includes('mid') || title.includes('mid-level') || title.includes('mid level') ||
-      MID_TITLE_RE.test(job.title || '')) {
-    return 'mid_level';
-  }
-
-  // TAG-LEVELDOMAIN-FIX(a): mid-default for seniority-neutral tech-IC titles.
-  // By here every intern / new-grad / junior / associate-engineer (ENTRY_LOCK),
-  // company-override, senior, and explicit-mid (II/III/mid-level) path has already
-  // returned. A bare "Software Engineer" / "Data Scientist" / "Network Engineer" is
-  // overwhelmingly a 2-4yr mid role, so default tech-IC titles to mid_level.
-  // Scoped to IC (engineer|developer|scientist|analyst|programmer|architect);
-  // manager/director/lead are senior-handled above or fall through to entry_level.
-  if (TECH_IC_TITLE_RE.test(job.title || '')) {
-    return 'mid_level';
-  }
-
-  // Default to entry level
-  return 'entry_level';
-}
-
-/**
- * Tag domains (multi-select)
- * Returns array of matching domains
- */
-function tagDomains(job, options) {
-  const debug = options && options.debug;
-  // TAG-ABBREV-1: Expand common ATS abbreviations before keyword matching.
-  // WD and other ATS systems truncate "Engineer" → "Engr" in titles (e.g., "Software Engr II").
-  // Without expansion, 29+ G1 jobs miss keyword matches. Safe: only expands "Engr" at word boundary.
-  const rawTitle = (job.title || '').toLowerCase();
-  const title = rawTitle.replace(/\bengr\b/g, 'engineer');
-  const description = (job.description || '').toLowerCase();
-  const tags = [];
-  const matches = debug ? [] : null;
-  // TAG-2026-06-20: company-scoped domain REPLACE override — strong short-circuit (pre-empts all keyword layers).
-  if (DOMAIN_TITLE_REPLACE_OVERRIDES.size) {
-    const _rpKeys = [];
-    if (job.company_name) _rpKeys.push(job.company_name.toLowerCase());
-    if (job.company_slug) _rpKeys.push(job.company_slug.toLowerCase());
-    for (const _k of _rpKeys) {
-      const _rpRules = DOMAIN_TITLE_REPLACE_OVERRIDES.get(_k);
-      if (_rpRules) {
-        const _rpMatch = _rpRules.find(r => r.regex.test(job.title || ''));
-        if (_rpMatch) return [_rpMatch.result];
-      }
-    }
-  }
-
-  // Debug helper: find which keyword matched in a list
-  function findMatch(keywords, text) {
-    for (const kw of keywords) {
-      if (text.includes(kw)) return kw;
-    }
-    return null;
-  }
-  function pushTag(domain, keyword, source) {
-    tags.push(domain);
-    if (matches) matches.push({ domain, keyword: keyword || (domain === 'general' ? '(no match)' : '(regex)'), source: source || 'title' });
-  }
-
-  // Department/team-based classification (highest confidence — company's own categorization).
-  // GH: departments[], Lever: team, Ashby: department + team. Checked BEFORE title keywords
-  // because the company's classification is more reliable than keyword inference.
-  // RULE ORDER MATTERS: first match wins (break on match). More specific rules must come
-  // before broader ones — e.g., 'product engineering' → software before 'product' → product.
-  const deptRaw = (job.team || job.department || (job.departments && job.departments[0]) || '').toLowerCase();
-  let deptGuardedSoftware = false;
-  if (deptRaw) {
-    const DEPT_RULES = [
-      // Trailing \b kept on rules with short patterns (it, ui) to prevent substring FPs.
-      // 'XXX engineering' forms added explicitly where 'XXX eng\b' missed the full word.
-      [/\b(software|platform engineer(?:ing)?|web engineer(?:ing)?|mobile engineer(?:ing)?|data engineer(?:ing)?|backend|frontend|devops|sre|infra engineer(?:ing)?|security engineer(?:ing)?|it engineer(?:ing)?|product engineer(?:ing)?|it)\b|\b(product (?:development|support|security|solutions))\b|\bengineering\s*[&,]\s*product\b|\bengineering\s+product\b|\b(epd)\b/i, 'software'],
-      [/\b(machine learning|artificial intelligence|ai |data science|ml engineer(?:ing)?)\b/i, 'ai'],
-      [/\b(data anal|business intel|analytics)\b/i, 'data_science'],
-      [/\b(hardware|electrical|mechanical|embedded|firmware|test engineer(?:ing)?|systems engineer(?:ing)?|materials engineer(?:ing)?)\b/i, 'hardware'],
-      [/\b(starlink enterprise & gov.?t account management)\b/i, 'sales'],
-      [/\b(sales|business develop|account exec|revenue)\b/i, 'sales'],
-      [/\b(marketing|brand|content|growth|creative|communications)\b/i, 'marketing'],
-      [/\b(finance|accounting|treasury|tax |fp&a|financial|actuarial)\b/i, 'finance'],
-      [/\b(legal|compliance|regulatory|counsel)\b/i, 'legal'],
-      // domain-accuracy audit: removed 'people' and 'talent' as standalone triggers.
-      // 'People' dept name is used by tech companies for all non-eng functions — EAs, admins, recruiters.
-      // Only explicit HR terms are safe as dept-level signals.
-      [/\b(human resources|human resource|recruiting|hr )\b/i, 'hr'],
-      [/\b(talent acquisition)\b/i, 'hr'],
-      [/\b(operations|ops |customer (experience|success|care|support)|fleet|supply chain|cx|field service)\b/i, 'operations'],
-      [/\b(food services - starbase)\b/i, 'operations'],
-      // 'Engineering / Design / Projects' dept (Veolia) was matching product — civil/mech engineering roles.
-      // 'design' only valid as product signal when paired with ux/ui context.
-      [/\b(product)\b|\b(ux|ui)\b|\bdesign\b(?=.*\b(ux|ui|user experience|product)\b)/i, 'product'],
-      [/\b(manufacturing|production|assembly|quality)\b/i, 'manufacturing'],
-      [/\b(healthcare|clinical|medical|nursing|pharma)\b/i, 'healthcare'],
-      [/\b(warehouse|logistics|distribution|shipping|transport)\b/i, 'logistics'],
-      [/\b(retail|stores?|merchandis)\b/i, 'retail'],
-      // SM31: safe dept rules for high-count general jobs (Cat A analysis)
-      // stores→retail: 89 Alo Yoga store roles. 'stores' wasn't matching \bstore\b (trailing 's').
-      [/\b(solutions engineering)\b/i, 'sales'],
-      // solutions engineering→sales: 17 pre-sales SE roles at Verkada/Vanta/Sigma. Confirmed pre-sales.
-      [/\b(data center technicians?)\b/i, 'operations'],
-      // data center technicians→operations: 11 Microsoft DC tech roles. Facility ops, not SW.
-      [/\b(cloud procurement)\b/i, 'operations'],
-      // cloud procurement→operations: 12 Crusoe supply/category manager roles. Procurement, not tech.
-      [/\b(customer outcomes)\b/i, 'sales'],
-      // customer outcomes→sales: 4 Glean AI Success Managers. Customer-facing account management.
-      [/\b(channel)\b/i, 'sales'],
-      // channel→sales: 2 Datadog/Zscaler partner managers. Channel sales.
-    ];
-    for (const [re, domain] of DEPT_RULES) {
-      if (re.test(deptRaw)) {
-        // TAG-GUARD-1: "Hardware Operations : Supply Chain" dept names match hardware regex
-        // before operations/supply chain regex can fire. Supply chain/procurement depts are
-        // operations, not hardware — skip hardware match and let operations rule fire.
-        if (domain === 'hardware' && /\b(supply chain|procurement)\b/i.test(deptRaw)) {
-          continue;
-        }
-        // TAG-GUARD-4: DEPT_RULES software overclassification guards. Three patterns cause FPs:
-        //
-        // 1. Bare \b(it)\b matches any "IT" dept — IT Support, Corp IT, IT Infrastructure.
-        //    These are operations/admin roles, not software. Only "IT Engineering" depts build software.
-        //    Fix: skip when \b(it)\b is the match AND dept contains non-engineering IT context.
-        if (domain === 'software' && /\bit\b/i.test(deptRaw) && !/\bit engineer/i.test(deptRaw)) {
-          deptGuardedSoftware = true;
-          continue;
-        }
-        // 2. "Mobile Engineering" dept at SpaceX is cellular/wireless hardware, not mobile app dev.
-        //    "Starlink Mobile Engineering" produces RF, mechanical, electrical engineers.
-        //    Fix: skip when dept contains mobile engineering AND hardware org keywords.
-        if (domain === 'software' && /\bmobile engineer/i.test(deptRaw) && /\b(starlink|wireless|rf|antenna|cell)\b/i.test(deptRaw)) {
-          continue;
-        }
-        // 3. "Product Engineering" dept at SpaceX/John Deere is hardware/manufacturing, not software.
-        //    "Starlink Product Engineering" produces mechanical, electrical, RF, compliance engineers.
-        //    "Product Engineering (CA)" at John Deere produces part-time student roles.
-        //    Fix: skip when dept has product engineering AND hardware org context OR non-SW company context.
-        if (domain === 'software' && /\bproduct engineer/i.test(deptRaw) && /\b(starlink|deere)\b/i.test(deptRaw)) {
-          continue;
-        }
-        pushTag(domain, '(dept: ' + deptRaw.substring(0, 30) + ')', 'department');
-        break;
-      }
-    }
-  }
-
-  // TAG-FAMILY-1: L6 — WD jobFamilyGroup exact-match lookup.
-  // Fires only when Layer 1 dept regex did not match. WD family names are curated strings
-  // from the API facet descriptor field — exact match is more reliable than regex inference.
-  // GUARD-4 carry-forward: if L1 blocked bare-IT→software, L6 must not re-add software.
-  // IMPORTANT: only push when family gives a confident non-general domain. When family says
-  // 'general', skip — do NOT pushTag('general') here, or L2-L4 title layers never fire.
-  if (tags.length === 0 && deptRaw && WD_FAMILY_MAP.has(deptRaw)) {
-    const familyDomain = WD_FAMILY_MAP.get(deptRaw);
-    if (familyDomain !== 'general' && !(deptGuardedSoftware && familyDomain === 'software')) {
-      pushTag(familyDomain, '(family: ' + deptRaw.substring(0, 40) + ')', 'department');
-    }
-  }
-
-  // Software domain (removed bare 'developer' — too broad, matches 'developer relations', 'developer advocate')
-  const softwareKeywords = [
-    'software engineer', 'software developer', 'full stack', 'fullstack',
-    'frontend', 'back end', 'backend', 'web developer', 'web dev',
-    'mobile developer', 'ios developer', 'android developer',
-    'mobile engineer',             // 5 gen, 0 FP — iOS/Android/mobile app engineering
-    'devops', 'site reliability', 'platform engineer',
-    // Intern-specific patterns missed by above (INTERN-1 fix):
-    'software intern', 'systems engineer', 'computer engineer', 'computer engineering',
-    'cybersecurity', 'cyber security', 'information technology',
-    'information security', 'cloud engineer',
-    // INTERN-1a Wave 2: additional patterns from Strategist simulation (196 reclassifications)
-    'security engineer', 'infrastructure engineer', 'compiler', 'middleware', 'flight software',
-    // TAG-KEYWORD-11: 'it service' removed (100% FP — IT Service Level Manager, IT Services Technician).
-    // TAG-KEYWORD-11: 'it systems' removed (75% FP — IT Systems Administrator, IT Systems & A/V Engineer).
-    //   Borderline "IT Systems Engineer" preserved via O*NET fallback (genuine SRE/infra roles).
-    //   Pre-O*NET guard blocks admin/AV/ops variants from O*NET software re-classification.
-    'cyber incident', 'threat detection', 'threat investigation',
-    'red team', 'product security', 'support engineer', 'technical support engineer',
-    'software asset manager',      // 1 gen, 0 FP — software asset management
-    'ai automation', 'software development engineer',
-    'developer experience', 'datapath engineer', 'application developer',
-    'protocol engineer',           // 2 gen, 0 FP — protocol engineering roles (Alchemy)
-    'penetration tester',          // 1 gen, 0 FP — explicit offensive-security / pentest role
-    'embedded firmware and software', // 1 gen, 0 FP — Google accelerator software engineering
-    'automation developer', 'internet measurement', 'digital engineer',
-    'enterprise architecture analyst',
-    // TAG-OVERHAUL-A additions:
-    'servicenow',                   // ServiceNow — guarded: only developer/engineer roles (TAG-KEYWORD-10)
-    'software quality assurance',   // SW QA — explicit software testing roles
-    'sw qa',                        // abbreviated form
-    'software test',                // 21 G1 — SW test/QA roles (covers Software Test Engineer, Tester, Test Manager)
-    'software designer',            // 6 G1 — SW design roles (co-op/intern/senior)
-    'information systems security', // ISSO — infosec role, distinct from physical 'security officer'
- // FRESHNESS-3: GH general-tagged misclassification fixes (Auditor data audit — 14 confirmed misses)
-    'perception engineer',          // Robotics/AI perception (Anduril) — software domain
-    'it infrastructure engineer',   // IT infra (Vercel) — software domain
-    'full-stack engineer',          // hyphenated form missed by 'full stack' keyword
- // TAG-CATEGORY-REDESIGN Option 2 (Strategist vocabulary audit — ~120 general+US reclassifications)
-    'solutions engineer',           // 48 hits — tech/pre-sales/defense tech (isSalesRole guard blocks 'sales solutions engineer')
-    'systems analyst',              // 43 hits — IT/business systems analysis
-    'technical operations engineer',// 15 hits — Anduril defense tech ops
-    'qa engineer',                  // ~9 hits — SW QA (safe bare pattern; 'quality assurance engineer' bare is NOT added — manufacturing FP risk)
-    'test automation engineer',     // ~4 hits — SW test automation
-    'network automation engineer',  // ~4 hits — IT network automation
-    'software automation engineer', // ~3 hits — SW automation
-    'programmer analyst',           // ~6 hits — Boeing/defense SW programmer-analysts
-    'oic developer',               // 4 gen, 0 FP — Oracle Integration Cloud developer roles (Anduril)
- // TAXONOMY-AUDIT-1: general-tagged engineering roles
-    'project engineer',             // 163 hits — engineering project roles (guard: not sales/manufacturing)
-    'integration engineer',         // 90 hits — systems integration (defense/tech)
- // TAG-MISROUTE-1 Issue 3b: keywords added to compensate for removing description fallback
-    'forward deployed engineer',    // 26 hits — Palantir/Glean/Commure (was caught by desc only)
-    'systems development engineer', // 14 hits — Amazon SDE variant
-    'android engineer',             // 13 hits — mobile dev (was caught by desc only)
-    'ios engineer',                 // 10 hits — mobile dev (was caught by desc only)
-    'linux engineer',               // 13 hits — systems/infra
-    'solution engineer',            // 84 hits — singular form missed by 'solutions engineer'
-    'technical services engineer',  // 10 hits — tech support engineering
-    'professional services engineer', // 4 hits — implementation engineering
-    'data center engineer',         // DC infra/operations engineering (software-adjacent)
-    'data center administrator',    // DC admin roles (DCIM, infrastructure)
-    'data center analyst',          // DC operations analysis
-    'data center database',         // DC database admin roles
-    // NOTE: bare 'data center' removed — matched facilities/safety roles (14 DC Technician, 8 Safety Engineer FPs)
-    'research engineer',            // 72 hits — ML/AI research (OpenAI, Anduril, KBR)
-    'automation engineer',          // 36 hits — SW/infra automation (guard: not HVAC/building)
-    'desktop support',              // 11 hits — IT desktop support
-    'security analyst',             // 13 hits — infosec analyst (guard: not physical security)
-    'customer engineer',            // 21 hits — technical customer-facing (Google, etc.)
-    // B48 Phase 1: architect/scrum/PM keywords
-    'solutions architect',           // 198 US — SA roles (guarded: isTamNotSales blocks AE/SA at sales companies)
-    'solution architect',            // singular form
-    'scrum master',                  // agile scrum master (software process role)
-    'engineering intern',           // 76 hits — general eng interns at tech cos (guard: not mech/civil/chem)
-    'network admin',                // 6 hits — network administration
-    'devsecops',                    // 6 hits — DevSecOps engineer (defense/gov)
-    'reverse engineer',             // 5 hits — software reverse engineering
-    'simulation engineer',          // 15 hits — M&S engineer (defense/tech)
-    'database administrator',       // 16 hits — DBA roles
-    'database engineer',            // 4 hits — database engineering
-    'splunk',                       // 3 hits — Splunk engineer/admin (SIEM)
-    'technical program manager',    // 6 hits — TPM roles (Cloudflare, Astranis)
-    'cloud system',                 // 2 hits — cloud systems engineer
-    'microsoft dynamics',           // 8 hits — ERP development/consulting
-    'power apps',                   // 4 hits — low-code platform development
-    'information system security',  // 6 hits — ISSO/infosec role
-    '.net developer',               // 7 hits — .NET framework development
-    '.net engineer',                // .NET engineering roles
-    'asp.net',                      // ASP.NET web development
-    'systems specialist',           // 20 hits — IT systems specialist
-    'cloud developer',              // 3 hits — cloud infrastructure development
-    'bi developer',                 // 2 hits — business intelligence development
-    'unity developer',              // 2 hits — Unity game/simulation development
-    'integration developer',        // 2 hits — systems integration development
-    'configuration management',     // 4 hits — CM/DevOps roles
-    'network implementation',       // 2 hits — network deployment engineering
-    'uipath developer',             // 1 hit — RPA development
-    'drupal developer',             // 1 hit — CMS development
-    'program manager',              // 8 gen, 88% spec — technical program management
-    'deployment strategist',        // 6 gen — deployment/field strategist roles
-    'configuration analyst',        // 3 gen — IT configuration analysis
-    'network automation',           // 4 gen — bare form (had only 'network automation engineer')
-    'security researcher',          // 1 gen — security research roles (OpenAI)
-    'compositing developer',        // 2 gen — VFX compositing (DreamWorks)
-    'manual tester',                // 2 gen — manual QA testing
-    'geospatial',                   // 1 gen — geospatial development
-    'cyber intern',                 // 2 gen — cybersecurity internships
-    'security operations center',   // 2 gen — SOC operators/analysts
-    'cyber capability',             // 1 gen — cyber capability development
-    'computer support',             // 1 gen — computer/IT support
-    'command center',               // 1 gen — command center operations
-    'information assurance',        // 2 gen — IA/ISSO roles
-    'cyberspace',                   // 1 gen — cyberspace operations
-    // C58: security/IAM keyword gaps
-    'sql engineer',               // 3 gen — SQL engineering roles
-    'detection and response',     // 3 gen — D&R security roles (e.g. "Detection and Response Engineer")
-    'graphics engineer',          // 2 gen — graphics/XR engineering
-    'endpoint detection',         // 1 gen — EDR specialist
-    'access management',          // 1 gen — IAM engineering (e.g. "Identity & Access Management Engineer")
-    'identity and access',        // 1 gen — IAM roles (covers 'Identity & Access Management')
-    'machine identity',           // 1 gen — machine identity engineering
-    'web app developer',          // 1 gen — web application development
-    'openshift',                  // C58 gap — container platform engineering
-    'cyber analytics',            // 1 gen — cyber analytics integration
-    'digital forensics',            // 1 gen — digital forensics engineering
-    'cyber threat',                 // 4 gen — cyber threat analysts
-    'presale engineer',             // 1 gen — singular form (had 'presales')
-    'escalations engineer',         // 2 gen — escalation engineering
-    'threat model',                 // 2 gen — threat modeling
-    'release engineer',             // 4 gen — release engineering
-    'jr. programmer',               // 1 gen — junior programmer
-    'jr developer',                 // 1 gen — junior developer
-    'implementation engineer',      // 4 gen — implementation/deployment engineering
-    'engineering manager',          // 2 gen — engineering management
-    'developer relations',          // 4 gen — DevRel engineering
-    'it operations',                // 3 gen — IT operations roles
-    'front-end developer',          // 1 gen — hyphenated form (had 'frontend' but not 'front-end developer')
-    'full-stack developer',         // 1 gen — hyphenated form (had 'full-stack engineer' but not developer)
-    'power platform developer',     // 3 gen — Microsoft Power Platform development
-    'cyber warfare',                // 2 gen — cyber warfare engineering (Booz Allen)
-    'developer advocate',           // 2 gen — DevRel advocacy roles
-    'internationalization engineer', // 1 gen, 0 FP — i18n engineering (Netflix)
-    'broadcom administrator',        // 2 gen, 0 FP — VMware/Broadcom admin
-    'itsm administrator',            // 1 gen, 0 FP — ITSM/ServiceNow admin
-    'application administrator',     // 1 gen, 0 FP — application admin
-    'patching engineer',             // 1 gen, 0 FP — patch management engineering
-    'noc engineer',                  // 2 gen, 0 FP — network operations center
-    'automated remediation',         // 1 gen, 0 FP — IT automated remediation
-    'network operations center',     // 1 gen, 0 FP — NOC roles
-    'mission it',                    // 1 gen, 0 FP — mission IT operator (defense)
-    'computer network operator',     // 1 gen, 0 FP — CNO roles (defense)
-    'infrastructure watch',          // 1 gen, 0 FP — NOSC infrastructure watch
-    'mumps developer',               // 1 gen, 0 FP — MUMPS/M programming
-    'linux system engineer',         // 1 gen, 0 FP — Linux syseng
-    'prisma access',                 // 1 gen, 0 FP — Palo Alto Prisma Access
-    'm365 platform',                 // 1 gen, 0 FP — M365 platform owner
-    'network firewall engineer',     // 1 gen, 0 FP — firewall engineering
-    'cno developer',                 // 1 gen, 0 FP — computer network operations dev
-    'cno analyst',                   // 2 gen, 0 FP — CNO analyst/programmer
-    'helpdesk technician',           // 1 gen, 0 FP — helpdesk tech
-    'cyber infrastructure',          // 1 gen, 0 FP — cyber infrastructure specialist
-    'gcp cyber',                     // 1 gen, 0 FP — GCP cyber engineer (USAF Cloud One)
-    'network monitor',               // 1 gen, 0 FP — network monitor specialist
-    'netops specialist',             // 1 gen, 0 FP — network operations specialist
-    'noc technician',                // 1 gen, 0 FP — NOC technician
-    'cross domain implementation',   // 1 gen, 0 FP — cross domain analyst
-    'celonis developer',             // 1 gen, 0 FP — Celonis process mining
-    'workday integrations',          // 1 gen, 0 FP — Workday integrations
-    'cyber risk assessment',         // 1 gen, 0 FP — cyber risk assessment analyst
-    'crowds artist',                    // 1 gen, 0 FP — VFX crowds artist (Disney)
-    'pc garage',                        // 1 gen, 0 FP — PC garage technician (GM)
-    'cognos administrator',             // 1 gen, 0 FP — Cognos BI admin (FLIR)
-
-    'sap functional',                // 1 gen, 0 FP — SAP functional FI/CO analyst
-    'firewall engineer',             // 1 gen, 0 FP — firewall engineering (bare form)
-    'computational imaging',         // 1 gen, 0 FP — computational imaging research
-    'cloud operations engineer',     // blocks O*NET hardware match for cloud ops roles
-    'ml framework engineer',         // 1 gen, 0 FP — ML framework engineering
-    'distributed training engineer', // 1 gen, 0 FP — distributed training (Sora)
-    'detection & mitigation',       // 1 gen, 0 FP — detection & mitigation engineering
-    'developer educator',           // 1 gen, 0 FP — developer education
-    'workday functional',           // 1 gen, 0 FP — Workday functional specialist
-    'ai security consultant',       // 1 gen, 0 FP — AI security consulting
-    'data protection analyst',      // 2 gen, 0 FP — data protection analysis
-    'ng siem',                      // 1 gen, 0 FP — next-gen SIEM
-    'technology evangelist',        // 1 gen, 0 FP — technology evangelist (Motorola)
-    'premierone',                   // 1 gen, 0 FP — PremierOne records (Motorola)
-    'civil construction software',  // 1 gen, 0 FP — civil construction software (Trimble)
-    'erp business advisor',         // 1 gen, 0 FP — ERP business advisor (Trimble)
-    'coupa support',                // 1 gen, 0 FP — Coupa support network (Caterpillar)
-    'saas governance',              // 1 gen, 0 FP — SaaS governance (Prudential)
-    'sdn enterprise',               // 1 gen, 0 FP — SDN enterprise engineer (AIG)
-    'fix onboarding',               // 1 gen, 0 FP — FIX protocol onboarding (Broadridge)
-    'it/ot infrastructure',         // 1 gen, 0 FP — IT/OT infrastructure (Elanco)
-    'dynamics 365',                 // 1 gen, 0 FP — Dynamics 365 developer
-    'threat collections',           // 1 gen, 0 FP — threat collections engineer (Anthropic)
-    'mixed reality developer',      // 1 gen, 0 FP — mixed reality development (Palantir)
-    'field ciso',                   // 1 gen, 0 FP — field CISO (F5)
-    'endpoint engineer',            // 1 gen, 0 FP — endpoint engineering (Genentech)
-    'power platform consultant',    // 1 gen, 0 FP — Power Platform consultant (Guidehouse)
-    'ai governance',                // 1 gen, 0 FP — AI governance specialist (Guidehouse)
-    'interface sustainment',         // 2 gen — interface sustainment analyst (IT role)
-    'sharepoint farm',              // 1 gen, 0 FP — SharePoint Farm Admin (CACI IT)
-    'hbss',                         // 1 gen, 0 FP — HBSS/ESS Administrator (CACI IT)
-    'pl/sql developer',             // 1 gen, 0 FP — PL/SQL Developer (CACI IT)
-    'sap master data',              // 1 gen, 0 FP — SAP Master Data Governance SME (CACI IT)
-    'ai context',                   // 1 gen, 0 FP — AI Context Engineer (CACI IT)
-    'application monitoring',       // 1 gen, 0 FP — 24/7 Application Monitoring (CACI IT)
-    'network access control',       // 1 gen, 0 FP — Network Access Control Engineer (CACI IT)
-    'vulnerability management',     // 2 gen, 0 real FP — pre-existing ops misclassification (Astranis/Workday)
-    'risk management framework',    // 1 gen, 0 FP — RMF Expert (Guidehouse Cyber)
-    'rmf expert',                   // 1 gen, 0 FP — RMF Expert (Guidehouse Cyber, title-specific guard)
-    'secops',                       // 1 gen, 0 FP — VulnMgmt & SecOps Specialist (Guidehouse)
-    'icam',                         // 1 gen, 0 real FP — ICAM Eng (BAH ops misclassification)
-    'microsoft power platform',     // 1 gen, 0 FP — Power Platform Consultant (Guidehouse)
-    'multiplatform planning',       // 1 gen, 0 FP — Multiplatform Planning & Strategy (NBCUniversal)
-    'on-platform strategy',         // 1 gen, 0 FP — On-Platform Strategy Specialist (NBCUniversal)
-    'lighting and look dev',        // 1 gen, 0 FP — Lighting & Look Dev Tools Engineer (DreamWorks)
-    'look dev tools',               // 1 gen, 0 FP — Look Dev Tools Engineer (DreamWorks, broader guard)
-    'system integration technician', // 1 gen, 0 FP — System Integration Tech (NBCUniversal broadcast)
-    'integration designer',         // 1 gen, 0 FP — Integration Designer (NBCUniversal)
-    'sap ariba',                    // 1 gen, 0 FP — SAP Ariba Cloud Integration Gateway Developer (RTX)
-    'digital technology intern',    // 2 gen, 0 FP — Digital Technology Internship (RTX, Carrier)
-    'maximo administrator',         // 1 gen, 0 FP — Maximo Administrator (Disney Parks)
-    'set extension artist',         // 1 gen, 0 FP — Set Extension Artist (Disney Animation CG)
-    'it technician',                // 1 gen, 0 FP — IT Technician 1st shift (Bosch)
-    'bts process analyst',          // 1 gen, 0 FP — BTS (Business Technology Solutions) Process Analyst (AbbVie)
-    'digital strategy lead',        // 1 gen, 0 FP — Associate Director Digital Strategy Lead Biologics (AbbVie)
-    'r&d information research',     // 1 gen, 0 FP — AD R&D Information Research IT (AbbVie)
-    'tanium engineer',              // 1 gen, 0 FP — Tanium Engineer (CACI IT)
-    'sipr beyondtrust',             // 1 gen, 0 FP — SIPR BeyondTrust Engineer (CACI IT)
-    'stripes/paces',                // 1 gen, 0 FP — STRIPES/PACES Specialist (CACI IT)
-    'network management/administrator', // 1 gen, 0 FP — Network Management/Administrator L3 (CACI IT)
-    'sap data services',            // 1 gen, 0 FP — SAP Data Services Consultant (CACI)
-    'data systems & policy',        // 1 gen, 0 FP — Data Systems & Policy Analyst (CACI IT)
-    'infrastructure monitoring tools', // 1 gen, 0 FP — Infrastructure Monitoring Tools Specialist (CACI IT)
-    'dashboard developer',          // 1 gen, 0 FP — Dashboard Developer (Booz Allen)
-    'desktop engineer',             // 1 gen, 0 FP — Desktop Engineer (Leidos IT)
-    'detection engineering',        // 2 gen, 0 FP — Principal Associate Detection Engineering (Capital One), Security Engineer Detection Engineering (Asana)
-    'cyber controls',               // 1 gen, 0 FP — Cyber Controls Monitoring Analyst (Capital One)
-    'it security',                  // 3 gen→1 gen, 2 already-sw — Engineer IT Security (Northrop Grumman), IT Security Engineer (Jane Street x2)
-    'pega developer',                // 1 current gen, 0 FP — AFS Pega developer
-    'react developer',               // 1 current gen, 0 FP — AFS React developer
-    'ux/ui developer',               // 1 current gen, 0 FP — AFS full-stack UX/UI developer
-    'adc engineer, aws database services', // 1 current gen, 0 FP — AWS database services engineering
-    'network communications administrator', // 1 gen, 0 FP — Network Communications Administrator (Northrop Grumman)
-    'cyber sys engineer',           // 3 gen→2 gen, 1 already-sw — Cyber Sys Engineer (Northrop Grumman)
-    'it infrastructure administrator', // 1 gen, 0 FP — IT Infrastructure Administrator (Northrop Grumman)
-    'sharepoint designer',          // 1 gen, 0 FP — SharePoint Designer/Developer (Guidehouse)
-    'archibus',                     // 1 gen, 0 FP — Archibus Project Advisor (Guidehouse) [CAFM software]
-    'ediscovery technical',         // 1 gen, 0 FP — eDiscovery Technical Advisor (Guidehouse)
-    'microsoft developer',          // 1 gen, 0 FP — Microsoft Developer (Guidehouse)
-    'intermediate developer',       // 1 gen, 0 FP — Intermediate Developer Specialist (Guidehouse)
-    'logistics it',                 // 1 gen, 0 FP — Logistics IT and Acquisition Consultant (Guidehouse)
-    'access management (iam)',      // 2 gen→1 gen, 1 already-sw — IAM Engineer (Guidehouse), Platform Engineer IAM (Palantir)
-    'health technology consulting', // 1 gen, 0 FP — Associate Director, Health Technology Consulting, Revenue Cycle Technology (Guidehouse)
-    'revenue cycle technology',     // 1 gen, 0 FP — Associate Director, Health Technology Consulting, Revenue Cycle Technology (Guidehouse) [EHR/RCM software implementation]
-    'advanced ux',                  // 2 gen, 0 FP — Designer Advanced UX team / Insight (General Motors) [UX design = software domain]
-    'ai cgi',                       // 1 gen, 0 FP — AI CGI Specialist Design Visualization (General Motors)
-    'aftermarket digital',          // 1 gen, 0 FP — Aftermarket Digital Specialist (Caterpillar) [Career Area: Product Support — digital tools for equipment service]
-    'technical infrastructure',     // 1 gen, 0 FP — IT Analyst - Technical Infrastructure (Caterpillar) [Career Area: Technology, Digital and Data]
-    'decision support',             // 1 gen, 0 FP — Decision Support Tools Engineer (Abbott)
-    'qa tester',                    // 1 gen, 0 FP — QA Tester (WBD/NetherRealm game studio; game QA = software testing)
-    'workforce support technician', // 1 gen, 0 FP — Workforce Support Technician (WBD IT; ServiceNow, remote tools, hardware/sw support)
-    'bit engineer',                 // 2 gen, 0 FP — Associate BIT Engineer / Multi-Function Engineer (WBD; BIT = Broadcast & IT infrastructure)
-    'multi-function engineer',      // 1 gen, 0 FP — Multi-Function Engineer (WBD Remote Operations Center; broadcast IT infrastructure)
-    'artist, technical',            // 2 gen, 0 FP — Associate/Advanced Artist, Technical (WBD Games; Unreal Engine, Python/C++, art pipelines)
-    'it/ot',                        // 1 gen, 0 FP — IT/OT Technical Analyst (Merck; Information Technology/Operational Technology convergence)
-    'training technology digital',  // 1 gen, 0 FP — Training & Technology – Digital Solutions Intern (Bosch; LMS rollout, digital transformation of training programs)
-    'navwar assessment',            // 1 gen, 0 FP — NAVWAR Assessment Coordinator (CACI; Naval Warfare Systems Center IT assessment)
-    'developer security awareness', // 1 gen, 0 FP — Developer Security Awareness & Engagement Specialist (Vanguard; AppSec awareness programs)
-    'associate engineer systems',   // 1 gen, 0 FP — Associate Engineer Systems/Engineer Systems (NG; systems engineering)
-    'software cross product',       // 1 gen, 0 FP — Software Cross Product Team Lead – Taiwan Surveillance Radar Program (RTX)
-    'technology and data risk',     // 1 gen, 0 FP — Senior Associate, Technology and Data Risk Management (Capital One; TDRM cloud/data technology risk — software domain)
-    // TAG-11 C55: CACI software roles
-    'it audit specialist',          // 1 gen, 0 FP — IT Audit Specialist (CACI; cybersecurity/FISCAM/application security audit for DHS CBP)
-    'systems technical specialist', // 1 gen, 0 FP — Systems Technical Specialist (CACI; IT governance/risk/compliance for DoJ USMS IT modernization)
-    // TAG-11 C56: Elanco software roles
-    'erp order to cash',            // 1 gen, 0 FP — ERP Order to Cash/GTS Functional Consultant (Elanco; SAP S4/HANA O2C + Global Trade Services)
-    // TAG-11 C57: RE/SPEC software roles
-    'billing consultant',           // 2 gen, 0 FP — Technical Billing Consultant I/II (RE/SPEC; SaaS billing system implementation/configuration)
-    // TAG-PRECISION-13 (B33): IT infrastructure — network/sysadmin/IT PM roles
-    'network engineer',             // 113 gen — network engineering (guard: optical/5G/LTE are hardware)
-    'systems administrator',        // 77 gen — systems administration (dept rules protect edge cases)
-    'system administrator',         // variant form
-    'it project manager',           // 15 gen — IT project management (all WD, no dept)
-    'linux administrator',          // Linux sysadmin variant
-    'storage administrator',        // 2 gen — storage admin
-    'osint analyst',                // 6 gen — open source intelligence analysis (defense tech)
-    // TAG-PRECISION-13 (B33): internship keyword gaps
-    'software development intern',  // 5 gen — software dev internship (not caught by 'software intern')
-    'developer intern',             // 2 gen — developer internship
-    'intern engineer',              // 2 gen — "Intern Engineer Co-op" (simplify)
-    'intern i - software',          // 1 gen — "Intern I - Software Test Development Engineering"
-    'algorithm engineer',           // 2 gen — algorithm engineering
-    'software architecture',        // 1 gen — "Software Architecture Engineer Intern"
-    // TAG-PRECISION-16 (B34): Northrop Grumman inverted title format + Motional AV/robotics
-    'embedded software',            // 8 gen — NG "Engineer Embedded Software" + GM test developer
-    'engineer software',            // 6 gen — NG inverted "Engineer Software [Quality/Simulation/etc]"
-    'motion planning',              // 2 gen — Motional AV motion planning engineers
-    'trajectory planning',          // 4 gen — Motional AV trajectory planning engineers
-    'ml planner',                   // 1 gen — Motional "Prediction & ML Planner"
-    // TAG-PRECISION-17 (B36): keyword gaps from top uninvestigated companies
-    'software development',         // 22 gen — SW dev manager/analyst/eng variants at Comcast, NG, Boeing, etc.
-    'system software',              // 3 gen — system SW engineering (Google Silicon, Boeing)
-    'software reliability',         // 2 gen — SRE variant (Waymo, Google)
-    'software safety',              // 1 gen — SW safety engineering (Boeing)
-    'software application',         // 3 gen — SW app specialist/manager (Walmart, Microchip)
-    'mission software',             // 1 gen — defense SW intern (Palantir)
-    'angular developer',            // 2 gen — Angular framework dev
-    'salesforce developer',         // 1 gen — SFDC platform dev
-    'powerbuilder developer',       // 1 gen — legacy PowerBuilder dev (CACI)
-    // TAG-PRECISION-20 (B38): hyphenated variant gaps + cloud platform keywords
-    'back-end developer',           // 1 gen, 0 FP — hyphenated variant (BAH)
-    'back-end engineer',            // 2 gen, 0 FP — hyphenated variant (guard: isRetailClerk blocks "back-end clerk")
-    'full-stack intern',            // 2 gen, 0 FP — hyphenated intern form (Uncountable)
-    'aws engineer',                 // 1 gen, 0 FP — AWS platform engineering (CACI)
-    'ml ops',                       // 1 gen, 0 FP — space variant of existing 'mlops' (Boston Dynamics)
-    'software modernization',       // 1 gen, 0 FP — software modernization engineering (Google Quantum AI)
-    // NOTE: 'business systems analyst' NOT added — TAG-PRECISION-8 guard: BSA configures SAP/Workday, not SWE
-    // NOTE: 'it support specialist/technician' NOT added — tests confirm IT support is operations, not SWE
-    // NOTE: bare 'it support' NOT added — substring of 'audit support' causes 2 FP
-    'sharepoint',                   // 2 gen — SharePoint dev/admin (CACI, Guidehouse)
-    // TAG-INTERN-1 (B45): software internship keyword gaps
-    'developer technology intern',             // 1 gen — NVIDIA Developer Technology Intern
-    'developer advocacy intern',               // 1 gen — Twilio Developer Advocacy Intern
-    'developer ecosystem intern',              // 1 gen — Twilio Dev Ecosystem intern
-    // TAG-INTERN-1 cycle 2 (B52): software keyword gaps
-    'codec',                                   // 1 gen — multimedia codec dev (Tencent)
-    'wireless network lab',                    // 1 gen — wireless networking research (Cisco)
-    'powertrain software',                     // 1 gen — automotive SW validation (Bosch)
-    'game research',                           // 4 gen — game engine R&D (Tencent)
-    'robot learning',                          // 2 gen — robotics ML (Boston Dynamics)
-    'phishing analyst',                        // 1 gen — security phishing analyst (Zscaler)
-    'techstop',                                // 1 gen — Google IT support program (Cadence)
-    'developer gtm',                           // 2 gen — developer go-to-market (Cloudflare)
-    'multimedia codec',                        // 1 gen — multimedia development (Tencent)
-    'security research intern',                // 4 gen — security research (CertiK, Microsoft, Intel)
-    'digital solutions co-op',                 // 1 gen — digital solutions (J&J)
-    'comcast finance technology',              // 1 gen — FinTech automation (Comcast)
-    'comcast global audit technology',         // 1 gen — audit tech (Comcast)
-    'comcast information systems',             // 1 gen — information systems (Comcast)
-    // TAG-INTERN-1 cycle 3 (B52/F86): software keyword gaps
-    'blockchain',                              // 1 gen — blockchain security (CertiK)
-    'software quality',                        // 7 gen — software quality engineering (CACI, NG, RTX)
-    // TAG-INTERN-1 cycle 4 (B53): software keyword gaps
-    'enterprise architecture',                 // 1 G1 — enterprise architecture intern
-    'software/electrical',                     // 1 G1 — compound SW/EE title
-    // TAG-INTERN-1 cycle 5 (B61): software keyword gaps
-    'technical architect',                     // 1 G1 — Services Solutions Technical Architect Intern (Guidewire)
-    'IT co-op',                                // 1 G1 — IT Co-Op (Lennox)
-    'IT innovation',                           // 1 G1 — IT Innovation & Research Intern (Rolls Royce)
-    'technical video',                         // 1 G1 — Technical Video Content Intern (Twilio)
-    'network observability',                   // 1 G1 — Intern - Infrastructure & Network Observability (Zayo)
-  ];
-  const isSalesRole = /\b(sales|account executive|pre-sales|presales)\b/i.test(title);
- // Guard: retail "Back End Clerk" is not a backend engineer (Lowe's — 6 FPs,
-  const isRetailClerk = /\b(clerk|stocker|cashier)\b/i.test(title);
- // TAG-MISROUTE-1 Issue 3a: short keywords need word-boundary regex — includes() causes
-  // "answer" → "anSWEr", "disrespect" → "diSREspect" false positives (509 + 151 FPs)
-  const softwareShortKeywords = /\b(swe|sre)\b/i;
-  // 'automation engineer' — HVAC/building/industrial/manufacturing/mechanical automation is hardware, not software
-  const isNonSwAutomation = /\b(hvac|building|industrial|process|manufacturing|mechanical)\b/i.test(title);
-  // 'security analyst' — physical security roles are not infosec
-  const isPhysicalSecurity = /\bphysical\b/i.test(title);
-  // 'engineering intern' — mechanical/civil/chemical/electrical interns are hardware; water/mine/rock/geomechanics interns are civil (general)
-  // TAG-11 C47: extended to cover RE/SPEC water resources/mine/rock/solid waste interns (civil engineering, not tech)
-  const isNonSwEngineeringIntern = /\b(semiconductor|mechanical|civil|chemical|electrical|environmental|water resources|wastewater|mine|rock mechanics|solid waste|cavern|reclamation|geomechanics)\b/i.test(title);
-  // TAG-13: 'simulation engineer' — structural/mechanical/thermal simulation is hardware
-  const isHwSimulation = /\b(structural|mechanical|thermal|finite element)\b/i.test(title);
-  // TAG-11 C47: 'project engineer' — non-software project engineers are not SWE.
-  // TAG-KEYWORD-9: expanded to electrical, HVAC, controls, automation, power, weapons, infrastructure.
-  // "Controls Project Engineer – HVAC" / "Project Engineer - Power Generation" / "Weapons Infrastructure Project Engineer"
-  // are all non-SWE coordination roles. Guard fires when 'project engineer' is sole sw match.
-  const isCivilProjectEngineer = /\b(structural|water resources|water treatment|geotechnical|wastewater|mechanical|civil|electrical|hvac|controls|automation|power|generation|weapons|infrastructure|fire protection|commissioning|construction|piping)\b/i.test(title);
-  // TAG-18: 'systems engineer' — HVAC controls, physical security, warehouse systems are not software
-  // B50: "IT Systems *" titles are IT infrastructure (admin/engineer/analyst), not SWE.
-  const isItSystemsRole = /\bit systems\b/i.test(title);
-  const isNonSwSystemsEngineer = /\b(hvac|physical security|warehouse|building controls|facilities)\b/i.test(title) || isItSystemsRole;
-  // TAG-18: ISSO compliance officers (not engineers) — "information system security officer" is ops/compliance
-  const isIssComplianceOfficer = (/\binformation systems? security\b/i.test(title) && /\bofficer\b/i.test(title)) || /\bISSO\b/i.test(title);
-  // TAG-PRECISION-5: 'program manager' — bare PM titles (Training PM, People PM, Supply Chain PM) are not SWE.
-  // Only classify as software when PM title has tech context (technical, AI, security, etc.).
-  // "Technical Program Manager, AI Platform" → software. "Training Program Manager" → not software.
-  const isNonTechProgramManager = !/\b(technical|ai |ml |cloud|security|developer|engineering|platform|data |cyber|infra|digital|automation)\b/i.test(title);
-  // TAG-PRECISION-8: 'systems analyst' — business/HRIS/financial/people systems are not SWE.
-  // "Business Systems Analyst" configures SAP/Workday, not writes code. "AI Systems Analyst" writes code.
-  // Guard fires when sole match AND title contains non-SW context.
-  const isNonSwSystemsAnalyst = /\b(business systems|hris|workday|people systems|financial systems|finance systems|legal systems|nuclear|logistic|pgim|payroll|investment systems|erp|sap |peoplesoft)\b/i.test(title) || isItSystemsRole;
-  // TAG-KEYWORD-10: 'servicenow' — ServiceNow admin/analyst/manager/support is not SWE.
-  // "ServiceNow Developer" and "ServiceNow Engineer" build software. Everything else configures/administers it.
-  // Guard fires when sole match AND title lacks developer/engineer context.
-  const isNonSwServiceNow = !/\b(developer|engineer)\b/i.test(title);
-  // TAG-PRECISION-13: 'network engineer' — optical/5G/LTE network engineers are hardware/telecom.
-  // "Optical Network Engineer" at Google builds physical fiber infrastructure.
-  // Guard fires when sole match AND title has hardware context.
-  const isHwNetworkEngineer = /\b(optical|5g|lte|fiber|photonics|telecommunications?)\b/i.test(title);
-  // TAG-GUARD-6: 'solutions/solution engineer' — pre-sales, commercial, enterprise, account roles.
-  // "Solutions Engineer, Commercial" at Notion is customer-facing, not software engineering.
-  // Allow when title has tech context: AI, cloud, security, data science, network, software, platform.
-  const isNonSwSolutionsEngineer = !/\b(ai |ml |machine learning|cloud|security|cyber|data science|network|software|developer|platform|infrastructure|devops|sre)\b/i.test(title);
-  const matchesSoftware = (text) =>
-    softwareKeywords.some(kw => text.includes(kw)) || softwareShortKeywords.test(text);
-  // Guard: block guarded keywords only when they are the sole match
-  const isGuardedSwOnly = (text) => {
-    const matched = softwareKeywords.filter(kw => text.includes(kw));
-    if (matched.length !== 1) return false; // multiple matches or short-kw → not solely guarded
-    const sole = matched[0];
-    if (sole === 'automation engineer' && isNonSwAutomation) return true;
-    if (sole === 'security analyst' && isPhysicalSecurity) return true;
-    if (sole === 'engineering intern' && isNonSwEngineeringIntern) return true;
-    if (sole === 'simulation engineer' && isHwSimulation) return true;
-    if (sole === 'project engineer' && isCivilProjectEngineer) return true;
-    if (sole === 'systems engineer' && isNonSwSystemsEngineer) return true;
-    if (sole === 'program manager' && isNonTechProgramManager) return true;
-    if (sole === 'systems analyst' && isNonSwSystemsAnalyst) return true;
-    if (sole === 'servicenow' && isNonSwServiceNow) return true;
-    if (sole === 'network engineer' && isHwNetworkEngineer) return true;
-    if ((sole === 'systems administrator' || sole === 'system administrator') && isItSystemsRole) return true;
-    if (sole === 'it project manager') return true;
-    // TAG-GUARD-6: 'solutions/solution engineer' — pre-sales/customer-facing roles, not SWE.
-    // 292 of 335 SW-tagged jobs have no tech context. Allow when AI/cloud/security/data present.
-    if ((sole === 'solutions engineer' || sole === 'solution engineer') && isNonSwSolutionsEngineer) return true;
-    return false;
-  };
- // TAG-MISROUTE-1 Issue 3b: software domain is now TITLE-ONLY.
-  // Description fallback removed — company boilerplate ("full stack technology platform",
-  // "alongside our software engineers") caused 1,774 non-tech jobs to be tagged software.
-  // Same approach as AI domain (title-only since inception). Keyword list expanded above
-  // to compensate for legitimate roles lost.
-  // B28: 'site reliability' sole-match on technician titles is not SWE.
-  // Jabil "Site Reliability Technician (402)" — facility/equipment tech, not SRE.
-  const isSwTechnicianOnly = (() => {
-    const matched = softwareKeywords.filter(kw => title.includes(kw));
-    if (matched.length !== 1) return false;
-    return matched[0] === 'site reliability' &&
-      (/\btechnicians?\b/i.test(title) || (/\btech\b/i.test(title) && !/\btechnology\b/i.test(title))) &&
-      !/\bengineer/i.test(title);
-  })();
-  if (!isSalesRole && !isRetailClerk && !isIssComplianceOfficer && !isSwTechnicianOnly && matchesSoftware(title) && !isGuardedSwOnly(title)) {
-    pushTag('software', findMatch(softwareKeywords, title) || (softwareShortKeywords.test(title) ? 'swe/sre regex' : null), 'title');
-  }
-
-  // AI domain (title-only — prevents description contamination misrouting general jobs)
-  // Keywords derived from S78 Auditor sample of 33 intercepted AI-title jobs (all_jobs.json 2026-02-25)
-  // TAXONOMY-AUDIT-1: 'llm' and 'nlp' use word-boundary regex — includes() caused
- // "fulfillment" → "fuLLMent" false positive (186 Lowe's jobs tagged AI, finding).
-  const aiKeywords = [
-    'machine learning', 'computer vision', 'deep learning',
-    'applied ai', 'ai engineer', 'ai researcher',
-    'natural language processing',
-    'large language model', 'generative ai',
-    // INTERN-1a Wave 2:
-    'ai/ml', 'genai', 'prompt engineer', 'ai tools',
-    'artificial intelligence',      // 7 hits — Artificial Intelligence Engineer (Booz Allen, Northrop)
-    'ai deployment',                // 21 hits — AI deployment strategist (Mistral AI, Booz Allen)
-    'applied researcher',           // 4 gen — applied AI/ML research (Capital One)
-    'ai solution developer',        // 1 gen, 0 FP — AI solution development
-    'research inference',           // 1 gen, 0 FP — ML inference research
-    'loss of control',              // 1 gen, 0 FP — AI safety (loss of control)
-    'simulation realism',           // 1 gen, 0 FP — robotics simulation realism
-    'frontier biological',          // 1 gen, 0 FP — frontier bio/chem risk research
-    'researcher, training',         // 1 gen, 0 FP — ML training researcher
-    'researcher, alignment',        // 1 gen, 0 FP — AI alignment researcher
-    'researcher, trustworthy',      // 1 gen, 0 FP — trustworthy AI researcher
-    'researcher, safety',           // 1 gen, 0 FP — AI safety researcher
-    'researcher, interpretability', // 1 gen, 0 FP — interpretability researcher
-    'researcher, pretraining',      // 1 gen, 0 FP — pretraining safety researcher
-    'vision-language-action',       // 1 gen, 0 FP — Vision-Language-Action Models Intern (Bosch)
-    'vision-language-navigation',   // 1 gen, 0 FP — Vision-Language-Navigation ADAS Intern (Bosch)
-    'simulation at scale',          // 1 gen, 0 FP — Automated Driving Simulation at Scale RL (Bosch)
-    'distributed embodied',         // 1 gen, 0 FP — Distributed Embodied AI Systems Intern (Bosch)
-    'multilingual text',            // 1 gen, 0 FP — Technical SETA SME Multilingual Text and Speech (Guidehouse)
-    // TAG-PRECISION-13 (B33): AI internship patterns
-    'ai intern',                    // 4 gen — AI internship roles
-    'ai analyst intern',            // 2 gen — AI analyst internship
-    'ai development intern',        // 1 gen — AI development internship
-    'agentic ai',                   // 1 gen — Agentic AI roles
-    'ai infrastructure',            // 1 gen — AI infrastructure engineering
-    'researcher intern',            // 4 gen — ML/AI research internship (simplify: "Researcher Intern - Vision and Graphics")
-    // TAG-PRECISION-17 (B36): AI keyword gaps
-    'ai developer',                 // 5 gen — AI developer roles (Booz Allen, BAH)
-    'mlops',                        // 2 gen — MLOps engineer (Booz Allen)
-    // TAG-INTERN-1 (B45): AI internship keyword gaps
-    'perception intern',                       // 2 gen — Kodiak Perception Intern (AV/perception)
-    'vision foundation model',                 // 1 gen — Vision Foundation Model Research Intern (ML)
-    'online architecture research intern',     // 1 gen — TikTok Architecture Research Intern (ML)
-    'phd technical intern',                    // 1 gen — Centific PhD Technical Intern - Vision AI
-    'student researcher, phd',                 // 2 gen — Google Student Researcher PhD (ML research)
-    'student researcher, bs/ms',               // 2 gen — Google Student Researcher BS/MS (ML research)
-    'phd residency intern',                    // 1 gen — X Development PhD Residency Intern (ML)
-    'applied research intern',                 // 1 gen — Labelbox Applied Research Intern (ML)
-    'intern, agent development',               // 1 gen — Sierra Agent Development Intern (AI agents)
-    'quantum information science intern',       // 1 gen — Leidos Quantum Info Science Intern
-    'intern bachelors ai',                     // 1 gen — Honeywell AI Intern (bachelor-level)
-    'emerging technologies co-op',             // 1 gen — J&J Emerging Technologies Co-op (AI/tech)
-    // TAG-INTERN-1 cycle 2 (B52): AI keyword gaps
-    'hunyuan',                                 // 4 gen — Tencent Hunyuan ML research
-    'video world model',                       // 1 gen — ML video research (Tencent)
-    'reinforcement learning for large foundation', // 1 gen — ML research (Tencent)
-    'intern - perception',                     // 1 gen — perception ML (Kodiak Robotics)
-    // TAG-INTERN-1 cycle 3 (B52/F86): AI keyword gaps
-    'ai agent',                                // 5 gen — AI agent development (TikTok, Microsoft, GM, Logitech)
-    'foundation model',                        // 5 gen — foundation model research (ByteDance)
-    'multimodal ai',                           // 1 gen — multimodal ML (Reality Defender)
-    'world model',                             // 2 gen — world model research (Tencent, ByteDance)
-    // TAG-INTERN-1 cycle 4 (B53): AI keyword gaps
-    'ai outcomes',                             // 16 G1 — AI outcomes mgmt (consulting AI implementation)
-    'ai coe',                                  // 2 G1 — AI Center of Excellence roles
-    'ai scenario',                             // 1 G1 — AI scenario analysis
-    // TAG-INTERN-1 cycle 5 (B61): AI keyword gaps
-    'AI & IoT',                                // 1 G1 — AI & IoT Solution Advisor Intern (SAS)
-    'fault tolerant',                          // 1 G1 — Fault Tolerant Quantum System Architecture (Microsoft)
-  ];
-  const aiShortKeywords = /\b(llm|nlp)\b/i;
-  if (aiKeywords.some(kw => title.includes(kw)) || aiShortKeywords.test(job.title || '')) {
-    pushTag('ai', findMatch(aiKeywords, title) || (aiShortKeywords.test(job.title || '') ? 'llm/nlp regex' : null), 'title');
-  }
-
- // Data Science domain (title-only — description fallback removed
-  // DESC-MIGRATE-1 moved descriptions to sidecars; all_jobs.json description field is always empty.
-  // Description fallback was producing 0 current matches and 1,038 ghost tags.
-  const dataScienceKeywords = [
-    'data scientist', 'data science', 'data engineer', 'data analyst',
-    'machine learning', 'ml engineer', 'ai engineer',
-    // INTERN-1a Wave 2:
-    'data analytics', 'applied science', 'operations research',
-    'algorithm engineering', 'decision science', 'quantitative research',
-    'research analyst',
- // FRESHNESS-3: GH general-tagged misclassification fixes (Auditor data audit)
-    'research scientist',           // Anthropic, DeepMind — data_science domain (3 confirmed misses)
-    'databricks',                   // 4 hits — Databricks engineer/developer (data platform)
-    'applied scientist',            // 62 hits — applied science/ML roles
-    'intelligence analyst',         // 27 hits — business intelligence + defense intelligence analysts
-    'quantum computing',            // 4 gen, 80% spec — quantum computing research/engineering
-    'business intelligence',        // 3 gen — BI engineer/analyst (bare form)
-    'analytics engineer',           // 6 gen — analytics/data engineering
-    'data visualization',           // 5 gen — data visualization analysts
-    'bioinformatics',               // 3 gen — bioinformatics specialists
-    'data quality',                 // 2 gen — data quality analysts
-    'survey analyst',               // 1 gen, 0 FP — survey/employee listening analysis
-    'causal inference',             // 1 gen, 0 FP — experimentation/causal inference
-    'people analytics',             // 2 gen, 0 FP — people/HR analytics (NBCU)
-    'subscriber forecasting',       // 1 gen, 0 FP — subscriber forecasting (NBCU)
-    'measurement science',          // 2 gen, 0 FP — measurement science
-    'media analytics',              // 1 gen, 0 FP — media analytics
-    'power modeling',                // 2 gen, 0 FP — power/energy modeling
-    'content analyst',               // 1 gen, 0 FP — content analyst (Bloomberg)
-    'content analytics intern',      // 1 gen, 0 FP — content analytics intern (Bloomberg)
-
-    'elint',                        // 1 gen, 0 FP — electronic intelligence analysis
-    'signals analyst',              // 1 gen, 0 FP — signals analysis (defense)
-    'signals intelligence',         // 1 gen, 0 FP — SIGINT officer
-    'fisint',                       // 1 gen, 0 FP — foreign instrumentation signals
-    'biometrics analyst',           // 1 gen, 0 FP — biometrics analysis
-    'afsim analyst',                // 1 gen, 0 FP — AFSIM modeling/simulation
-    'aesthetics analytics',         // 1 gen, 0 FP — AD Aesthetics Analytics (AbbVie commercial analytics)
-    'market access contract',       // 1 gen, 0 FP — AD Market Access Contract Analytics (AbbVie)
-    'performance lead',             // 1 gen, 0 FP — AD Performance Lead IBD (AbbVie brand analytics)
-    'statistician',                 // 2 gen, 0 FP — Statistician Human Subjects Research (Leidos)
-    'geo-spatial intelligence',     // 2 gen, 0 FP — Technical SETA SME Geo-Spatial Intelligence (Guidehouse)
-    'clinical analytics',           // 1 gen, 0 FP — Healthcare Solution Analyst, Clinical Analytics Solutions (Guidehouse)
-    'biostatistician',              // 1 gen, 0 FP — Biostatistician (Abbott)
-    'cx data',                      // 1 gen, 0 FP — Analyst, CX Data & Insights (WBD; AI/ML & automation for customer experience)
-    'ad sales research',            // 1 gen, 0 FP — Analyst, Ad Sales Research (WBD; audience measurement, attribution analytics)
-    'ai solution analyst',          // 1 gen, 0 FP — AI Solution Analyst (FLIR; AI tool evaluation/testing, copilots, RAG systems)
-    'atmospheric scientist',         // 1 gen, 0 FP — Atmospheric Scientist (Boeing; weather modeling/atmospheric science for aerospace)
-    // TAG-11 C55: CACI data science roles
-    'gis analyst',                   // 1 gen, 0 FP — GIS Analyst (CACI; geospatial/geographic information systems analysis)
-    // TAG-INTERN-1 (B45): data science internship keyword gaps
-    'data intern',                             // 1 gen — Kikoff Data Intern
-    'programmatic analyst intern',             // 1 gen — Samba TV Programmatic Analyst Intern
-    'ratings analytical intern',               // 1 gen — S&P Global Ratings Analytical Intern
-    'data and analytics intern',               // 1 gen — BeOne Data and Analytics Intern
-    'automation analyst intern',               // 1 gen — Axos Bank Automation Analyst Intern
-    'data processing support intern',          // 1 gen — UT Austin Data Processing Intern
-    // TAG-INTERN-1 cycle 2 (B52): data science keyword gaps
-    'cmc quantitative',                        // 1 gen — pharma quantitative (Moderna)
-    'pricing and market analytics',            // 1 gen — pricing analytics (ASSA ABLOY)
-    'reporting analytics',                     // 2 gen — reporting analytics (Kaiser)
-    'customer data and insights',              // 1 gen — customer analytics (Biogen)
-    'product data analysis',                   // 1 gen — product analytics (Accuray)
-    'revenue science',                         // 1 gen — revenue analytics (Comcast)
-    'comcast data products',                   // 1 gen — data governance (Comcast)
-    // TAG-INTERN-1 cycle 4 (B53): data science keyword gaps
-    'imaging and algorithms',                  // 1 G1 — imaging+algorithms intern (data science / ML)
-  ];
-  if (dataScienceKeywords.some(kw => title.includes(kw))) {
-    pushTag('data_science', findMatch(dataScienceKeywords, title), 'title');
-  }
-
-  // Hardware domain
-  const hardwareKeywords = [
-    'hardware engineer', 'embedded', 'firmware', 'electrical engineer',
-    'chip design', 'fpga', 'pcb', 'vlsi', 'robotics', 'mechatronics',
-    'avionics', 'mechanical engineer', 'new graduate engineer',
-    // Was causing 132 hardware-only misroutes. Manufacturing engineers belong in manufacturing domain.
-    // 'manufacturing engineering' (as program/intern title) also moved.
-    'materials engineer', 'materials engineering',
-    'process engineer', 'process technician',
-    'controls engineer', 'controls specialist',
-    'hvac technician', 'hvac engineer',
-    'industrial automation', 'manufacturing automation', 'building automation', 'process automation',
-    // Intern-specific patterns missed by above (INTERN-1 fix):
-    'electrical engineering', 'test engineer', 'design engineer',
-    'mechanical design', 'hardware design', 'hardware test',
-    // INTERN-1a Wave 2:
-    'analog', 'mixed-signal', 'ic design', 'dsp', 'power electronics',
-    'thermal engineer', 'propulsion', 'turbomachinery', 'fluid component',
-    'ground systems', 'radiation effects', 'harness manufacturing',
-    'electrical integration', 'cad engineer', 'industrial engineering',
-    'quality engineer', 'hardware development engineer', 'electrical design',
-    // B48 Phase 1: data center / infrastructure keywords
-    'data center technician',        // DC technician (infrastructure/hardware)
-    'cable integration',             // cable/wiring integration (hardware)
-    'critical environment technician', // CE tech (data center critical env)
-    'package engineering', 'signal integrity', 'asic',
-    'process integration', 'process safety', 'optical engineer',
-    'structural engineer', 'aerospace engineer', 'lidar engineer',
-    'physical design', 'plasma etch', 'plasma deposition', 'plasma process', 'reliability engineer', 'equipment engineer',
-    'biomedical engineer', 'chemical engineer', 'field applications engineer',
-    'application engineer', 'gnc engineer', 'radar engineer',
-    'performance engineering', 'wireless system',
-    // TAG-OVERHAUL-A additions (verified safe by title + company context):
-    'controls integration engineer',  // Amazon DC hardware
-    'field service engineer',         // ASML/HP/Caterpillar equipment install
-    'verification engineer',          // chip design: logic/timing/functional verification
-    'dft engineer',                   // Design-for-Test, semiconductor
-    'emulation engineer',             // pre-silicon hardware emulation
-    'board validation engineer',      // PCB/hardware bring-up
-    'ic verification engineer',       // IC-level verification
-    'gpu design verification',        // GPU silicon verification
-    'cpu verification',               // CPU silicon verification
- // TAG-CATEGORY-REDESIGN Option 2 (Strategist vocabulary audit — ~71 general+US reclassifications)
-    'distribution engineer',              // 15 hits — vehicle/electrical distribution
-    'supplier development engineer',      // ~12 hits — electronics/hardware supply chain (SpaceX Starshield, etc.)
-    'commissioning engineer',             // 12 hits — equipment bring-up (Amazon DC, data centers)
-    'electronics engineer',               // 9 hits — hardware/electronics domain
-    'maintenance engineer',               // 7 hits — equipment maintenance (SpaceX/Tesla factory floor)
-    'power systems automation engineer',  // 3 hits — electrical grid automation
-    'power systems protection engineer',  // 3 hits — electrical grid protection
-    'substation protection',              // 3 hits — electrical infrastructure (NOT added: 'substation engineer' bare — too broad)
-    'substation control engineer',        // 1 hit — electrical infrastructure
-    'photonic packaging engineer',        // 1 hit — semiconductor optics (NOT added: 'packaging engineer' bare — mfg FP risk)
-    'field service technician',           // 52 hits — equipment/field service (Leidos, Johnson Controls)
-    'service technician',                 // 141 hits — HVAC/fire/equipment service (guard: not customer service)
-    'installation technician',            // 13 hits — equipment installation
-    'product development engineer',       // 19 hits — hardware R&D (SpaceX, Abbott)
-    'field service representative',       // 50 hits — field equipment service reps
-    'rf engineer',                        // 15 hits — RF engineering (SpaceX, Leidos, CACI)
-    'signal processing',                  // 9 hits — DSP/signal processing engineer
-    'operations engineer',                // 57 hits — plant/process operations engineering
-    'development engineer',               // 47 hits — R&D/product development engineering
-    'industrial engineer',                // 25 hits — industrial/manufacturing engineering
-    'test specialist',                    // 22 hits — hardware/equipment test
-    'validation engineer',                // 19 hits — hardware/process validation
-    'safety engineer',                    // 23 hits — fire/systems/aerospace safety (SOC 17)
-    'electrician',                        // 29 hits — maintenance/industrial electricians (SpaceX, utilities)
-    'hvac',                               // 37 hits — HVAC technician/programmer/controls (all hardware)
-    'cad designer',                       // 5 hits — CAD/civil CAD design roles
-    'lab engineer',                       // 4 hits — hardware lab engineers (Amazon, etc.)
-    'fire alarm',                         // 1 hit — fire alarm designer/installer
-    'fire protection',                    // 1 hit — fire protection EIT
-    // 'geologist' removed TAG-11 C47: all hits were RE/SPEC civil/environmental geology (FP) — no tech collateral
-    'field engineer',                     // 22 hits — field engineering roles (Johnson Controls, etc.)
-    'compliance engineer',                // 8 hits — product/regulatory compliance (legal guard blocks legal tagging)
-    'field specialist',                   // 14 hits — field service specialists
-    'production engineer',                // 4 hits — production/manufacturing engineering
-    'facilities engineer',                // 3 hits — facilities/building engineering
-    'applications engineer',              // 3 hits — field applications engineering
-    'weld engineer',                      // 3 hits — welding engineering
-    'electronic technician',              // 3 hits — electronics bench technicians
-    'fire detection',                     // 3 hits — fire detection systems
-    'data center operations',             // 3 hits — DC operations technician/engineer
-    'diagnostic technician',              // 4 gen — diagnostic/test technicians (Jabil)
-    'electrical installer',               // 3 gen — electrical installation (JCI)
-    'biomedical equipment',               // 5 gen — biomedical equipment technicians
-    'design release engineer',            // 5 gen — design release engineering (GM)
-    'product review engineer',            // 3 gen — product review/liaison engineering
-    'analysis engineer',                  // 12 gen — structural/thermal analysis engineering
-    'naval architect',                    // 1 gen — naval architecture/marine design
-    'production pilot',                   // 1 gen — production test pilots
-    'radar operator',                     // 1 gen — radar test operations
-    'piping design',                      // 2 gen — piping/process design
-    'test planner',                       // 1 gen — test planning engineering
-    'fire installer',                     // 3 gen — fire system installers
-    'energy analyst',                     // 2 gen — energy systems analysis
-    'nuclear',                            // 2 gen — nuclear engineering
-    'journeyman',                         // 3 gen — journeyman tradespeople
-    'automated logic',                    // 7 gen — building automation (Johnson Controls)
-    'wireless engineer',                  // 3 gen — wireless/RF engineering
-    'laser',                              // 1 gen — laser technician/engineer
-    'servo',                              // 1 gen — servo control engineering
-    'hydrodynamic',                       // 1 gen — hydrodynamic engineering
-    'material scientist',                 // 1 gen — materials science
-    'hardware technician',                // 3 gen — hardware bench technicians
-    'rf communications',                  // 1 gen — RF communications engineering
-    'design for test',                    // 1 gen — DFT engineering
-    'electronics technician',             // 8 gen — plural form (had 'electronic technician')
-    'solder technician',                  // 4 gen — soldering technicians
-    'physicist',                          // 3 gen — physics/applied physics
-    'circuit design',                     // 2 gen — circuit design (was desc phrase only)
-    'fire sprinkler',                     // 3 gen — fire sprinkler installers
-    'electrical eit',                     // 1 gen — electrical EIT roles
-    'sheet metal technician',             // 2 gen — sheet metal work
-    'calibration',                        // 9 gen — calibration technicians/engineers
-    'powertrain',                         // 4 gen — powertrain engineering
-    'thin films',                         // 2 gen — thin film technicians
-    'environmental scientist',            // 2 gen — environmental science
-    'solar technician',                   // 1 gen — solar panel technicians
-    'electrical technician',              // 4 gen — electrical techs (different from electronic)
-    'frac technician',                    // 1 gen — hydraulic fracturing
-    'power engineer',                     // 4 gen — power systems engineering (SEL)
-    'transmission line',                  // 1 gen — transmission line engineering (SEL)
-    'r&d engineer',                       // 17 gen, 100% spec — R&D engineering
-    'service engineer',                   // 13 gen, 98% spec — field/service engineering
-    'systems technician',                 // 11 gen, 75% spec — systems/electronics tech
-    'controls systems',                   // 9 gen, 85% spec — controls/automation
-    'engineering tech',                   // 6 gen, 80% spec — engineering technician (short form)
-    // 'structural bim' removed TAG-11 C47: all 5 hits were RE/SPEC civil structural BIM technicians (FP) — no tech collateral
-    'performance engineer',               // 4 gen — perf/thermal/systems engineering
-    'upgrade install',                    // 5 gen — installation/relocation engineering
-    'motorsports tire',                   // 2 gen, 0 FP — motorsports tire engineering (Oshkosh)
-    'heavy duty ev',                      // 1 gen, 0 FP — heavy-duty EV technician (Oshkosh)
-    'microelectronics sme',               // 1 gen, 0 FP — radiation hardened microelectronics
-    'combat systems integration',         // 1 gen, 0 FP — naval combat systems
-    'radar modeling',                     // 1 gen, 0 FP — radar modeling engineer
-    'substation engineer',                // 1 gen, 0 FP — electrical substation engineer
-  
-    'metallurgical engineer',             // 2 gen, 0 FP — metallurgical engineering
-    'platform cots',                      // 1 gen, 0 FP — COTS platform engineering
-    'mrb engineer',                       // 1 gen, 0 FP — material review board engineering
-    'nssms technician',                   // 1 gen, 0 FP — NATO SEASPARROW technician
-    'field service supervisor',           // 1 gen, 0 FP — field service supervision
-    'radar sme',                          // 1 gen, 0 FP — radar subject matter expert
-    '3d reconstruction',                  // 1 gen, 0 FP — 3D reconstruction
-    'digital modeling',                   // 1 gen, 0 FP — digital modeling engineer
-    'lidar intern',                       // 1 gen, 0 FP — lidar internship
-    'protected satcom',                   // 1 gen, 0 FP — protected SATCOM
-    'pressure systems',                   // 1 gen, 0 FP — pressure systems specialist
-    'hydrogen electrolyzer',                // 1 gen, 0 FP — H2 electrolyzer simulation (Bosch)
-    'biosensor intern',                     // 1 gen, 0 FP — biosensor internship (Bosch)
-    'laboratory engineer',                  // 1 gen, 0 FP — laboratory engineering (Bosch)
-    'media replay',                         // 2 gen, 0 FP — media replay operator (Disney)
-    'motorsports aero',                     // 1 gen, 0 FP — motorsports aero data (GM)
-    'motorsports vehicle dynamics',         // 1 gen, 0 FP — motorsports dynamics (GM)
-    'ress process',                         // 2 gen, 0 FP — RESS process HV tech (GM)
-    'creative seat designer',               // 1 gen, 0 FP — seat design (GM)
-    'loads and dynamics',                   // 2 gen, 0 FP — loads/dynamics engineer (SpaceX)
-    'recovery engineer',                    // 1 gen, 0 FP — recovery engineer (SpaceX)
-    'mechanisms engineer',                  // 1 gen, 0 FP — mechanisms engineer (SpaceX)
-
-    'chiller system',                     // 1 gen, 0 FP — chiller system technician
-    'shoulder r&d',                       // 1 gen, 0 FP — shoulder R&D (J&J)
-    'mechanical simulation',              // 3 gen, 0 FP — mechanical simulation (WD)
-    'sot reader',                         // 1 gen, 0 FP — SOT reader film research (WD)
-    'hdd testing',                        // 1 gen, 0 FP — HDD testing (WD)
-    'cmf designer',                       // 1 gen, 0 FP — CMF designer (Polaris)
-    // 'field technician- water' removed TAG-11 C47: sole hit was RE/SPEC water resources field tech (FP) — no tech collateral
-    'land development',                   // 4 gen, 0 FP — land development (RE/SPEC)
-    'engine systems integration',         // 1 gen, 0 FP — engine systems integration
-    'robot optics',                       // 1 gen, 0 FP — robot optics (Neuralink)
-    'neuroengineer',                      // 1 gen, 0 FP — neuroengineering (Neuralink)
-    'engineer structural',                // 1 gen, 0 FP — structural engineering (Northrop)
-    'permeability modifier',              // 1 gen, 0 FP — permeability modifier (Baker Hughes)
-    'battery responsible engineer',       // 1 gen, 0 FP — battery responsible eng (Blue Origin)
-    'av associate',                       // 1 gen, 0 FP — AV associate (Braze)
-    'yield enhancement',                  // 1 gen, 0 FP — yield enhancement engineer (Micron)
-    'healthcare spatial designer',        // 1 gen, 0 FP — healthcare spatial design (Philips)
-    'drafter/ designer',                  // 1 gen, 0 FP — drafter/designer (SEL)
-    'membrane r&d',                       // 1 gen, 0 FP — membrane R&D (Veolia)
-    'cad technical designer',             // 1 gen, 0 FP — CAD technical designer (Blue Origin)
-    'phase integrator',                   // 1 gen, 0 FP — phase integrator (Blue Origin)
-    'materials and process',               // 2 gen, 0 FP — M&P engineer (Blue Origin)
-    'implant account',                    // 1 gen, 0 FP — implant account technologist
-    'architecture intern',                // 1 gen, 0 FP — chip architecture internship
-    'cca design',                         // 1 gen, 0 FP — Digital CCA Design (circuit card assembly)
-    'flight line',                        // 2 gen, 0 FP — F-15 Flight Line Technician (Boeing)
-    'ordnance technician',                // 1 gen, 0 FP — F/A-18 Ordnance Technician (Boeing)
-    'sustainment engineer',               // 1 gen, 0 FP — F-15EX/IA Sustainment Engineer (Boeing)
-    'retrofit technical',                 // 1 gen, 0 FP — Retrofit Technical Specialist (Boeing)
-    'mp&p engineer',                      // 1 gen, 0 real FP — MP&P = Materials Processes Physics
-    'airworthiness',                      // 1 gen, 0 real FP — Airworthiness Support (pre-existing legal FP)
-    'guidance navigation & control',      // 1 gen, 0 FP — GNC Engineer (avoids Anduril software FP)
-    'system health engineer',             // 1 gen, 0 FP — Reliability & System Health Engineer (Boeing)
-    'mass properties engineer',           // 1 gen, 0 FP — Weights & Mass Properties Engineer (Boeing)
-    'training device technician',         // 1 gen, 0 FP — Training Device Technician Flight Sim (Boeing)
-    'tech pubs',                          // 1 gen, 0 FP — Chinook Tech Pubs Author (Boeing)
-    'ltamds',                             // 1 gen, 0 FP — LTAMDS Program Integrator (RTX)
-    'slcm-n',                             // 1 gen, 0 FP — SLCM-N Program Integrator (RTX)
-    'coyote block',                       // 1 gen, 0 FP — Coyote Block 3 Chief Engineer (RTX)
-    'patriot missile',                    // 1 gen, 0 FP — Technical Aide Patriot Missile (RTX)
-    'javelin joint venture',              // 1 gen, 0 FP — Javelin JV Portfolio Chief Engineer (RTX)
-    'f135 fse',                           // 1 gen, 0 FP — F135 FSE Cherry Point (RTX)
-    'hydrogen technology',                // 1 gen, 0 FP — Hydrogen Technology Co-op (Bosch)
-    'vision system engineer',             // 1 gen, 0 FP — Vision System Engineer AOI (Bosch)
-    'computational materials science',    // 1 gen, 0 FP — Computational Materials Science Intern (Bosch)
-    'plc controls technician',            // 1 gen, 0 FP — PLC Controls Technician Siemens (Bosch)
-    'rf seeker',                          // 1 gen, 0 FP — RF Seeker Engineer (Leidos)
-    '3d substation',                      // 1 gen, 0 FP — 3D Substation Designer (Leidos)
-    'electronic warfare',                 // 3 gen, 1 acceptable — EW Analyst (Leidos), FUSION CUAS Analyst (Leidos), Air Defense EW Analyst (CACI). 1 FP: Motorola EW Sales Eng = correctly hardware-adjacent
-    'missile launcher',                   // 1 gen, 0 FP — Missile Launcher Product Team Lead (Leidos)
-    'loads & dynamics',                   // 1 gen, 0 FP — Loads & Dynamics Engineer Starship (SpaceX)
-    'guidance navigation control',        // 2 gen, 0 FP — Guidance Navigation Control Engineer L2/3, L4 (Northrop Grumman)
-    'nre operator',                       // 1 gen, 0 FP — NRE Operator (Northrop Grumman) [Non-Recurring Engineering]
-    'causal technical',                   // 1 gen, 0 FP — Causal Technical Professional (Northrop Grumman)
-    // C58: defense/hardware keyword gaps
-    'controls system',            // 2 gen — controls system design (e.g. "Controls System Designer")
-    'radio frequency engineer',   // 1 gen — RF engineering
-    'sensors engineer',           // 1 gen — sensor systems engineering
-    'espasat',                            // 1 gen, 0 FP — ESPASat Product Line Program Coordinator (Northrop Grumman)
-    'u105 sensors',                       // 1 gen, 0 FP — U105 SENSORS&SYSTEMS TECH (Northrop Grumman)
-    'electronic ground support',          // 1 gen, 0 FP — Electronic Ground Support Equipment (EGSE) Engineer (Northrop Grumman)
-    'condition monitoring advisor',       // 1 gen, 0 FP — Condition Monitoring Advisor - Reliability (Caterpillar) [predictive maintenance engineering]
-    'cat technology component',           // 1 gen, 0 FP — CAT Technology Component Coordinator (Caterpillar) [Career Area: Engineering — machine/vehicle hardware]
-    'regulatory compliance technology specialist', // 1 gen, 0 FP — Technical Regulatory Compliance Technology Specialist - Electrical/Electronics (Caterpillar) [Career Area: Engineering]
-    'autonomy project team lead',         // 1 gen, 1 justified FP — Autonomy Project Team Lead (Caterpillar x2); FP is same company misclassified as operations; desc confirms hardware/NTI engineering
-    'electrical diagnostician',     // 1 gen, 0 FP — Launch Electrical Diagnostician (General Motors) [vehicle electrical systems]
-    'thermal 1d',                   // 2 gen, 0 FP — Thermal 1D VDDV Engineer (General Motors x2) [1D thermal simulation engineering]
-    'vehicle fastening',            // 1 gen, 0 FP — VDDV Global Technical Specialist Vehicle Fastening (General Motors)
-    'wheel designer',               // 1 gen, 0 FP — Entry-Level Wheel Designer (General Motors) [vehicle component design engineering]
-    'cooling pump',                 // 1 gen, 0 FP — Technical Specialist Cooling Pump System and Hardware (General Motors)
-    'structures/durability',        // 1 gen, 0 FP — Technical Specialist Structures/Durability (General Motors) [vehicle structural engineering]
-    'paint and polymer',            // 1 gen, 0 FP — Researcher Paint and Polymer Technology (General Motors) [materials engineering]
-    'test cell support',            // 1 gen, 0 FP — Onsite & Test Cell Support Technician (General Motors) [engine/powertrain test cell]
-    'product validation owner',     // 1 gen, 0 FP — Product Validation Owner GPSSC (General Motors)
-    'cfd simulation',               // 1 gen, 0 FP — 3D-CFD Simulation Intern (Bosch; 3D CFD/thermal simulation of engine components)
-    'reliability, availability, maintainability', // 1 gen, 0 FP — Engineer Level I – Reliability, Availability, Maintainability (RAM) Analysis (CACI; systems reliability engineering for defense systems)
-    'vision imaging',            // 1 gen, 0 FP — Vision Imaging Engineer (Intuitive; imaging algorithms, camera/optics for da Vinci robot)
-    'associate engineer electronics', // 1 gen, 0 FP — Associate Engineer Electronics (NG; electronics engineering)
-    'associate engineer electrical',  // 1 gen, 0 FP — Associate Engineer Electrical/Engineer Electrical Level 1/2 (NG; electrical engineering)
-    'environmental effects engineering', // 1 gen, 0 FP — AD Environmental Effects Engineering Strategy & Integration Lead (RTX; environmental hardening for defense systems)
-    'structural repair',             // 1 gen, 0 FP — Structural Repair Engineer (Boeing; aircraft structural repair/MRO engineering)
-    'electrical retrofit',           // 1 gen, 0 FP — Electrical Retrofit Engineer (Boeing; avionics/electrical systems service bulletin retrofit)
-    'lab test program',              // 1 gen, 0 FP — Lab Test Program Integrator (Boeing; BT&E lab test integration for defense programs)
-    'technical designer',            // 1 gen, 0 FP — Technical Designer (Interiors) (Boeing; cabin interiors CAD/design for 787 program)
-    // TAG-26: SpaceX Starlink/Starshield semiconductor + RF hardware
-    'device physics',                   // 1 gen, 0 FP — Device Physics Engineer (SpaceX Starlink)
-    'hardware reliability',             // 14 matches, 0 FP — all hardware reliability engineering
-    'low voltage engineer',             // 3 gen, 0 FP — Oracle data-center low-voltage electrical engineering
-    'engineer electronics',             // 2 gen, 0 FP — Northrop electronics engineering titles
-    'soc silicon top-level floorplan engineer', // 1 gen, 0 FP — Google silicon floorplan hardware role
-    'low power design methodology and optimization engineer', // 1 gen, 0 FP — Google silicon/power hardware role
-    'data center mechanical cooling engineer', // 1 gen, 0 FP — Google data center mechanical engineering role
-    'scada',                            // 4 matches, 0 real FP — SCADA systems engineering (1 manufacturing, acceptable)
-    'ic package',                       // 1 gen, 0 FP — IC Package Engineer (SpaceX Starlink)
-    'eee components',                   // 1 gen, 0 FP — EEE Components Engineer (SpaceX)
-    'eee failure',                      // 1 gen, 0 FP — EEE Failure Analysis Technician (SpaceX)
-    'electromagnetic effects',          // 4 matches, 0 real FP — EM effects engineering (2 Boeing general that should be HW)
-    'electro-optical',                  // 2 matches, 0 FP — electro-optical engineering
-    'launch engineer',                  // 4 matches, 0 real FP — launch engineering (SpaceX)
-    'rfic engineer',                    // compound: avoids 'superficial' substring FP
-    'microwave engineer',               // 3 matches, 1 marginal (Starlink Mobile tagged SW by pipeline)
-    // TAG-11 C55: CACI hardware roles
-    'condition based maintenance',   // 1 gen, 0 FP — Engineer - Condition Based Maintenance (CACI; predictive/condition-based maintenance engineering for defense systems)
-    // TAG-11 C56: Elanco hardware roles
-    'process team engineer',         // 1 gen, 0 FP — Associate, Process Team Engineer (Elanco; process engineering for pharma/animal health manufacturing)
-    // TAG-PRECISION-17 (B36): hardware keyword gaps
-    'ndt technician',               // 5 gen — nondestructive testing (Boeing, NG)
-    'fluid system',                 // 1 gen — fluid systems engineering (Blue Origin)
-    // TAG-PRECISION-19 (B37): hardware keyword gaps
-    'component engineer',           // 8 gen — semiconductor/electronics component engineering
-    // TAG-INTERN-1 (B45): hardware internship keyword gaps
-    'electro-mechanical instrument',           // 1 gen — Draper Electro-Mechanical Instrument Co-op
-    'microelectronics integration',            // 1 gen — Draper Microelectronics Integration Co-op
-    'wireless sensing research intern',        // 1 gen — Bosch Wireless Sensing Research Intern
-    'mobile robots intern',                    // 2 gen — KION Mobile Robots Intern (robotics)
-    'power integrity industry immersion',      // 2 gen — Intel Power Integrity Intern (EE)
-    'formal verification intern',              // 1 gen — NVIDIA Formal Verification Intern (HW verify)
-    'rtl intern',                              // 1 gen — Etched RTL Intern (digital design)
-    'hw design verification',                  // 1 gen — d-Matrix HW Design Verification Intern
-    'power and thermal management',            // 1 gen — Intel Power & Thermal Management Intern (EE)
-    'construction management intern',          // 1 gen — SEL Construction Management Intern (civil/hw)
-    // TAG-INTERN-1 cycle 2 (B52): hardware keyword gaps
-    'antenna intern',                          // 1 gen — antenna engineering (Qualcomm)
-    'vehicle electronics',                     // 1 gen — automotive electronics (Rolls Royce)
-    'adas hardware',                           // 3 gen — ADAS hardware dev (Bosch)
-    'r&d electrical',                          // 1 gen — electrical R&D (Boston Dynamics)
-    'electronics co-op',                       // 1 gen — electronics engineering (Regal Rexnord)
-    'dfm intern',                              // 1 gen — design for manufacturing (Xometry)
-    'optics development intern',               // 1 gen — optics engineering (Bosch)
-    'intern - asi/psi',                        // 1 gen — ASI/PSI defense hardware (Northrop Grumman)
-    // TAG-INTERN-1 cycle 4 (B53): hardware keyword gaps
-    'hardware development',                    // 1 G1 — HW dev intern/co-op
-    'system test',                             // 1 G1 intern + 21 total — system test engineering
-    'automation & test',                       // 1 G1 — test automation intern
-    'electrical sourcing',                     // 1 G1 — EE sourcing intern
-    // TAG-INTERN-1 cycle 5 (B61): hardware keyword gaps
-    'engineering application mechanics',       // 2 G1 — Engineering Application Mechanics Intern (Bosch)
-    'battery experimental',                    // 1 G1 — Battery Experimental Intern (Nissan)
-    'engine dynamics',                         // 1 G1 — Intern in Engine Dynamics (RTX)
-  ];
-  // ENR-8: Intuitive Surgical clinical/QC FP detection (declared here — used in both
-  // hardware guard below and pre-O*NET guard above line ~2640).
-  const isIntuitive = /intuitive surgical|intuitive/i.test(job.company_name || '');
-  const isIntuitiveClinicalFP = isIntuitive && (
-    /\bclinical applications? engineer\b/i.test(title) ||
-    /\bquality inspection failure analysis\b/i.test(title)
-  );
-
-  // Guard: 'service technician' — sole-match is ALWAYS a FP (TAG-PRECISION-7)
-  // All 63 sole-match service technicians are service/repair/maintenance (Comcast, JC, Lucid, etc.)
-  // When title also matches another HW keyword (circuit, RF, embedded, etc.) → legitimate HW
-  const matchesHardware = hardwareKeywords.some(kw => title.includes(kw));
-  if (matchesHardware) {
-    const isOnlyServiceTech = title.includes('service technician') &&
-      !hardwareKeywords.some(kw => kw !== 'service technician' && title.includes(kw));
-    // TAG-13: 'operations engineer' in cloud/devops/SRE context is software, not hardware
-    const isCloudOpsEng = title.includes('operations engineer') &&
-      /\b(cloud|devops|site reliability|platform)\b/i.test(title) &&
-      !hardwareKeywords.some(kw => kw !== 'operations engineer' && title.includes(kw));
-    // operations technicians, not hardware engineers. Veolia water treatment FSRs (PLC,
-    // water treatment, mobile water commissioning) are field ops, not hardware engineering.
-    // Non-Veolia FSRs (RTX NASAMS, Boeing F-22/F-18, Motorola, INFICON, Leidos) are
-    // defense/comms/instrumentation hardware — correctly kept.
-    const isWaterUtilityFSR = title.includes('field service representative') &&
-      /water treatment|water technolog|water commissioning|plc technician/i.test(title) &&
-      !hardwareKeywords.some(kw => kw !== 'field service representative' && title.includes(kw));
-    // ENR-7: Veolia Chemical/O&G/Energy field-ops guard (slug-specific).
-    // Veolia Chemical Solutions, O&G down-hole, Energy Systems, and I&E technicians
-    // are field operations roles, not hardware engineering. Matched via field-service/trades
-    // keywords but produce zero skills — Philips/ASML have legitimate hardware FSEs and
- // must NOT be guarded globally. Baker Hughes guarded separatelyA — oilfield, not tech).
-    // Veolia legitimate hardware (commissioning engineers, data center electrical/mechanical
-    // engineers) match via 'commissioning engineer'/'electrical engineer'/'mechanical
-    // engineer'/'mechanical design' — unaffected by this guard.
-    const isVeolia = /veolia/i.test(job.company_name || '');
-    const veoliaFieldOpsKeywords = [
-      'field service representative', 'field service technician',
-      'service technician', 'systems technician',
-      'electrician', 'electrical technician', 'journeyman',
-    ];
-    const isVeoliaFieldOps = isVeolia &&
-      veoliaFieldOpsKeywords.some(kw => title.includes(kw)) &&
-      !hardwareKeywords.some(kw => !veoliaFieldOpsKeywords.includes(kw) && title.includes(kw));
- //A: NCR Voyix field service technicians repair ATMs/POS terminals — operations,
-    // not hardware. 4 misrouted jobs visible in consumer repos. NCR has no legitimate
-    // hardware roles; all their tech roles are software (tagged via software keywords).
-    const isNCR = /ncr voyix|ncr/i.test(job.company_name || '');
-    const ncrFieldOpsKeywords = [
-      'field service technician', 'service technician',
-      'field service representative',
-    ];
-    const isNCRFieldOps = isNCR &&
-      ncrFieldOpsKeywords.some(kw => title.includes(kw)) &&
-      !hardwareKeywords.some(kw => !ncrFieldOpsKeywords.includes(kw) && title.includes(kw));
- //A: Baker Hughes field service/maintenance roles are oilfield industrial — not tech
-    // hardware. "Nuclear mechanical engineer", "Machine Maintenance Technician", "Field
-    // Specialist" are drilling/turbine maintenance. Baker Hughes legitimate tech roles
-    // ("AI Solutioning Consultant") match via software/AI keywords, unaffected by this guard.
-    const isBakerHughes = /baker hughes/i.test(job.company_name || '');
-    const bakerFieldOpsKeywords = [
-      'field service engineer', 'field service technician',
-      'field specialist', 'service technician',
-      'machine maintenance', 'maintenance technician',
-    ];
-    const isBakerFieldOps = isBakerHughes &&
-      bakerFieldOpsKeywords.some(kw => title.includes(kw)) &&
-      !hardwareKeywords.some(kw => !bakerFieldOpsKeywords.includes(kw) && title.includes(kw));
- //A: Trades keyword guard — hvac, electrician, maintenance technician, journeyman,
-    // apprentice are trades roles when they're the SOLE hardware keyword match.
-    // Legitimate tech-hardware cases have additional context: "HVAC Controls Engineer"
-    // matches both hvac + controls engineer, "Wafer Equipment Maintenance Technician"
-    // matches both maintenance technician + wafer. Sole-match = no tech context = trades.
-    // Fixes 15 visible misroutes in hardware repo (HVAC techs, automotive electricians,
-    // aircraft maintenance, seal repair) without affecting defense/semiconductor roles.
-    const tradesKeywords = [
-      'hvac', 'hvac technician', 'hvac engineer',
-      'electrician', 'electrical technician', 'journeyman',
-      'maintenance technician', 'maintenance tech', 'maintenance mechanic',
-      'maintenance operator', 'maintenance supervisor',
-      'apprentice',
-    ];
-    const isTradesOnly = (() => {
-      const hwMatches = hardwareKeywords.filter(kw => title.includes(kw));
-      if (hwMatches.length === 0) return false;
-      // If ALL hardware matches are trades keywords → no tech-hardware context → block
-      // If ANY match is non-trades (controls engineer, wafer, embedded, etc.) → keep
-      return hwMatches.every(kw => tradesKeywords.includes(kw));
-    })();
-    // TAG-22: Software-primary guard — titles with "software" as a primary descriptor
-    // are software roles, not hardware. Blocks HW tag for "Software Test Engineer" etc.
-    // Exception: "Hardware/Software Co-Design" and "Hardware Design ..., Software Defined Radio"
-    // where "software" is in an org/product name, not the primary role.
-    const isSoftwarePrimaryRole = title.includes('software') &&
-      !/hardware\s*\/\s*software|hardware\s*and\s+software/i.test(title) &&
-      !/^hardware\s+(design|test|engineer|development|validation)/i.test(title);
-    // TAG-GUARD-1: Supply chain engineering FP guard. "Process Engineer - Supply Chain",
-    // "Quality Engineer - Supply Chain", "Sourcing Engineer", "Industrial Engineer" in
-    // supply chain/warehouse/procurement context are operations/logistics roles, not hardware.
-    // These engineer-titled jobs match hardwareKeywords but the actual work is supply chain ops.
-    const supplyChainKeywords = ['supply chain', 'procurement', 'sourcing', 'buyer', 'warehouse', 'shipping', 'receiving', 'inventory'];
-    const supplyChainEngineeringKws = ['process engineer', 'quality engineer', 'industrial engineer', 'production engineer', 'sourcing engineer', 'supplier development engineer', 'procurement engineer', 'cost value engineer', 'materials associate', 'production scheduler'];
-    const isSupplyChainEng = supplyChainKeywords.some(kw => title.includes(kw)) &&
-      hardwareKeywords.filter(kw => title.includes(kw)).every(kw => supplyChainEngineeringKws.includes(kw));
-    // TAG-PRECISION-11: Technician-only guard — "Technician" is a support/maintenance role, not
-    // hardware engineering. When the title's primary role is "technician" (no "engineer"/"scientist"
-    // context), skip HW tag. 39 visible FPs in HW consumer repo (service techs, quality control
-    // techs, installation techs, field service techs). Zero FN risk: no HW engineering role is
-    // titled solely "Technician" without "Engineer" also appearing.
-    const isTechnicianOnly = (() => {
-      const hasTechRole = /\btechnicians?\b/i.test(title) || (/\btech\b/i.test(title) && !/\btechnology\b/i.test(title));
-      if (!hasTechRole) return false;
-      // "Engineering Technician", "Quality Engineering Technician" etc. — borderline but keep
-      // to avoid FN on engineering-support roles at defense/semiconductor companies
-      const hasEngContext = /\bengineer/i.test(title) || /\bscientist\b/i.test(title) ||
-        /\bphysicist\b/i.test(title) || /\barchitect\b/i.test(title);
-      if (hasEngContext) return false;
-      // TAG-PRECISION-17: Some hardware keywords explicitly identify technician roles that ARE hardware
-      // (e.g., "electronics technician", "ndt technician"). Don't guard these — they're intentional matches.
-      // NOTE: Only "electronics technician" (with 's') — "electronic technician" (singular) is blocked
-      // per PRECISION-11 (bare Electronic Technician is ops, not HW engineering).
-      // NOTE: "field service technician" is NOT included — PRECISION-11 established field service is ops.
-      // NOTE: "test technician" is NOT included — "Propulsion Test Technician" and "Hardware Test Technician"
-      // are blocked per PRECISION-11 (technician-only roles without engineering context).
-      const hwTechnicianKeywords = [
-        'electronics technician', 'ndt technician', 'rf technician',
-        'hvac technician', 'hvac/r technician',
-        'data center technician',  // SM31: DC facility tech — hardware/infrastructure, not ops.
-      ];
-      if (hwTechnicianKeywords.some(kw => title.includes(kw))) return false;
-      return true;
-    })();
-    // B28: 'embedded' sole-match on sales/finance/consultant titles is not hardware.
-    // "Embedded Sales Development Representative" (Workato), "Implementation Consultant, Embedded Finance" (Brex)
-    // are business roles using "embedded" as a product/finance term, not embedded systems engineering.
-    const hwMatches = hardwareKeywords.filter(kw => title.includes(kw));
-    const isEmbeddedNonTech = hwMatches.length === 1 && hwMatches[0] === 'embedded' &&
-      /\b(sales|finance|consultant|account|representative|manager)\b/i.test(title) &&
-      !/\bengineer/i.test(title);
-    // B28: 'automated logic' sole-match on sales titles is not hardware.
-    // Carrier Global "Service Sales Representative, Automated Logic" — Automated Logic is a
-    // Carrier subsidiary (building automation), not a hardware engineering role.
-    const isAutomatedLogicSales = hwMatches.length === 1 && hwMatches[0] === 'automated logic' &&
-      /\b(sales|representative|manager)\b/i.test(title) &&
-      !/\bengineer/i.test(title);
-    // TAG-WD-NONTECH-1: Sales roles are not hardware engineering.
-    // "Account Sales (Semiconductor EQ)", "Japan OEM Sales" at Applied Materials etc.
-    // Guarded globally — sales representative/manager is never a HW engineering role.
-    const isHwSalesFP = isSalesRole &&
-      !/\bengineer/i.test(title) && !/\bscientist\b/i.test(title);
-    // TAG-WD-NONTECH-1: Medtronic EP Mapping Specialists are clinical support roles
-    // (cardiac electrophysiology mapping), not hardware engineering.
-    const isMedtronic = /medtronic/i.test(job.company_name || '');
-    const isMedtronicMappingFP = isMedtronic && /\bmapping specialist\b/i.test(title);
-    if (!isOnlyServiceTech && !isCloudOpsEng && !isWaterUtilityFSR && !isVeoliaFieldOps && !isIntuitiveClinicalFP && !isNCRFieldOps && !isBakerFieldOps && !isTradesOnly && !isSoftwarePrimaryRole && !isSupplyChainEng && !isTechnicianOnly && !isEmbeddedNonTech && !isAutomatedLogicSales && !isHwSalesFP && !isMedtronicMappingFP) {
-      pushTag('hardware', findMatch(hardwareKeywords, title), 'title');
-    }
-  }
-
-  // Healthcare domain (title-only — short credentials use word-boundary regex)
-  // Previously named 'nursing' — renamed TAG-OVERHAUL-B to reflect actual coverage (PT, pharmacist, etc.)
-  const healthcareExact = [
-    'registered nurse', 'nurse practitioner', 'nursing', 'travel nurse', 'lvn', 'graduate nurse',
-    'licensed practical nurse', 'licensed vocational nurse',
-    'patient care technician', 'patient care tech',
-    'surgical technician', 'surgical tech',
-    'pharmacy technician', 'pharmacy tech',
-    'physical therapist', 'occupational therapist',
-    'rehab aide', 'rehabilitation aide',
-    'medical lab scientist', 'medical laboratory scientist',
-    'dialysis technician', 'dialysis tech',
-    'emergency department technician', 'emergency dept technician',
-    'respiratory therapist',
-    'medical assistant',
-    'phlebotomist',
-    'radiology technologist', 'radiologic technologist', 'radiographer',
-    'sonographer', 'sonography technologist', 'ultrasound technologist',
-    'pharmacist',
-    'dietitian',
-    'sterile processing technician',
-    'speech therapist', 'speech language pathologist',
-    'ct technologist', 'computed tomography technologist',
-    'mammography technologist',
-    'polysomnographic technician', 'sleep technician', 'sleep tech',
-    'cytogenetics technologist', 'cytogenetic technologist',
-    'pathologist assistant',
-    'paramedic',
-    'patient access representative',
-    'ambulatory surgery assistant',
-    'unit service associate',
-    'clinic assistant', 'practice assistant',
-    'neonatal transport',
-    // TAG-OVERHAUL-B additions (492 additional clinical jobs in 'general'):
-    'anesthetist', 'anesthesia technician',
-    'mri technologist', 'echocardiography technologist', 'echo technician',
-    'ekg technician', 'ekg tech',
-    'radiation therapist',
-    'endoscopy technician',
-    'clinical research coordinator',
-    'crisis clinician',
-    'admission coordinator',
-    'patient service representative', 'patient service specialist',
-    'patient access rep',
-    'patient transporter',
-    'medical office specialist',
-    'lab support technician', 'laboratory assistant',
-    'behavioral health',
-    'histotechnologist',
-    'prior authorization specialist',
-    'child life specialist',
-    'exercise physiologist',
-    'medical technologist',
-    'medical interpreter',
- // GENERAL-CLASSIFICATION additions — +376 verified from live pool):
-    'physician',                // PRN Emergency Medicine Physician, Faculty Physician
-    'pharmacy intern',          // pharmacy intern roles not caught by 'pharmacy tech' / 'pharmacist'
-    'pharmacy manager',         // pharmacy operations management (Walmart/Sam's, 37 gen)
-    'pharmacy pre-grad',        // pharmacy pre-graduate intern (Walmart, 37 gen)
-    'pharmacy grad intern',     // pharmacy graduate intern (Walmart/Sam's, 19 gen)
-    'grad intern (hourly)',     // pharmacy grad intern variant (Sam's Club Pharmacy, 2 gen)
-    'optician',                 // optical dispensing (Walmart/Sam's, 18 gen)
-    'optometrist',              // eye care professional (Walmart/Sam's, 10 gen)
-    'clinical technician',      // clinical lab/hospital techs
-    'clinical specialist',      // clinical device/product specialists
-    'clinical associate',       // clinical support roles
-    'medical screener',         // intake/screening roles
-    'medical scribe',           // documentation support
-    'radiology tech',           // shorthand caught by 'radiology technologist' longer form too
-    'dental assistant',         // dental clinic support
-    'dental hygienist',         // dental clinical
-    'veterinary',               // vet tech, veterinary assistant
-    'ophthalmic',               // ophthalmic tech, ophthalmic assistant
-    'cardiac tech',             // cardiac monitoring/telemetry
-    'health educator',          // public health education roles
-    'public health',            // public health analyst/coordinator
-    'plasma center technician',     // 35 hits — Takeda/BioLife plasma donation techs
-    'laboratory technician',        // 18 hits — clinical/hospital lab techs
-    'lab technician',               // 18 hits — shortened form
-    'oncology',                     // 54 hits — oncology specialist/rep (medical device/pharma)
-    'clinical territory',           // 17 hits — clinical territory associate/manager (medical device)
-    'spine specialist',             // 25 hits — associate spine specialist (Medtronic/Stryker)
-    'interventional specialist',    // 14 hits — interventional cardiology/radiology (Medtronic)
-    'phlebotom',                    // 16 hits — phlebotomist/phlebotomy (prefix match)
-    'cardiovascular',               // 30 hits — cardiovascular nurse/consultant/hospitalist (AbbVie, Medtronic)
-    'endoluminal',                  // 6 hits — endoluminal territory associate (medical device)
-    'health services',              // 7 hits — health services coding/admin
-    'patient account',              // 19 hits — patient account representative (hospital billing)
-    'clinical psychologist',        // 3 hits — clinical psych roles (defense/VA)
-    'surgical consultant',          // 7 hits — medical device surgical consulting
-    'clinical account',             // 18 hits — clinical account specialist (med device/pharma)
-    'neurophysiologist',            // 25 hits — neuromonitoring roles
-    'psychiatrist',                 // 9 hits — psychiatrist roles (Talkiatry, defense/VA)
-    'counselor',                    // 9 hits — military family life counselors, mental health counselors
-    'veterinarian',                 // 3 hits — professional services veterinarians
-    'microbiologist',               // 1 hit — microbiology/sterilization roles
-    // TAG-PRECISION-10: 'chemist' removed — causes 5+ FPs (SpaceX PCB, NG defense, Benchling SW,
-    // Handshake edtech, NVIDIA semiconductor). Word matches 'chemistry' via substring.
-    // Abbott (3 genuine pharma chemists) still visible in NGJ main repo via other HC keywords.
-    // Re-add with per-company override if that pattern is built (TENANT_DEFAULTS v2).
-    'research associate',           // 15 gen, 89% spec — clinical/medical research associates
- // 'mental health' moved to regex guard below — 'environmental' contains 'mental' substring (TAG-13)
-    'medical laboratory',           // 6 gen, 100% spec — medical lab technologists
-    'clinical quality',             // 4 gen — clinical quality assurance
-    'clinical trial',               // 4 gen — clinical trial statistics/management
-    'associate scientist',          // 9 gen — biotech/pharma research scientists
-    'medical coding',               // 1 gen — medical coding/billing
-    'lab analyst',                  // 2 gen — laboratory analysts
-    'clinical integration',         // 2 gen — clinical integration team leads
-    'formulation scientist',        // 3 gen — pharmaceutical formulation
-    'clinical consultant',          // 4 gen — clinical consulting roles
-    'dental',                       // 3 gen — dental field roles (bare form)
-    'medical biller',               // 3 gen — medical billing
-    'proteomics',                   // 1 gen — proteomics research
-    'clinical lab',                 // 4 gen, 2 FP — clinical laboratory roles
-    'inpatient coding',             // 1 gen, 0 FP — medical coding
-    'patient access',               // 1 gen, 0 FP — patient registration/access
-    'industrial hygiene',           // 1 gen, 0 FP — industrial hygiene technician
-    'him coding',                   // 1 gen, 0 FP — health info management coding
-    'payer enrollment',             // 1 gen, 0 FP — healthcare payer enrollment
-    'release of information',       // 1 gen, 0 FP — medical records release
-    'admitting representative',     // 3 gen, 0 FP — hospital admitting
-    'patient relations',            // 1 gen, 0 FP — patient relations
-    'clinical documentation improvement', // 1 gen, 0 FP — CDI specialist
-    'credit balance specialist',    // 1 gen, 0 FP — healthcare credit balance
-    'cash poster',                  // 1 gen, 0 FP — healthcare payment posting
-    'birth clerk',                  // 1 gen, 0 FP — birth records clerk
-    'electron microscopy',          // 1 gen, 0 FP — EM laboratory
-  
-    'licensed psychologist',         // 1 gen, 0 FP — licensed psychologist
-    'immunologist',                  // 1 gen, 0 FP — immunology
-    'strength and conditioning',     // 1 gen, 0 FP — S&C specialist
-    'molecular geneticist',          // 1 gen, 0 FP — molecular geneticist
-    'pharmacovigilance',             // 1 gen, 0 FP — pharmacovigilance scientist
-    'regulatory cmc',                // 1 gen, 0 FP — regulatory CMC lead
-    'lab technologist',              // 1 gen, 0 FP — laboratory technologist (Moog)
-    'msl head',                      // 1 gen, 0 FP — MSL head (J&J)
-    'hcp engagements',               // 1 gen, 0 FP — HCP engagements analyst (J&J)
-    'pcr assay',                     // 1 gen, 0 FP — PCR assay development (IDEXX)
-    'clinical pathology',            // 1 gen, 0 FP — clinical pathology (IDEXX)
-    'upstream qbd',                  // 1 gen, 0 FP — upstream QbD development (Elanco)
-    'biologist',                     // 1 gen, 0 FP — biologist (Guidehouse)
-    'comparative medicine',          // 1 gen, 0 FP — comparative medicine (Intuitive)
-    'health solution specialist',    // 2 gen, 0 FP — health solution specialist (USAA)
-    'revenue cycle coordinator',     // 2 gen, 0 FP — revenue cycle coordinator
-    'revenue cycle case',            // 1 gen, 0 FP — revenue cycle case mgmt (athenahealth)
-    'patient experience specialist', // 1 gen, 0 FP — patient experience
-
-    'ergonomist',                   // 1 gen, 0 FP — ergonomist
-
-    'purification development',      // 1 gen, 0 FP — protein purification R&D
-    'scientific compliance',         // 1 gen, 0 FP — scientific compliance
-    'biologics drug substance',      // 1 gen, 0 FP — biologics drug substance
-    'peptide synthesis',             // 1 gen, 0 FP — peptide synthesis
-    'translational precision medicine', // 1 gen, 0 FP — translational precision medicine
-    'hematopathologist',            // 1 gen, 0 FP — Hematopathologist (Guidehouse)
-    'ip quality reviewer',          // 1 gen, 0 FP — Remote IP Quality Reviewer (Guidehouse HIM)
-    'hospital admissions rep',      // 2 gen, 0 real FP — fixes misclassified ops→healthcare (Guidehouse)
-    'medical affairs',              // 1 gen, 0 FP — AD Medical Affairs (AbbVie)
-    'protein analytics',            // 1 gen, 0 FP — Scientist I Protein Analytics (AbbVie PDS&T)
-    'histology',                    // 1 gen, 0 FP — Scientist II Histology (AbbVie); fixes 2 Exact Sciences ops→healthcare misclassifications
-    'pds&t',                        // 1 gen, 0 FP — AD Technical PDS&T (AbbVie Product Development Science & Technology)
-    'managed care',                 // 2 gen, 0 FP — Managed Care Contracting Specialist (Abbott); also Guidehouse healthcare managed care
-    'laboratory supervisor',        // 3 gen, 0 FP — Laboratory Supervisor QC (Abbott), Lab Supervisor (IDEXX, Veolia env lab)
-    // TAG-11 C56: Elanco healthcare/animal health roles
-    'feed additive',                // 1 gen, 0 FP — Advisor – Feed Additive Assay & Generic Defense (Elanco; animal health feed additive testing/HPLC-MS methodology)
-    // TAG-PRECISION-14: high-impact healthcare keywords
-    // Scientist I / II use regex below so "Data Scientist Intern" does not substring-match healthcare.
-    'lab scientist',                // 2 gen — lab scientist applications (Thermo Fisher)
-    'postdoctoral',                 // 18 gen — postdoctoral researcher/fellow (academic/medical)
-    'clinical research',            // 4 gen — clinical research coordinator/associate
-    // TAG-PRECISION-17 (B36): healthcare keyword gaps
-    'field reimbursement',          // 8 gen — pharma field reimbursement (AbbVie, J&J)
-    'clinical data',                // 3 gen — clinical data management (AbbVie)
-    'clinical documentation',       // 1 gen — clinical documentation (AbbVie)
-    'patient care coordinator',     // 1 gen — patient care coordination (AbbVie)
-    'lab services',                 // 1 gen — lab services specialist (AbbVie)
-    // TAG-INTERN-1 (B45): healthcare internship keywords
-    'cell culture development',      // 1 gen — Biogen Co-op
-    'biomaterials r&d co-op',        // 1 gen — J&J Biomaterials R&D
-    'heart recovery summer internship', // 1 gen — J&J Heart Recovery
-    'hfe co-op',                     // 1 gen — J&J HFE co-op
-    'intern - revenue cycle',        // 1 gen — Guidehouse Revenue Cycle
-    'intern bachelor pharmacy',      // 1 gen — pharmacy intern
-    'palmm immunology',              // 1 gen — J&J PALM Immunology
-    'clinical development',          // 1 gen — J&J Clinical Development
-    // TAG-INTERN-1 cycle 2 (B52): healthcare keyword gaps
-    'cell therapy',                            // 1 gen — cell therapy co-op (J&J)
-    'device lifecycle',                        // 1 gen — medical device lifecycle (J&J)
-    'health informatics',                      // 1 gen — health IT (Harris Computer)
-    'health account',                          // 2 gen — health accounts (Booz Allen)
-    'in vitro translational',                  // 1 gen — in vitro pharmacology (Merck)
-  ];
-  // \bnurse\b catches bare 'nurse' titles (charge nurse, nurse educator, etc.)
-  // without matching 'nursery'. Short credentials use word-boundary to avoid false positives.
-  // AEMT (Advanced EMT) added as word-boundary credential.
-  const healthcareCredentials = /\b(nurse|rn|lpn|cna|crna|np|aemt|emt)\b/i;
-  // 'social worker' only in hospital context — title-match is sufficient since hospital Workday tenants
-  // won't title non-clinical social work roles as 'social worker' without qualification
-  const healthcareOther = ['social worker', 'medical social worker', 'clinical social worker',
-    'qc scientist', 'clinical scientist', 'clinical application'];
-  // TAG-13: 'mental health' uses word-boundary regex — 'environmental' contains 'mental' substring
-  const mentalHealthRegex = /\bmental health\b/i;
-  const healthcareScientistLevelRegex = /\bscientist\s+(?:i|ii)\b/i;
-  if (
-    healthcareExact.some(kw => title.includes(kw)) ||
-    healthcareCredentials.test(title) ||
-    healthcareOther.some(kw => title.includes(kw)) ||
-    mentalHealthRegex.test(title) ||
-    healthcareScientistLevelRegex.test(job.title || '')
-  ) {
-    const hcMatch = findMatch(healthcareExact, title) ||
-      (healthcareCredentials.test(title) ? 'credential regex' : null) ||
-      findMatch(healthcareOther, title) ||
-      (mentalHealthRegex.test(title) ? 'mental health (regex)' : null) ||
-      (healthcareScientistLevelRegex.test(job.title || '') ? 'scientist level regex' : null);
-    // TAG-PRECISION-2: Sales/ops roles at pharma/med-device companies match disease-area
-    // keywords (oncology, cardiovascular, endoluminal) but are sales/ops, not clinical.
-    // "Oncology Territory Manager" = pharma sales rep, not oncologist.
-    // "Key Account Manager, Oncology" = account management, not clinical.
-    // Guard: if the ONLY healthcare match is a disease/therapy keyword AND the title
-    // contains sales/ops keywords, route to sales/ops instead of healthcare.
-    const diseaseAreaKws = ['oncology', 'cardiovascular', 'endoluminal', 'clinical territory', 'spine specialist', 'interventional specialist', 'clinical account'];
-    const isSalesTitle = /\b(sales|territory|account manager|account exec|key account|business development)\b/i.test(title);
-    const isOpsTitle = /\b(operations manager|program operations)\b/i.test(title);
-    const onlyDiseaseMatch = diseaseAreaKws.some(kw => title.includes(kw)) &&
-      !healthcareExact.some(kw => !diseaseAreaKws.includes(kw) && title.includes(kw)) &&
-      !healthcareCredentials.test(title) &&
-      !healthcareOther.some(kw => title.includes(kw)) &&
-      !mentalHealthRegex.test(title);
-    // TAG-PRECISION-9: 'research associate' — RAs without clinical context are not healthcare.
-    // Bare "Research Associate" at non-HC companies (Eight Sleep, Entegris, Bridgewater) = FP.
-    // Guard fires when sole HC keyword is 'research associate' AND title lacks clinical context.
-    // Genuines preserved: Clinical RA, genomics/biotech RA (CZ Biohub, Arc Institute), Oncology RA.
-    const raHcContext = /\b(clinical|medical|healthcare|health\s|pharma|biotech|biology|drug|oncology|biochemist|molecular|cell|genetic|immunolog|lab\b|assay|genomic|synthetic|epidem|real-world science)\b/i.test(title);
-    const onlyRaMatch = title.includes('research associate') &&
-      !healthcareExact.some(kw => kw !== 'research associate' && title.includes(kw)) &&
-      !healthcareCredentials.test(title) &&
-      !healthcareOther.some(kw => title.includes(kw)) &&
-      !mentalHealthRegex.test(title);
-    // TAG-PRECISION-15: 'lab technician' matching construction materials testing (Olsson: 4 FPs).
-    // "Construction Materials Testing Lab Technician" = civil engineering QA, not clinical lab.
-    const isConstructionLab = /lab(oratory)? technician/i.test(title) &&
-      /\b(construction|materials testing|soil|concrete|asphalt|aggregate)\b/i.test(title);
-    if (onlyDiseaseMatch && isSalesTitle) {
-      pushTag('sales', hcMatch, 'title');
-    } else if (onlyDiseaseMatch && isOpsTitle) {
-      pushTag('operations', hcMatch, 'title');
-    } else if (onlyRaMatch && !raHcContext) {
-      // Skip healthcare — bare RA with no clinical/biotech context.
-    } else if (isConstructionLab) {
-      // Skip healthcare — construction materials testing, not clinical lab.
-    } else if (isSalesRole && !/\b(clinical|nurse|doctor|physician|pharma|therapist|dentist)\b/i.test(title)) {
-      // TAG-WD-NONTECH-1: Sales roles routed to healthcare are device/pharma sales reps,
-      // not clinical practitioners. "Sales Support, Clinical Specialist" kept (clinical context).
-      // "Area Sales Manager" at Abbott selling nutrition products blocked.
-      pushTag('sales', hcMatch, 'title');
-    } else {
-      pushTag('healthcare', hcMatch, 'title');
-    }
-  }
-
-  // Finance / Quant domain (title-only — function-based, not employer-based)
-  // Matches quant trading/research roles regardless of which firm posts them.
- // GENERAL-CLASSIFICATION expansion: added banking/accounting roles.
-  // Guard: SWE roles at trading firms stay tagged 'software' — function matters, not employer.
-  const financeKeywords = [
-    'quantitative trader', 'quantitative researcher', 'quantitative developer',
-    'quantitative analyst', 'quant trader', 'quant researcher', 'quant developer',
-    'quant strategist', 'quant analyst', 'trading engineer', 'trading strategist',
-    'broker trader', 'floor trader', 'options trader', 'derivatives trader',
-    'algorithmic trader', 'algo trader', 'market maker', 'execution trader',
-    'investment analyst', 'portfolio analyst', 'risk analyst',
- // GENERAL-CLASSIFICATION additions — +1,859 verified from live pool):
-    'financial analyst', 'financial advisor', 'financial consultant',
-    'financial counselor', 'financial representative', 'financial service',
-    'loan officer', 'credit analyst',
-    'teller',                   // bank teller — #1 hit (1,400+ jobs from WF/BofA/Chase/PNC)
-    'accountant',               // accountant — (bare 'accounting' NOT added: 'Accounting Technology Consultant' FP)
-    'tax analyst', 'payroll',
-    'treasury analyst',
-    'capital analyst',             // 2 gen, 0 FP — capital/treasury-style finance analysis
-    'actuary', 'actuarial',
-    'underwriter',
-    'personal banker', 'universal banker', 'banker', // retail banking roles
-    'property adjuster',            // 35 hits — property/auto claims adjusters (insurance)
-    'branch ambassador',            // 27 hits — bank branch ambassadors (Capital One, Chase)
-    'finance analyst',              // 19 hits — financial analysis roles
-    'investment consultant',        // 14 hits — wealth management consulting
-    'cost control analyst',         // 12 hits — defense program cost analysis
-    'financial systems analyst',   // 4 gen, 0 FP — finance systems / ERP finance analysis
-    'client relationship',          // 21 hits — Morgan Stanley/WF client relationship analyst
-    'private wealth',               // 11 hits — Morgan Stanley/Goldman private wealth associate/officer
-    'client service associate',     // 84 hits — Morgan Stanley/Ameriprise FINRA-licensed wealth mgmt
-    'finance intern',               // 9 hits — finance internship roles
-    'claims adjuster',              // 5 hits — property/commercial/marine insurance adjusters
-    'claims examiner',              // 4 hits — disability/accident/federal claims examiners
-    'injury adjuster',              // 3 hits — personal injury insurance adjusters
-    'accounting intern',            // 5 hits — accounting internship roles
-    'pricing analyst',              // 4 hits — pricing/revenue analysis
-    'fp&a',                         // 3 hits — financial planning & analysis
-    'client service excellence',    // 8 gen — Morgan Stanley FINRA-licensed reps
-    'client service specialist',    // 6 gen — Morgan Stanley client service
-    'planning consultant',          // 48 gen — Fidelity financial planning consultants
-    'retirement income',            // 6 gen — USAA retirement income advisors
-    'insurance professional',       // 5 gen — USAA insurance sales
-    'wealth management associate',  // 3 gen — Morgan Stanley wealth advisory
-    'risk officer',                 // 3 gen — Morgan Stanley risk/compliance
-    'auto adjuster',                // 6 gen — auto insurance adjusters (USAA)
-    'auto service representative',  // 1 gen — auto insurance service (Hartford)
-    'life solutions',               // 12 gen — USAA life insurance specialists
-    'corporate development',        // 10 gen — M&A/corporate strategy
-    'ultra high net worth',         // 3 gen — UHNW client service (Vanguard)
-    'risk strategist',              // 2 gen — risk strategy roles
-    'cost analyst',                 // 7 gen — cost analysis roles
-    'underwriting',                 // 7 gen — insurance underwriting
-    'fraud',                        // 6 gen — fraud investigation/analysis
-    'controllership',               // 1 gen — financial controllership
-    'compliance aml',               // 2 gen — AML compliance
-    'originations',                 // 5 gen — loan/mortgage originations
-    'economist',                    // 3 gen — research economists
-    'quantitative modeler',         // 1 gen — quant modeling
-    'quantitative trading',         // 1 gen — quant trading (had 'trader' not 'trading')
-    'loan servicing',               // 1 gen — loan servicing roles
-    'budget analyst',               // 1 gen — budget analysis
-    'cost and schedule',            // 3 gen — program cost/schedule control
-    'workers compensation',         // 1 gen — workers comp claims
-    'reinsurance',                  // 1 gen — reinsurance analysis
-    'remittance processing',        // 6 gen — payment processing
-    'business service officer',     // 5 gen — financial services officers
-    'fund accounting',              // 4 gen — fund accounting/administration
-    'private equity',               // 4 gen — PE roles
-    'private credit',               // 4 gen — credit fund roles
-    'risk engineer',                // 6 gen, 0 FP — insurance risk engineering (AIG, Hartford)
-    'client case representative',   // 3 gen, 0 FP — financial client case management
-    'retirement education',         // 2 gen, 0 FP — retirement planning education
-    'claim representative',         // 1 gen, 0 FP — insurance claims
-    'countrywide coverage',         // 1 gen, 0 FP — insurance underwriting coverage
-    'absence management',           // 1 gen, 0 FP — insurance absence/disability mgmt
-    'sovereign analyst',            // 1 gen, 0 FP — sovereign debt analysis
-    'finance & strategy',           // 4 gen, 0 FP — finance & strategy roles (Netflix)
-    'partnerships finance',         // 2 gen, 0 FP — partnerships finance (Netflix)
-    'analyst pricing',              // 1 gen, 0 FP — pricing analysis
-    'foreign military sales',       // 1 gen, 0 FP — FMS analyst (defense)
-    'pcard analyst',                // 1 gen, 0 FP — PCard/travel expense analyst
-    'transaction monitoring',       // 2 gen, 0 FP — AML transaction monitoring
-    'loan reconciliation',          // 1 gen, 0 FP — loan reconciliation
-    'financial operations consultant', // 1 gen, 0 FP — financial ops consulting
-    'financial intelligence',       // 1 gen, 0 FP — financial intelligence/AML
-  
-    'order administrator',           // 1 gen, 0 FP — order administration
-    'proposal analyst',              // 1 gen, 0 FP — proposal analysis
-    'program cost controls',         // 1 gen, 0 FP — program cost controls
-    'financial associate',           // 1 gen, 0 FP — financial associate
-    'cost recovery',                 // 1 gen, 0 FP — cost recovery advisor
-    'risk management assurance',     // 1 gen, 0 FP — risk management assurance
-    'price to win',                  // 1 gen, 0 FP — price-to-win analysis
-    'fms analyst',                   // 1 gen, 0 FP — foreign military sales analyst
-    'global financial audit',        // 1 gen, 0 FP — global financial audit
-    'customs valuation',             // 1 gen, 0 FP — customs valuation compliance
-    'tariff classification',         // 1 gen, 0 FP — tariff classification
-    'insurance claims',              // 1 gen, 0 FP — insurance claims specialist
-    'commercial loan',               // 1 gen, 0 FP — commercial loan operations
-    'financial products',            // 1 gen, 0 FP — financial products strategy
-    'broker data',                   // 1 gen, 0 FP — broker data associate
-    'broker relations',              // 1 gen, 0 FP — broker relations analyst
-    'fund flow',                     // 2 gen, 0 FP — fund flow analyst/strategist
-    'quantitative strategist',       // 4 gen, 0 FP — quantitative strategist
-    'global pricing',                // 1 gen, 0 FP — global pricing & access
-    'corporate tax',                 // 3 gen, 0 FP — corporate tax
-    'rating analyst',                // 1 gen, 0 FP — credit rating analyst
-    'tax compliance',                // 1 gen, 0 FP — tax compliance
-    'agent services',                // 1 gen, 0 FP — agent services (syndicated loans)
-    'finance rotational',            // 1 gen, 0 FP — finance rotational program (WD)
-    'tax & treasury',                // 1 gen, 0 FP — tax & treasury (Dropbox)
-    'junior valuation',              // 1 gen, 0 FP — valuation analyst
-    'portfolio management',          // 1 gen, 0 FP — portfolio management (AmEx)
-    'compliance high-risk',          // 1 gen, 0 FP — compliance high-risk due diligence (AmEx)
-    'investment associate',          // 2 gen, 0 FP — investment associate (Wintermute)
-    'paraplanner',                   // 1 gen, 0 FP — paraplanner (Ameriprise)
-    'private debt',                  // 1 gen, 0 FP — private debt (Audax Group)
-    'crypto researcher',             // 2 gen, 0 FP — crypto researcher (Jump Trading)
-    'transfer agency',               // 2 gen, 0 FP — transfer agency (State Street)
-    'annuities',                     // 2 gen, 0 FP — annuities (Prudential)
-    'ltd claims',                    // 1 gen, 0 FP — LTD claims (Prudential)
-    'edgar filing',                  // 1 gen, 0 FP — EDGAR filing (Broadridge)
-    'recovery specialist',           // 1 gen, 0 FP — loss recovery (AIG)
-    'policy wording',                // 1 gen, 0 FP — policy wording (AIG)
-    'uw specialist',                 // 1 gen, 0 FP — underwriting specialist (AIG)
-    'aml special investigations',    // 1 gen, 0 FP — AML investigations (Capital One)
-    'anti-money laundering',         // 1 gen, 0 FP — AML data analysis (Capital One)
-    'governance documentation',      // 1 gen — governance documentation specialist
-    'governance framework',          // 1 gen — governance framework analyst
-    'associate finance director',    // 1 gen, 0 FP — Associate Finance Director ESSM (RTX)
-    'finance & controlling',         // 1 gen, 0 FP — Finance & Controlling Intern (Bosch)
-    'assistant finance controller',  // 1 gen, 0 FP — Assistant Finance Controller Tempe Manufacturing (AbbVie)
-    'shareholding',                  // 1 gen, 0 FP — Substantial Shareholding Disclosures Specialist (Vanguard; cross-jurisdictional regulatory reporting)
-    'structured products',           // 1 gen, 0 FP — Analyst, Structured Products Group (Capital One; fixed income/credit derivatives analysis)
-    'sox advisory',                  // 1 gen, 0 FP — IT SOX Risk Principal Associate, SOX Advisory Team (Capital One; Sarbanes-Oxley IT risk compliance)
-    'aml content',                   // 1 gen, 0 FP — Senior Associate, Process Manager - AML Content Developer (Capital One; anti-money laundering compliance)
-    'financial analysis for risk',   // 1 gen, 0 FP — Principal Associate, Financial Analysis for Risk (Capital One; financial risk analysis)
-    'investment banking associate',  // 2 gen, 0 FP — TripleTree + KippsDeSanto Investment Banking Associate (Capital One subsidiaries; M&A/advisory services)
-    'risk advisor',                  // 1 gen, 0 FP — Principal Associate Risk Advisor (Capital One; ORM operational risk management)
-    'risk management, policy',       // 1 gen, 0 FP — Principal Associate, Risk Management, Policy Analyst (Capital One; enterprise risk policy; comma guard makes safe)
-    'enterprise risk organization',  // 1 gen, 0 FP — Associate, Enterprise Risk Organization Chief of Staff (Capital One; ERO governance/oversight)
-    'edata risk',                    // 1 gen, 0 FP — Principal Associate, eData Risk Guide (Capital One; Enterprise Services Risk data risk management)
-    'senior tax associate',          // 1 gen, 0 FP — Senior Tax Associate, Corporate, Income Franchise (Capital One; state tax accounting/reporting)
-    // TAG-11 C55: CACI finance roles
-    'program finance',               // 1 gen, 0 FP — Program Finance & Controls Analyst (CACI; program-level financial controls/planning for defense contracts)
-    'financial planning and analysis', // 1 gen, 0 FP — Analyst, Financial Planning and Analysis (CACI; FP&A for defense programs)
-    // C58: banking/finance keyword gaps
-    'banking associate',          // 34 gen — TD Bank customer-facing banking roles
-    'financial reporting',        // 3 gen — financial reporting analyst
-    'finance specialist',         // 3 gen — finance specialist roles
-    'import-export auditor',      // 1 gen — trade compliance auditing
-    // TAG-PRECISION-14: high-impact finance keywords
-    'finance manager',               // 25 gen — corporate finance management
-    'financial wellness associate',  // 13 gen — KeyBank financial wellness products
-    'branch manager',                // 14 gen — bank branch management
-    'claims analyst',                // 8 gen — insurance claims analysis
-    'business management manager',   // 2 gen, 0 FP — Northrop business-management leadership
-    // TAG-PRECISION-17 (B36): finance keyword gaps
-    'relationship manager',         // 30 gen — banking relationship manager (Capital One, Citi, KeyBank, TD Bank, Vanguard)
-    'energy trading',               // 1 gen — energy trading analyst
-    // TAG-INTERN-1 (B45): finance internship keyword gaps
-    'quant risk management intern',            // 2 gen — CME Group Quant Risk Management Intern
-    'trading intern',                          // 1 gen — Gelber Group Trading Intern
-    'systematic trading',                      // 1 gen — JP Morgan Systematic Trading Intern
-    'capital market graduate intern',          // 1 gen — Ameriprise Capital Markets Graduate Intern
-    'pricing & revenue management intern',     // 1 gen — Disney Pricing & Revenue Management Intern
-    'internship - markets',                    // 1 gen — JP Morgan Markets Internship
-    'ratings analytical',                      // 1 gen — S&P Global Ratings Analytical Intern
-    // TAG-INTERN-1 cycle 2 (B52): finance keyword gaps
-    'investor operations',                     // 2 gen — investment operations (Audax)
-    'comcast financial application',           // 1 gen — financial app analyst (Comcast)
-    'comcast state and local tax',             // 1 gen — tax controversy (Comcast)
-    'comcast global accounting',               // 1 gen — accounting product support (Comcast)
-  ];
-  if (financeKeywords.some(kw => title.includes(kw))) {
-    pushTag('finance', findMatch(financeKeywords, title), 'title');
-  }
-
-  // Sales domain (title-only — description contamination risk high)
-  // Guard: DO NOT add bare 'sales engineer' or 'solutions engineer' — those are tech-adjacent
-  const salesKeywords = [
-    'retail sales consultant', 'field sales representative',
-    'sales development representative', 'sales development', 'account executive',
-    'business development representative', 'inside account representative', 'b2b sales',
-    'sales consultant', 'sales associate',
-    'outside sales representative', 'inside sales',
-    'sales account executive', 'enterprise account executive',
-    'commercial account executive', 'sales specialist',
- // GENERAL-CLASSIFICATION additions — +377 verified from live pool):
-    'sales representative',  // field/territory/medical/pharma sales reps
-    'sales trainee',         // training programs at pharma/medical device companies
-    'sales executive',       // entry-level sales exec titles
- // TAG-1 G1 expansion: consulting/solution sales
-    'solution consultant',   // 65 hits — advisory/consulting sales (Deloitte, etc.)
-    'sales trainer',         // 10 hits — pharma/medical device sales trainers (AbbVie, Abbott)
-    'account development',   // 7 hits — account development representatives
-    'solutions consultant',  // 8 gen, 100% spec — pre-sales/advisory consulting
-    'area access executive', // 8 gen — AbbVie pharma field sales
-    'field sales rep',       // 5 gen — territory field sales reps (JCI)
-    'presales engineer',     // 2 gen — pre-sales engineering (Motorola)
-    'national business development manager', // 3 gen, 0 FP — direct sales/BD leadership
-    'solutions specialist',  // 19 gen — solutions/pre-sales specialists
-    'account specialist',    // 13 gen — account management specialists
-    'client partner',        // 7 gen — client partnership/sales roles
-    'market development',    // 5 gen — market development representatives
-    'sales support',         // 5 gen — sales support roles
-    'sales intern',          // 6 gen, 0 FP — sales internships
-    'sales admin',           // 4 gen, 1 FP — sales administration roles
-    'sales coordinator',     // 1 gen, 0 FP — sales coordination
-    'sales excellence',      // 1 gen, 0 FP — sales enablement/excellence
-    'advisor consultant',    // 5 gen, 0 FP — insurance retail sales advisors
-    'advisor support',       // 1 gen, 0 FP — sales support advisors
-    'provider specialist',   // 2 gen, 0 FP — pro customer sales (Lowe's)
-    'central selling',       // 1 gen, 0 FP — central selling supervisor
-    'digital sales planner', // 2 gen, 0 FP — programmatic/digital ad sales (NBCU)
-    'proposal specialist',   // 1 gen, 0 FP — proposal/bid writing (Oshkosh)
-    'sales controlling',            // 2 gen, 0 FP — sales controlling analyst
-
-    'hospital surgical rep', // 2 gen, 0 FP — hospital surgical sales rep
-    'virtual sales rep',     // 1 gen, 0 FP — virtual sales representative
-    'ciso solutions',        // 1 gen, 0 FP — CISO solutions GTM
-    'ad sales intelligence', // 1 gen, 0 FP — enterprise ad sales intelligence
-    'sales onboarding manager',    // 3 gen, 0 FP — sales onboarding/program roles
-    'partner sales rep',           // 1 gen, 0 FP — explicit partner sales representative
-    'management & sales training program', // 24 gen, 0 FP — Sherwin-Williams sales trainee program
-    'wellbore intervention', // 1 gen, 0 FP — wellbore intervention sales
-    'refinery account',      // 1 gen, 0 FP — refinery account rep
-    'enterprise renewals',   // 1 gen, 0 FP — enterprise renewals specialist
-    'growth development representative', // 1 gen, 0 FP — growth dev rep
-    'fire service sales',       // 2 gen, 0 FP — fire service sales (JCI)
-    'commercial security services', // 1 gen, 0 FP — commercial security renewals (JCI)
-    'new technology specialist', // 1 gen, 0 FP — new technology specialist (J&J)
-    'sales partnerships',       // 1 gen, 0 FP — sales partnerships enablement
-    'client service partner',    // 2 gen, 0 FP — client service partner (Bloomberg)
-    'relationship partner',      // 2 gen, 0 FP — relationship partner
-    'sales development supervisor', // 1 gen, 0 FP — sales dev supervisor
-    'aftermarket solutions',    // 1 gen, 0 FP — aftermarket solutions (Caterpillar)
-    'clean energy solution',    // 1 gen, 0 FP — clean energy solution specialist (Generac)
-    'emergency medicine executive', // 1 gen, 0 FP — emergency medicine executive (Abbott)
-    // B48 Phase 1: sales management
-    'sales manager',                 // sales management roles
-    'strategic account executive',   // SAE is always sales (AE exempted from TAM guard below)
-    'partner solution specialist', // 2 gen, 0 FP — partner solution specialist (Autodesk)
-    'renewals representative',   // 4 gen, 0 FP — renewals rep (Autodesk)
-    'expansion account',         // 1 gen, 0 FP — expansion account rep
-    'technical adoption',        // 1 gen, 0 FP — technical adoption specialist
-    'vacation club',             // 1 gen, 0 FP — Disney Vacation Club Preview Center Assistant
-    'key account sales',         // 1 gen, 0 FP — Key Account Sales Caterpillar North America (Bosch)
-    'incentive compensation',    // 1 gen, 0 FP — AD Sales Planning & Incentive Compensation (AbbVie)
-    'sales planning & incentive', // 1 gen, 0 FP — AD Sales Planning & Incentive Compensation (AbbVie, broader guard)
-    'workday sales enablement',  // 1 gen, 0 FP — Workday Sales Enablement Specialist (Guidehouse) [sales ops using Workday platform]
-    'direct sales',                 // 6 gen, 0 FP — Direct Sales Rep (Abbott x4), Direct Sales (AIG), MAE Direct Sales (TransUnion)
-    'sales development intern',     // 2 gen, 0 FP — Sales Development Intern (Bosch; demand gen, email/web/social, customer ROI journey)
-    'sales planner',                // 1 gen, 0 FP — Sales Planner, NBC4 & T52 Los Angeles (NBCUniversal; local TV ad sales planning)
-    // TAG-PRECISION-14: high-impact sales keywords
-    'account manager',              // 191 gen — B2B account management is sales (guard: not TAM)
-    'territory manager',            // 22 gen — pharma/medical device territory = sales
-    'sales operations',             // 13 gen — sales ops/admin roles
-    'sales enablement',             // 10 gen — sales enablement/training roles
-    // TAG-INTERN-1 (B45): sales internship keyword gaps
-    'go-to-market analyst intern',             // 1 gen — Twilio GTM Analyst Intern
-    'technology business development',         // 1 gen — J&J Tech BD PM Co-op
-    'capture management intern',               // 2 gen — Leidos Capture Management Intern (defense BD)
-    'agentic sales',                           // 1 gen — Comcast Agentic Sales Co-op (AI-powered sales)
-    // SM31: title-pattern additions from Cat A analysis
-    'coverage specialist',                     // 7 G1 — Arrive Logistics dispatch coverage. Sales operations.
-  ];
-  const isSalesEngineer = /\b(sales engineer|solutions engineer|pre-sales engineer)\b/i.test(title);
-  // TAG-PRECISION-14: Technical/Software Account Managers are tech-adjacent, not sales.
-  // "Software Technical Account Manager" (Axon), "Technical Account Manager" (Adobe, Stripe) —
-  // these manage technical relationships, not sales quotas.
-  // Exception: "Account Executive" is ALWAYS sales (TAM guard should not block AE).
-  const isAccountExec = /\baccount executive\b/i.test(title);
-  const isTamNotSales = !isAccountExec &&
-    /\b(technical account|software.*account|strategic account|enterprise.*account)\b/i.test(title) &&
-    /\b(software|technical|strategic|enterprise)\b/i.test(title);
-  if (!isSalesEngineer && !isTamNotSales && salesKeywords.some(kw => title.includes(kw))) {
-    pushTag('sales', findMatch(salesKeywords, title), 'title');
-  }
-
-  // Marketing domain (title-only)
-  const marketingKeywords = [
-    'marketing manager', 'marketing coordinator', 'marketing analyst',
-    'digital marketing', 'growth marketing', 'brand manager',
-    'content marketing', 'product marketing', 'social media manager',
-    'marketing associate', 'marketing specialist', 'email marketing',
-    'marketing intern', 'seo specialist',
- // GENERAL-CLASSIFICATION additions — +129 verified from live pool):
-    'student marketeer',    // Red Bull campus ambassador program — 129 hits, all legitimate
-    'copywriter',            // 3 hits — advertising/creative copywriters
-    'photographer',          // 4 hits — news/marketing photographers
-    'publicist',             // 1 hit — PR/publicity roles
-    'social media',          // 9 gen, 75% spec — social media coordinator/manager
-    'café ambassador', 'cafe ambassador', // 6 gen — Capital One café retail roles
-    'thought leader',            // 3 gen — thought leader liaison (pharma marketing)
-    'account supervisor',        // 2 gen — agency account supervisors
-    'communications coordinator',// 4 gen — corporate communications
-    'community engagement',      // 3 gen — community relations/outreach
-    'proposal content',          // 1 gen — proposal content development
-    'media specialist',          // 1 gen — media/social media specialists
-    'communications intern',     // 6 gen, 1 FP — corporate communications internships
-    'brand marketing',           // 2 gen, 0 FP — brand marketing roles
-    'internal communications',   // 2 gen, 0 FP — corporate internal comms
-    'marketing attribution',     // 1 gen, 0 FP — marketing measurement/attribution
-    'screenings researcher',     // 1 gen, 0 FP — content research (Netflix)
-    'ads marketing operations',  // 1 gen, 0 FP — ads marketing ops
-    'assignment desk',           // 4 gen, 0 FP — news assignment desk (NBCU)
-    'global publicity',          // 2 gen, 0 FP — global publicity/PR (NBCU)
-    'casting coordinator',       // 2 gen, 0 FP — casting/talent coordination (NBCU)
-    'trade marketing',           // 1 gen, 0 FP — trade/channel marketing
-    '360 designer',              // 1 gen, 0 FP — 360/multiplatform design (NBCU)
-    'creative director',             // 2 gen, 0 FP — creative director
-    'rx ads',                        // 1 gen, 0 FP — Rx ads & promotions
-    'omnichannel',                   // 1 gen, 0 FP — omnichannel/digital operations
-    'newsletter editor',             // 3 gen, 0 FP — newsletter editing (Bloomberg)
-    'demand gen specialist',         // 1 gen, 0 FP — demand gen (SharkNinja)
-    'consumer insights',             // 1 gen, 0 FP — consumer insights (SharkNinja)
-    'localization specialist',       // 1 gen, 0 FP — localization (Life.Church)
-    'b2b digital strategy',          // 1 gen, 0 FP — B2B digital strategy (Elanco)
-    'content programmer',            // 2 gen, 0 FP — content programming (WBD)
-    'video and audio editor',        // 1 gen, 0 FP — video/audio editing (WBD/CNN)
-    'editor-writer',                 // 1 gen, 0 FP — editor-writer (WBD/CNN)
-    'tiktok social programming',     // 1 gen, 0 FP — TikTok social (WBD/BR)
-    'multi-media journalist',        // 1 gen, 0 FP — multimedia journalist (NBCU)
-    'youth programs marketing',      // 1 gen, 0 FP — youth programs marketing (Red Bull)
-    'editor, politics',              // 1 gen, 0 FP — politics editor (WBD)
-    'founding marketer',             // 1 gen, 0 FP — founding marketer (Gimlet Labs)
-
-    'consumer intelligence',        // 1 gen, 0 FP — consumer intelligence research (GM)
-    'spaceport designer',           // 1 gen, 0 FP — spaceport interior design (SpaceX)
-
-    'hcp marketing',             // 1 gen, 0 FP — HCP marketing
-    'professional marketing',    // 3 gen, 0 FP — professional/OTC marketing
-    'copy supervisor',           // 1 gen, 0 FP — copy supervisor (creative)
-    'digital lab banner',        // 1 gen, 0 FP — digital lab banner ads
-    'avod',                      // 1 gen, 0 FP — AVOD Growth & Digital Dist. (NBCUniversal)
-    'nbc sports digital',        // 1 gen, 0 FP — NBC Sports Digital Programming (NBCUniversal)
-    'global platform partnerships', // 2 gen, 0 FP — Global Platform Partnerships (NBCUniversal)
-    'audience acquisition',      // 1 gen, 0 FP — Audience Acquisition & Growth (NBCUniversal)
-    'partner marketing',         // 1 gen, 0 FP — Partner Marketing Manager (NBCUniversal)
-    'digital communications',    // 1 gen, 0 FP — Digital Comms Specialist (NBCUniversal)
-    'seo intern',                // 1 gen, 0 FP — ABC News SEO Intern (Disney)
-    'brand team lead',           // 3 gen, 0 FP — Director Brand Team Lead IMCO (AbbVie global brand)
-    'consumer marketing',        // 2 gen, 0 real FP — AD Consumer Marketing (AbbVie); fixes Takeda healthcare→marketing misclassification
-    'portfolio marketing',       // 1 gen, 0 FP — AD Innovation & Portfolio Marketing (AbbVie)
-    'innovation & portfolio',    // 1 gen, 0 FP — AD Innovation & Portfolio Marketing (AbbVie, broader guard)
-    'advertising and design',    // 1 gen, 0 FP — Advertising and Design Specialist (Bosch)
-    'marketing programs',        // 1 gen, 0 FP — Marketing Programs & Communications Specialist (Caterpillar)
-    'crm marketing',             // 1 gen, 0 FP — CRM Marketing Operations Intern (WBD; marketing automation/CRM operations)
-    'design and advertising',    // 1 gen, 0 FP — Design and Advertising Intern (Bosch; branding, marketing design, digital/print campaigns)
-    'search engine optimization', // 1 gen, 0 FP — Search Engine Optimization (SEO) Specialist (Vanguard; SEO/GEO/AISO program)
-    'ux content strategist',     // 1 gen, 0 FP — UX Content Strategist, Specialist (Vanguard; content strategy, UX writing)
-    'market research intern',    // 1 gen, 0 FP — Technology Market Research Intern - Strategy and Operations (Applied Materials; market research/competitive intelligence intern)
-    'specialist, performance marketing', // 2 gen, 0 FP — Specialist, Performance Marketing (NBCUniversal; paid search/programmatic advertising)
-    'paid search',               // 1 gen, 0 FP — Specialist, Performance Marketing – Paid Search and Programmatic (NBCUniversal)
-    'social strategy',           // 1 gen, 0 FP — Coordinator, Social Strategy & Insights (NBCUniversal; NBC Sports social marketing)
-    'development-peacock',       // 2 gen, 0 FP — Specialist, Development-Peacock (NBCUniversal ×2; Peacock streaming partnerships/marketing)
-    'coordinator, marketing',    // 1 gen, 0 FP — Coordinator, Marketing Strategy (NBCUniversal; entertainment marketing strategy)
-    'peacock marketing',         // 1 gen, 0 FP — Associate Manager, NBC & Peacock Marketing (NBCUniversal)
-    'brand agency',              // 1 gen, 0 FP — Senior Associate, Brand Agency Relations (Capital One; creative agency sourcing/management)
-    'social operations',         // 1 gen, 0 FP — Principal Associate, Social Operations & Enablement (Capital One; brand governance/social media access mgmt)
-    'insights creative',         // 1 gen, 0 FP — Principal Associate, Insights Creative & Sponsorship (Capital One; creative/sponsorship marketing)
-    'marketing - premium',       // 1 gen, 0 FP — Sr. Associate, Marketing - Premium Products & Experiences (Capital One; premium card acquisition/marketing; dash guard makes safe)
-    // TAG-11 C54: Disney/cross-company marketing
-    'communication intern',      // 1 gen, 0 FP — Disney Entertainment Television Communication Intern (singular form of existing 'communications intern')
-    // TAG-11 C56: Elanco marketing roles
-    'farm animal beef marketing', // 1 gen, 0 FP — Farm Animal Beef Marketing (Packaged Goods) Academic Worker (Elanco; animal health beef marketing academic internship IU-Indy)
-    // TAG-INTERN-1 (B45): marketing internship keyword gaps
-    'employer brand intern',                   // 1 gen — SharkNinja Employer Brand Intern
-    'marketing events and campaigns intern',   // 1 gen — Cloudflare Marketing Events Intern
-    // TAG-INTERN-1 cycle 2 (B52): marketing keyword gaps
-    'comcast digital internal comms',          // 1 gen — digital communications (Comcast)
-    'comcast integrated marcom',               // 1 gen — integrated marketing (Comcast)
-    'comcast brand strategy',                  // 1 gen — brand strategy (Comcast)
-    'comcast market & competitive',            // 1 gen — market insights (Comcast)
-    'comcast campus events',                   // 1 gen — campus events marketing (Comcast)
-    'comcast sponsorships',                    // 1 gen — sponsorships marketing (Comcast)
-    'comcast town hall',                       // 2 gen — events production (Comcast)
-  ];
-  // TAG-9: 'producer' and 'reporter' added as guarded keywords for media/content roles
-  const isInsuranceProducer = /\b(licensed|insurance|enrollment)\b/i.test(title);
-  const isNonMediaReporter = /\b(litigation|analyst|legal)\b/i.test(title);
-  const isAITrainer = title.includes('ai trainer') || title.includes('ai training');
-  const videoEditorMatch = !isAITrainer && title.includes('video editor'); // 3 gen (Disney, WBD ×2), 0 FP — guard excludes Handshake AI trainer roles
-  const seoWordMatch = /\bseo\b/i.test(job.title || ''); // word-boundary check (title.includes('seo') FPs on "Seoul")
-  const producerReporterMatch = (!isInsuranceProducer && title.includes('producer')) ||
-    (!isNonMediaReporter && title.includes('reporter'));
-  if (marketingKeywords.some(kw => title.includes(kw)) || producerReporterMatch || videoEditorMatch || seoWordMatch) {
-    const mktMatch = findMatch(marketingKeywords, title) ||
-      (title.includes('producer') ? 'producer' : null) ||
-      (title.includes('reporter') ? 'reporter' : null) ||
-      (videoEditorMatch ? 'video editor' : null) ||
-      (seoWordMatch ? 'seo' : null);
-    pushTag('marketing', mktMatch, 'title');
-  }
-
-  // Operations domain (title-only — narrow terms only, avoid broad 'analyst' standalone)
-  const operationsKeywords = [
-    'operations analyst', 'operations associate', 'operations coordinator',
-    'supply chain analyst', 'logistics analyst', 'program analyst',
-    'project analyst', 'business operations', 'strategy analyst',
-    'strategy associate', 'operations specialist',
- // TAG-1 G1 expansion: supervisor + inventory roles
-    'shift supervisor',          // 171 hits — CVS/retail/manufacturing floor supervisors
-    'operations supervisor',     // 48 hits
-    'inventory specialist',      // 73 hits — auto auction/warehouse inventory
-    // Was causing 225 ops-only misroutes (Lowe's warehouse, Red Bull fulfillment).
-    'customer service representative', // 65 hits — CSR roles
-    'management analyst',        // 31 hits — management consulting/analysis
-    'support analyst',           // 23 hits — operations support analysis
-    'buyer',                     // 33 hits — procurement/purchasing buyer roles
-    'business analyst',          // 63 hits — business analysis across industries
-    'procurement specialist',    // 4 hits — procurement roles
-    'project coordinator',       // 16 hits — project coordination roles
-    'service coordinator',       // 3 hits — service coordination roles
-    'operations asm',            // 4 hits — assistant store manager (operations)
-    'procurement analyst',       // 3 hits — procurement analysis
-    'operations support',        // 3 hits — operations support specialist/analyst
-    'supply chain',              // 101 gen — broader form (had only 'supply chain specialist/coordinator')
-    'customer service',          // 68 gen — broader form (had only 'customer service representative')
-    'operations technician',     // 23 gen — operations/facilities technicians
-    'support associate',         // 10 gen — operations support roles
-    'technical consultant',      // 12 gen — consulting/advisory roles
-    'sourcing specialist',       // 7 gen — procurement sourcing
-    'production operations',     // 9 gen — production operations roles
-    'scheduling staffing',       // 10 gen — scheduling/staffing admin roles
-    'site manager',              // 8 gen — assistant site managers
-    'customs specialist',        // 6 gen — customs/trade compliance
-    'executive protection',      // 3 gen — corporate security/protection
-    'workplace coordinator',     // 3 gen — facilities/workplace coordination
-    'facilities coordinator',     // 2 gen, 0 FP — facilities/workplace coordination
-    'associate specialist, operations', // 3 gen, 0 FP — Merck operations specialists
-    'executive operations & analytics manager', // 1 gen, 0 FP — Boeing ops/analytics management
-    'critical environment operations manager', // 3 gen, 0 FP — Microsoft data center critical environment operations
-    'critical environment energy marshall', // 2 gen, 0 FP — Microsoft data center critical environment / safety operations
-    'critical environment ops technician', // 1 gen, 0 FP — Microsoft data center critical environment operations tech
-    'flightline operations manager', // Boeing ops/manufacturing-style flightline management
-    'customer experience project specialist',   // 1 gen, 0 FP — Cisco customer experience project work
-    'customer enablement specialist', // 2 gen, 0 FP — customer enablement / support ops
-    'demand operations program manager', // 3 gen, 0 FP — Waymo demand operations programs
-    'assistant manager trainee', // 8 gen, 0 FP — Sherwin-Williams store operations trainee title
-    'manager proposals', // 2 gen, 0 FP — Northrop proposal-management operations title
-    'manager design release coordinator', // 2 gen, 0 FP — RTX release/coordination operations title
-    'production and inventory',  // 3 gen — production/inventory coordination
-    'yard supervisor',           // 2 gen — yard/lot management (Copart)
-    'program controls',          // 2 gen — program controls analysis (Moog defense)
-    'customer support agent',    // 4 gen — customer support roles
-    'physical security',         // 11 gen — physical security officers/investigators
-    'console operator',          // 9 gen — security console operators
-    'background investigator',   // 10 gen — federal background investigators (CACI)
-    'security officer',          // 9 gen — physical security officers (USAA, Hermeus)
-    'customer care',             // 8 gen — customer care representatives/advocates
-    'master scheduler',          // 4 gen — program/master schedulers
-    'close protection',          // 3 gen — executive protection officers
-    'baggage handling',          // 2 gen — airport baggage operations
-    'motor transport',           // 3 gen — military motor transport (KBR)
-    'industrial security',       // 6 gen — industrial security specialists
-    'assistant general manager', // 3 gen — facility/store AGMs
-    'import/export',             // 2 gen — trade compliance analysts
-    'custodian',                 // 4 gen — custodial/janitorial
-    'targeter',                  // 2 gen — intelligence targeting (Booz Allen)
-    'surveillance analyst',      // 3 gen — surveillance/monitoring analysts
-    'sous chef',                 // 3 gen — kitchen sous chefs (SpaceX)
-    'janitor',                   // 5 gen — janitorial roles
-    'food service',              // 4 gen — food service specialists
-    'kitchen manager, dashmart',  // 5 gen, 0 FP — DoorDash DashMart kitchen operations
-    'subject matter expert',     // 8 gen — defense/consulting SMEs
-    'planning and scheduling',   // 5 gen — program planning/scheduling
-    'player tracking',           // 4 gen — sports tracking systems (Zebra)
-    'military fellowship',       // 5 gen — military SkillBridge fellowships
-    'professional services consultant', // 5 gen — PS consulting
-    'scheduling analyst',        // 5 gen — scheduling/planning analysts
-    'business transformation',   // 8 gen — transformation program roles
-    'inventory control',         // 1 gen — inventory control roles
-    'protection specialist',     // 1 gen — asset/account protection
-    'protection integrator',     // 1 gen — security integration
-    'customer success',          // 12 gen — customer success advisors/managers
-    'line cook',                 // 4 gen — kitchen line cooks
-    'imagery analyst',           // 1 gen — intelligence imagery analysis
-    'receptionist',              // 4 gen — front desk reception
-    'trust and safety',          // 2 gen — trust & safety operations
-    'operational language analyst', // 12 gen, 0 FP — military linguist/translator roles (CACI)
-    'parts planner',             // 3 gen, 0 FP — material/parts planning
-    'blucar support specialist', // 3 gen, 0 FP — Copart vehicle support
-    'linguist interpreter',      // 2 gen, 0 FP — military interpreter roles
-    'targeting officer',         // 2 gen, 0 FP — intelligence targeting roles
-    'order entry',               // 2 gen, 0 FP — order entry/processing
-    'construction superintendent', // 1 gen, 0 FP — construction site management
-    'lab clerk',                 // 1 gen, 0 FP — laboratory clerk roles
-    'materials analyst',         // 1 gen, 0 FP — materials/inventory analysis
-    'strategic sourcing intern', // 1 gen, 0 FP — procurement internships
-    'vehicle detailer',          // 1 gen, 0 FP — vehicle detailing/prep
-    'sc security specialist',    // 3 gen, 0 FP — supply chain security (Lowe's)
-    'helix data creator',        // 3 gen, 0 FP — data creation ops
-    'corporate department assistant', // 1 gen, 0 FP — corporate admin
-    'district support coordinator', // 1 gen, 0 FP — district operations
-    'receiving support specialist', // 1 gen, 0 FP — warehouse receiving
-    'assistant manager attractions', // 2 gen, 0 FP — theme park attractions (NBCU)
-    'work order coordinator',    // 2 gen, 0 FP — facility work orders (Oshkosh)
-    'summer help',               // 2 gen, 0 FP — seasonal help roles (Oshkosh)
-    'assistant manager show',    // 1 gen, 0 FP — show quality management (NBCU)
-    'culinary internship',       // 1 gen, 0 FP — food service internship (NBCU)
-    'site supervisor',           // 1 gen, 0 FP — site operations supervision
-    'facility support',          // 1 gen, 0 FP — facility support roles
-    'intel analyst',             // 1 gen, 0 FP — intelligence analyst
-    'operations integrator',     // 1 gen, 0 FP — military operations integrator
-    'sensitive activities',      // 1 gen, 0 FP — sensitive activities advisor
-    'procurement administrator', // 1 gen, 0 FP — procurement admin
-    // 'governance documentation' MOVED to finance (TAG-12 audit: CACI Job Category = Finance and Accounting)
-    // 'governance framework' MOVED to finance (TAG-12 audit: CACI Job Category = Finance and Accounting)
-    // 'interface sustainment' MOVED to software (TAG-12 audit: CACI Job Category = Information Technology)
-    'cryptologic language',      // 1 gen, 0 FP — cryptologic language analyst
-    'fielding/training',         // 1 gen, 0 FP — equipment fielding/training
-    'security cooperation',      // 3 gen, 0 FP — security cooperation specialist
-    'operations warfighting',    // 2 gen, 0 FP — warfighting analyst
-    'hicom',                     // 3 gen, 0 FP — HICOM integrator roles
-    'fuops planner',             // 1 gen, 0 FP — future operations planner
-    'foreign disclosure',        // 1 gen, 0 FP — foreign disclosure rep
-    'naval experiment',          // 1 gen, 0 FP — naval experiment planner
-    'joint effects',             // 1 gen, 0 FP — joint effects integrator
-    'requirements integration',  // 1 gen, 0 FP — requirements integration officer
-    'protocol officer',          // 1 gen, 0 FP — protocol officer
-    'fires curriculum',          // 1 gen, 0 FP — fires curriculum developer
-    'fires simulation',          // 1 gen, 0 FP — fires simulation operator
-    'c-uas training',            // 1 gen, 0 FP — counter-UAS training
-    'military capabilities',     // 1 gen, 0 FP — military capabilities analyst
-    'defense mission',           // 1 gen, 0 FP — defense mission analyst
-    'supplier onboarding',       // 1 gen, 0 FP — supplier onboarding specialist
-    'exercise planning',         // 1 gen, 0 FP — exercise planning specialist
-    'intelligence exercise',     // 1 gen, 0 FP — intelligence exercise planner
-    // (Guidehouse ops keywords interspersed below)
-    'operations advisor',        // 2 gen, 0 FP — operations advisor
-    'deckhand',                  // 1 gen, 0 FP — maritime deckhand
-    'jassm targeting',           // 1 gen, 0 FP — JASSM targeting analyst
-    'triage examiner',           // 1 gen, 0 FP — triage examiners (linguist)
-    'korean linguist',           // 1 gen, 0 FP — Korean linguist/translator
-    'arabic linguist',           // 2 gen, 0 FP — Arabic linguist
-    'bilingual linguist',        // 1 gen, 0 FP — bilingual linguist
-    'weather forecaster',        // 1 gen, 0 FP — aviation weather forecaster
-    'energy advisor',            // 1 gen, 0 FP — energy efficiency advisor
-    'material control',          // 2 gen, 0 FP — material control stockroom
-    'visual charting',           // 1 gen, 0 FP — visual charting specialist
-    'documentation specialist',  // 3 gen, 0 FP — documentation specialist
-    'call center',               // 1 gen, 0 FP — call center rep
-    'process improvement managing', // 1 gen, 0 FP — process improvement consultant
-  
-    'commodity supplier',            // 1 gen, 0 FP — commodity supplier assurance
-    'combat systems planning',       // 1 gen, 0 FP — combat systems planning
-    'customs operations',            // 1 gen, 0 FP — customs operations import
-    // B48 Phase 1: operations management keywords
-    'change management',             // organizational change management (consulting)
-    'material program manager',      // MPM — defense/materials program management
-    'escalation manager',            // customer/ops escalation management
-    'supplier commodity',            // 1 gen, 0 FP — supplier commodity assurance
-    'small business advocate',       // 1 gen, 0 FP — small business advocacy
-    'oem support',                   // 1 gen, 0 FP — OEM support specialist
-    'campaign planner',              // 1 gen, 0 FP — strategy/campaign planner
-    'force operations planner',      // 1 gen, 0 FP — joint force ops planner
-    'manpower analyst',              // 1 gen, 0 FP — manpower analysis
-    'technical author',              // 1 gen, 0 FP — technical authoring
-    'contracts support',             // 1 gen, 0 FP — contracts support SME
-    'human systems integration',     // 1 gen, 0 FP — HSI specialist
-    'weapon system contract',        // 1 gen, 0 FP — weapon system contract eval
-    'career exploration',            // 1 gen, 0 FP — career exploration program
-    'safety management system',      // 1 gen, 0 FP — SMS engineer
-    'team lead - deicer',            // 1 gen, 0 FP — deicer team lead
-    'technical documentation illustrator', // 2 gen, 0 FP — tech doc illustrator
-    'business unit intern',          // 1 gen, 0 FP — business unit internship
-
-    'purchasing quality',           // 1 gen, 0 FP — purchasing quality (Bosch)
-    'fire captain',                 // 1 gen, 0 FP — fire captain (Disney)
-    'hospitality specialist',       // 2 gen, 0 FP — hospitality specialist (SpaceX)
-    'mixologist',                   // 1 gen, 0 FP — mixologist (SpaceX)
-    'spaceport experience',         // 2 gen, 0 FP — spaceport experience (SpaceX)
-    'gsoc operator',                // 1 gen, 0 FP — GSOC operator (SpaceX)
-    'pilot in command',             // 1 gen, 0 FP — pilot in command (SpaceX)
-    'payload rack officer',         // 2 gen, 0 FP — payload rack officer (FLIR)
-    'field services coordinator',   // 1 gen, 0 FP — field services coord (FLIR)
-    'supplier quality coordinator', // 1 gen, 0 FP — supplier quality coord (FLIR)
-    'customer delivery readiness',  // 1 gen, 0 FP — customer delivery readiness (FLIR)
-    'poi specialist',               // 1 gen, 0 FP — POI specialist (FLIR)
-
-    'category management',          // 2 gen, 0 FP — category management
-    'corporate catering',           // 1 gen, 0 FP — corporate catering
-    'procurement agent',            // 3 gen, 0 FP — procurement agent
-    'fleet monitoring',             // 1 gen, 0 FP — fleet monitoring engineer
-    'customer support specialist',  // 4 gen, 0 FP — customer support specialist
-    'account administrator',        // 2 gen, 0 FP — account admin
-    'workplace strategy',           // 1 gen, 0 FP — workplace strategy
-    'voice ordering',               // 1 gen, 0 FP — voice ordering accessibility
-    'quality strategy',             // 1 gen, 0 FP — quality strategy & operations
-    'proactive outreach',           // 1 gen, 0 FP — proactive outreach specialist
-    'premium resolution',           // 1 gen, 0 FP — premium resolution partner
-    'merchant sentiment',           // 1 gen, 0 FP — merchant sentiment specialist
-    'revenue operations business partner', // 1 gen, 0 FP — revenue ops business partner
-    'customer advocacy',            // 2 gen, 0 FP — customer advocacy
-    'webcast',                      // 1 gen, 0 FP — webcast/AV specialist
-    'contact center trainer',       // 1 gen, 0 FP — contact center training
-    'construction equipment services', // 3 gen, 0 FP — construction equipment (JCI)
-    'global business process owner', // 2 gen, 0 FP — GBPO (Moog)
-    'skip tracer',                  // 1 gen, 0 FP — skip tracing (Motorola)
-    'office stock assistant',       // 1 gen, 0 FP — office stock (Motorola)
-    'supplier technologist',        // 1 gen, 0 FP — supplier technologist (Applied Materials)
-    'loading dock',                 // 1 gen, 0 FP — loading dock specialist
-    'fixed wing captain',           // 1 gen, 0 FP — fixed wing pilot
-    'central planner',              // 1 gen, 0 FP — central planner (Polaris)
-    'mailroom facilities',          // 1 gen, 0 FP — mailroom facilities (Broadridge)
-    'sustainability analyst',       // 1 gen, 0 FP — sustainability analyst
-    'volunteer experience',         // 1 gen, 0 FP — volunteer experience (Life.Church)
-    'rfc coordinator',              // 1 gen, 0 FP — RFC coordinator (Jabil)
-    'contract lifecycle',           // 1 gen, 0 FP — contract lifecycle mgmt (Philips)
-    'property maintenance',         // 1 gen, 0 FP — property maintenance (SEL)
-    'technical customer advisor',   // 1 gen, 0 FP — technical customer advisor (Veolia)
-    'yard attendant',               // 1 gen, 0 FP — yard attendant (Copart)
-    'tamashek linguist',            // 1 gen, 0 FP — Tamashek linguist (CACI)
-    'service dispatch',             // 1 gen, 0 FP — service dispatch supervisor
-    'intel ops controller',         // 1 gen, 0 FP — intel ops controller (CACI)
-    'russian kazak',                // 1 gen, 0 FP — Russian/Kazak linguist (CACI)
-    'administrative operations assistant', // 1 gen, 0 FP — admin ops assistant
-    'fleet & safety',               // 1 gen, 0 FP — fleet & safety (Allegion)
-    'bag jam clearer',              // 3 gen, 0 FP — bag jam clearer (Oshkosh airports)
-    'transportation strategy',      // 1 gen, 0 FP — transportation strategy (Point72)
-    'mission operator',             // 1 gen, 0 FP — mission operator (Latitude AI)
-    'engineering projects administrator', // 1 gen, 0 FP — eng projects admin (Curtiss-Wright)
-    'procurement support',          // 1 gen, 0 FP — procurement support (Guidehouse)
-    'human evaluator',              // 2 gen, 0 FP — human evaluator (Roblox)
-    'french /hausa',                // 1 gen, 0 FP — French/Hausa linguist (Leidos)
-    'energy efficiency programs',   // 1 gen, 0 FP — energy efficiency programs (Leidos)
-    'orders and demand',            // 1 gen, 0 FP — orders & demand consultant (Caterpillar)
-    'dispatch operations',          // 1 gen, 0 FP — dispatch operations (Voltus)
-    'intelligence planner',         // 1 gen, 0 FP — intelligence planner (Booz Allen)
-    'intelligence management specialist', // 1 gen, 0 FP — intel mgmt specialist (CACI)
-    'contract management specialist', // 2 gen, 0 FP — Contract Management Specialist (Boeing)
-    'maintenance controller',        // 1 gen, 0 FP — Maintenance Controller F-15SA (Boeing)
-    'learning strategist',           // 1 gen, 0 real FP — Associate Learning Strategist (pre-existing mfg FP)
-    'material review board',         // 1 gen, 0 FP — Quality Production Spclst MRB (Boeing)
-    'tech pubs author',              // 1 gen, 0 FP — Chinook Tech Pubs Author (Boeing, ops domain)
-    'procurement field',             // 1 gen, 0 FP — Procurement Field Rep (Boeing)
-    'database content developer',    // 1 gen, 0 FP — Database Content Developer (Boeing visual systems)
-    'image process specialist',      // 1 gen, 0 FP — Associate Image Process Specialist (Boeing)
-    'logistics representative',      // 2 gen, 0 FP — C-32/C-40 Logistics Representative (Boeing)
-    'quality workplace coach',       // 1 gen, 0 FP — Quality Workplace Coach (Boeing manufacturing floor)
-    'centurion lounge',             // 5 gen, 0 FP — Centurion Lounge (AmEx)
-    'technical service trainer',    // 2 gen, 0 FP — technical service training (Generac)
-    'cuas osint',                   // 1 gen, 0 FP — CUAS OSINT Analyst (CACI Intelligence)
-    'sof operations',               // 1 gen, 0 FP — DTRA SOF Operations Planner (CACI Intel)
-    'dtra',                         // 1 gen, 0 FP — DTRA SOF Operations Planner (CACI)
-    'federal financial management', // 1 gen, 0 FP — Federal Financial Mgmt Consultant (Guidehouse)
-    'future plans analyst',         // 1 gen, 0 FP — Future Plans Analyst (Guidehouse ops)
-    'energy markets',               // 3 gen, 0 FP — Managing Consultant-Energy Markets (Guidehouse)
-    'broadcast engineer',           // 1 gen, 0 FP — Production/Broadcast Engineer (NBCUniversal)
-    'photo coordinator',            // 1 gen, 0 FP — Photo Coordinator (NBCUniversal)
-    'digital scheduling',           // 1 gen, 0 FP — Digital Scheduling Supervisor (NBC Sports)
-    'citywalk',                     // 2 gen, 0 FP — CityWalk Projects/Entertainment (NBCUniversal)
-    'entertainment coordinator',    // 2 gen, 0 FP — Entertainment Coordinator (NBCUniversal)
-    'life cycle engineering',       // 1 gen, 0 FP — Life Cycle Engineering Cross Product Team Lead (RTX)
-    'advanced technology program management', // 1 gen, 0 FP — Intern Advanced Tech Program Mgmt (RTX)
-    'product lifecycle services',   // 1 gen, 0 FP — Intern Product Lifecycle Services (RTX)
-    'technical coordinator',        // 1 gen, 0 FP — Technical Coordinator (RTX)
-    'program quality & mission',    // 1 gen, 0 FP — Program Quality & Mission Assurance Associate (RTX)
-    'master control operator',      // 1 gen, 0 FP — Network Origination/Master Control Operator (Disney)
-    'content planning',             // 1 gen, 0 FP — Content Planning Associate (Disney DTC)
-    'audio operator',               // 1 gen, 0 FP — Audio Operator REMI A2 (ESPN/Disney)
-    'export analyst',               // 1 gen, 0 FP — Export Analyst (Disney global trade)
-    'podcast production',           // 1 gen, 0 FP — ABC News Podcast Production Intern (Disney)
-    'dtc strategy',                 // 1 gen, 0 FP — Analyst DTC Strategy (Disney+/Hulu)
-    'digital video content',        // 1 gen, 0 FP — Digital Video Content Associate (ESPN Disney+)
-    'rockwork designer',            // 1 gen, 0 FP — Rockwork Designer (Walt Disney Imagineering)
-    'network origination',          // 1 gen, 0 FP — Network Origination Operator (Disney broadcast)
-    'franchise planning',           // 1 gen, 0 FP — WDI Franchise Planning Intern (Disney)
-    'preditor',                     // 1 gen, 0 FP — Preditor producer/editor hybrid (Disney)
-    'construction associate',       // 1 gen, 0 FP — Construction Associate Project Manager (Disney)
-    'patient services business',         // 1 gen, 0 FP — AD Patient Services Business Design (AbbVie)
-    'transformation program management', // 1 gen, 0 FP — AD Transformation Program Management (AbbVie)
-    'organizational excellence',         // 1 gen, 0 FP — AD Organizational Excellence (AbbVie)
-    'international planning',            // 1 gen, 0 FP — AD International Planning & Data Operations (AbbVie)
-    'lean digital transformation',  // 1 gen, 0 FP — Team Lead Lean Digital Transformation (Bosch)
-    'warranty and returns',         // 1 gen, 0 FP — Warranty and Returns Specialist (Bosch)
-    'project purchasing',           // 1 gen, 0 FP — Project Purchasing Specialist (Bosch)
-    'replenishment team lead',      // 1 gen, 0 FP — Replenishment Team Lead (Bosch warehouse)
-    'geoint analyst',               // 2 gen, 0 FP — GEOINT Analyst (CACI/Leidos intelligence)
-    'all source',                   // 2 gen, 0 FP — All Source Analyst + FUSION/All Source CUAS Analyst (CACI Intelligence) — bare catches slash-separated title format
-    'multi-domain analyst',         // 1 gen, 0 FP — Multi-Domain Analyst (CACI Intelligence)
-    'kurdish linguist',             // 1 gen, 0 FP — Kurdish Linguist (CACI/Leidos)
-    'pashto',                       // 2 gen, 0 FP — Pashto/Dari Linguists (CACI/Leidos) — bare catches "Pashto/Dari" format
-    'somali linguist',              // 2 gen, 0 FP — Somali Linguist (CACI)
-    'russian linguist',             // 4 gen, 0 FP — Russian Linguist (CACI/Leidos)
-    'farsi linguist',               // 1 gen, 0 FP — Farsi Linguist (CACI)
-    'chinese linguist',             // 1 gen, 0 FP — Chinese Linguist (CACI/Leidos)
-    'uzbek',                        // 1 gen, 0 FP — Uzbek & Russian Linguist (CACI)
-    'tamashek',                     // 1 gen, 0 FP — Tamashek/Tamasheq Linguist (CACI)
-    'lessons learned analyst',      // 1 gen, 0 FP — Lessons Learned Analyst (Booz Allen)
-    'continuity of operations',     // 1 gen, 0 FP — Continuity Of Operations Planner (Booz Allen)
-    'space operations',             // 1 gen, 0 FP — Combined Space Operations SME / Planner (Booz Allen)
-    'space exercise',               // 1 gen, 0 FP — Space Exercise Planner (Booz Allen USSF)
-    'space future operations',      // 1 gen, 0 FP — Space Future Operations Planner (Booz Allen USSF)
-    'counter unmanned',             // 1 gen, 0 FP — Counter Unmanned Systems Portfolio Specialist (Booz Allen)
-    'techno-economic',              // 1 gen, 0 FP — Techno-Economic Analyst (Booz Allen ARPA-E)
-    'cyber policy',                 // 1 gen, 0 FP — Cyber Policy Writer (Booz Allen)
-    'organizational transformation strategist', // 1 gen, 0 FP — Organizational Transformation Strategist (Booz Allen)
-    'records management specialist', // 1 gen, 0 FP — Records Management Specialist (Booz Allen)
-    'workforce support specialist', // 2 gen, 0 FP — Workforce Support Specialist (Booz Allen/Leidos)
-    'network development analyst',  // 1 gen, 0 FP — Network Development Analyst (Booz Allen intel)
-    'language-enabled analyst',     // 1 gen, 0 FP — Language-Enabled Analyst (Booz Allen intel)
-    'occupational safety health',   // 2 gen, 0 FP — Occupational Safety Health Analyst (Leidos)
-    'field operations tech',        // 1 gen, 0 FP — Field Operations Tech (Leidos)
-    'cost estimator',               // 1 gen, 0 FP — Cost Estimator (Leidos)
-    'quality control group',        // 1 gen, 0 FP — Quality Control Group Specialist (Leidos)
-    'net mod training',             // 1 gen, 0 FP — NET Mod Training/Fielding Support (Leidos)
-    'communications and engagement specialist', // 1 gen, 0 FP — Communications and Engagement Specialist (Leidos)
-    'site security specialist',     // 1 gen, 0 FP — Site Security Specialist (Leidos)
-    'health & safety technician',   // 4 gen, 0 FP — Environmental Health & Safety Technician (SpaceX)
-    'facilities supervisor',        // 1 gen, 0 FP — Facilities Supervisor Starbase Village (SpaceX)
-    'construction technician',      // 1 gen, 0 FP — Construction Technician (SpaceX)
-    'security protective operations', // 1 gen, 0 FP — Security Protective Operations Center Operator (SpaceX)
-    'u109 driver',                  // 1 gen, 0 FP — U109 Driver 1st Shift (Northrop Grumman) [program-specific driver role]
-    // C58: field service keyword gap
-    'field service technician',   // 28 gen — NCR Voyix ATM/POS field repair (operations)
-    'site security controller',     // 1 gen, 0 FP — Site Security Controller (Northrop Grumman)
-    'value chain designer',         // 1 gen, 0 FP — Value Chain Designer (Caterpillar) [supply chain design/operations]
-    'machine technical services',   // 1 gen, 0 FP — Machine Technical Services Representative (Caterpillar)
-    'corporate travel security',    // 1 gen, 0 FP — Corporate Travel Security Specialist (Vanguard; GR&S travel risk/security operations)
-    'operational excellence engineer', // 1 gen, 0 FP — Operational Excellence Engineer – Global Logistics (Intuitive; Lean/Six Sigma logistics ops)
-    'office planning',             // 1 gen, 0 FP — SDS Office Planning Representative (NG; space programs division office planning/coordination)
-    'tactical strike',             // 1 gen, 0 FP — AD Tactical Strike Requirements & Capabilities (RTX; missile systems requirements definition)
-    'web editor',                  // 1 gen, 0 FP — Web Editor, Telemundo T40 McAllen (NBCUniversal; digital content publishing)
-    'ent audio',                   // 1 gen, 0 FP — Supervisor Ent Audio/Video (NBCUniversal; entertainment AV operations)
-    'production client experience', // 1 gen, 0 FP — Production Client Experience Coordinator (NBCUniversal; studio services production support)
-    'entry operations',            // 1 gen, 0 FP — Assistant Manager Entry Operations (NBCUniversal; theme park admissions/rentals/guest services)
-    'telemundo t60',               // 1 gen, 0 FP — Production Operation Specialist, Telemundo T60 San Antonio (NBCUniversal; broadcast production ops)
-    'telemundo responde',          // 1 gen, 0 FP — Anchor, Telemundo Responde/Investiga Las Vegas (NBCUniversal; consumer investigative journalism)
-    'freelance desk',              // 1 gen, 0 FP — Freelance Desk Editor - NBC Sports (NBCUniversal; digital sports editorial)
-    'nbc news washington',         // 1 gen, 0 FP — Desk Assistant, NBC News Washington (NBCUniversal; network news bureau)
-    'business solutions analyst',  // 1 gen, 0 FP — Business Solutions Analyst (NBCUniversal; UP&E operational excellence/process ops)
-    'hollywood drift',             // 1 gen, 0 FP — Assistant Manager Fast & Furious Hollywood Drift (NBCUniversal; theme park attraction ops)
-    'researcher-nbc',              // 1 gen, 0 FP — Researcher-NBC Sports (NBCUniversal; live sports research/editorial)
-    'media prep technician',       // 1 gen, 0 FP — Media Prep Technician (NBCUniversal; digital supply chain QC/transcode/delivery)
-    'production & operations',     // 1 gen, 0 FP — Coordinator, Production & Operations (NBCUniversal; exec support production ops team)
-    'coordinator, center',         // 1 gen, 0 FP — Coordinator, Center of Excellence (NBCUniversal; Ad Sales CoE admin/coordination)
-    'coordinator, communications', // 1 gen, 0 FP — Coordinator, Communications (NBCUniversal; comms executive admin/scheduling)
-    'supervisor entertainment',    // 2 gen, 0 FP — Supervisor Entertainment (NBCUniversal ×2; theme park costume/show operations)
-    'product ops',                 // 1 gen, 0 FP — Product Ops. Mgr., Tooling & Automation (NBCUniversal; Peacock/NBC ops tech tooling)
-    'data integrity reviewer',     // 1 gen, 0 FP — Core Ops Data Integrity Reviewer (QC) (Capital One; banking data quality review)
-    'velocity black',              // 1 gen, 0 FP — Travel Specialist, Associate - Velocity Black (Capital One; luxury travel concierge/AI)
-    'small business bank',         // 2 gen, 0 FP — Project Manager | Small Business Bank (Capital One ×2; SMB banking operations)
-    'treasury management product', // 1 gen, 0 FP — Senior Associate, Project Manager - Treasury Management Product (Capital One; commercial bank TM product ops)
-    'principal associate, business analysis', // 1 gen, 0 FP — Principal Associate, Business Analysis (Capital One; cloud transformation business analysis ops)
-    'process manager, principal',  // 1 gen, 0 FP — Process Manager, Principal Associate (Capital One; ATM availability/operational efficiency)
-    'supply base management',       // 1 gen, 0 FP — Supply Base Management Specialist (Boeing; supplier quality/contract compliance)
-    'mro digital',                  // 1 gen, 0 FP — Digital Enablement MRO Digital / Analytics Integration Analyst (Boeing; MRO digital transformation analytics)
-    'training and content',         // 1 gen, 0 FP — Associate Training and Content Specialist (Boeing BBE; visitor experience training/content design)
-    'business ops specialist',      // 2 gen, 0 FP — BDS Capability Business Ops Specialist + Business Ops Specialist Airplane Programs (Boeing)
-    'airplane management',          // 1 gen, 0 FP — Airplane Management Team Specialist (Boeing; airplane configuration/delivery programs)
-    // TAG-11 C54: Disney/cross-company operations
-    'government relations',         // 4 gen, 0 FP — Gov't relations interns/associates (Disney, Merck, NG, ADI)
-    'external affairs',             // 1 gen, 0 FP — External Affairs Intern (Disney)
-    'project controls',             // 1 gen, 0 FP — WDI Project Controls Planning Intern (Disney); Intel/Cat PCE dual-tag accept
-    'content acquisition',          // 1 gen, 0 FP — Senior Content Acquisition Associate (Disney DTC); S&P/Spotify dual-tag accept
-    'restaurant',                   // 1 gen, 0 FP — Restaurant Guest Service Manager (Disney Aulani); French Disney chef roles non-US
-    'events coordinator',           // 3 gen, 0 FP — Events Coordinator (Exact Sciences, Jane Street, IDEXX)
-    'coordinator, events',          // 1 gen, 0 FP — Coordinator, Events (FX) (Disney; reversed form)
-    'event services',               // 1 gen, 0 FP — Event Services Coordinator Disney's Fairy Tale Weddings
-    // TAG-11 C55: CACI operations/intelligence roles
-    'exploitation specialist',      // 1 gen, 0 FP — Exploitation Specialist (CACI; intelligence exploitation/analysis for defense)
-    'trainer intelligence',         // 1 gen, 0 FP — Trainer Intelligence (CACI; Special Forces MI instructor; GEOINT/SIGINT/OSINT training)
-    'real-time operations controller', // 1 gen, 0 FP — Real-Time Operations Controller (CACI; 24x7 satellite ground system monitoring/ops)
-    'aoc operations',               // 1 gen, 0 FP — AOC Operations SME (CACI; Air Operations Center mission/C2 systems operations)
-    'resource management professional', // 1 gen, 0 FP — Resource Management Professional (CACI; defense program resource/workforce management)
-    'program planning specialist',  // 1 gen, 0 FP — Program Planning Specialist (CACI; defense program planning/scheduling)
-    'military operations and intelligence', // 1 gen, 0 FP — Military Operations and Intelligence Specialist (CACI; NAVWAR PNT intelligence analyst)
-    'crisis operations response',   // 1 gen, 0 FP — Crisis Operations Response Advisor (CACI; DoD crisis action planning/CCDR support)
-    'bambara linguist',             // 1 gen, 0 FP — French & Bambara Linguist (CACI; TS/SCI government linguistics; extends linguist series)
-    'francophone arabic',           // 1 gen, 0 FP — Franco-Arab/Francophone Arabic Speaker (CACI; TS/SCI government linguistics)
-    // TAG-11 C56: Elanco operations roles
-    'audit coordinator',            // 1 gen, 0 FP — Audit Coordinator/ Administrator (Elanco; corporate audit lifecycle/admin coordination for CAS team)
-    // TAG-11 C57: RE/SPEC operations roles
-    'agilist',                      // 1 gen, 0 FP — Principle Agilist (RE/SPEC; SAFe/Lean-Agile enterprise coaching role)
-    // TAG-INTERN-1 (B45): operations internship keyword gaps
-    'group install and maintenance',           // 1 gen — Kaiser Group Install & Maintenance Intern
-    'intern renewable generation engineer',    // 1 gen — BHE Renewable Generation Engineer Intern
-    'rsts engineering system intern',          // 1 gen — CACI RSTS Engineering System Intern
-    'predictive maintenance co-op',            // 1 gen — Rolls Royce Predictive Maintenance Co-op
-    'total vehicle system integration',        // 1 gen — Rolls Royce Total Vehicle System Integration Co-op
-    'quality steering intern',                 // 1 gen — Rolls Royce Quality Steering Intern
-    'product certifications and marking',      // 1 gen — Bose Product Certifications Co-op (quality/ops)
-    'intern (technician)',                     // 1 gen — Microchip Intern (Technician)
-    'rls intern - technical information',      // 1 gen — KION RLS Intern - Technical Info & Documentation
-    // TAG-INTERN-1 cycle 2 (B52): operations keyword gaps
-    'procurement intern',                      // 4 gen — procurement (KION, SEL)
-    'purchasing intern',                       // 3 gen — purchasing (SEL)
-    'packaging science',                       // 1 gen — packaging (Bosch)
-    'facilities management intern',            // 1 gen — facilities (Bosch)
-    'comcast data management',                 // 1 gen — data management ops (Comcast)
-    'comcast strategic planning',              // 1 gen — strategic planning (Comcast)
-    'comcast campus planning',                 // 1 gen — campus planning (Comcast)
-    'comcast program management',              // 1 gen — program management (Comcast)
-    'wind development',                        // 1 gen — wind energy (AES)
-    'intern - defense & security',             // 1 gen — defense segment (Guidehouse)
-    // TAG-INTERN-1 cycle 5 (B61): operations keyword gaps
-    'game operations',                         // 5 G1 — Game Operations Intern (Tencent)
-    'corporate sustainability',               // 2 G1 — Corporate Sustainability Intern (Corning)
-    'biodiversity',                            // 1 G1 — Biodiversity Intern (Veolia)
-    'uptime management',                       // 1 G1 — Uptime Management Center Intern (EquipmentShare)
-    // SM31: title-pattern additions from Cat A analysis
-    'construction manager',                    // 9 G1 — Crusoe/xAI/SEL construction PMs. Facility buildout, not tech.
-    'critical environment technician',         // 7 G1 — Microsoft DC facility techs. Not SW.
-    'structural technician',                   // 6 G1 — Sierra Nevada/Rocket Lab structural assembly. HW manufacturing.
-    'manager, contracts',                      // 8 G1 — RTX/J&J contract admin. Operations, not tech.
-    'manager, project management',             // 7 G1 — Capital One/FIS/RTX PM roles. Operations.
-    'administrative business partner',         // 8 G1 — Palantir/Waymo/Roblox admin support. Operations.
-  ];
-  if (operationsKeywords.some(kw => title.includes(kw))) {
-    pushTag('operations', findMatch(operationsKeywords, title), 'title');
-  }
-
-  // Legal domain (title-only)
-  // Guard: isComplianceEngineer blocks 'Compliance Engineer', 'NERC Compliance Engineer',
-  // 'Air Quality & Compliance Engineer', etc. — those are hardware/software, not legal.
-  const legalKeywords = [
-    'paralegal', 'legal counsel', 'commercial counsel', 'corporate counsel',
-    'litigation counsel', 'regulatory counsel', 'privacy counsel',
-    'compliance analyst', 'legal analyst', 'litigation paralegal',
-    'contracts counsel', 'employment counsel',
- // GENERAL-CLASSIFICATION additions — +62 verified from live pool):
-    'attorney',              // trial attorney, corporate attorney, etc.
-    'compliance officer',    // compliance officer roles (4 hits — all legitimate)
-    'compliance specialist', // compliance specialist roles (10 hits — all legitimate)
-    'regulatory affairs',    // regulatory affairs specialist (9 hits — safe phrase)
-    'regulatory specialist', // regulatory specialist titles
-    'legal assistant',       // legal support roles
-    'contracts specialist',  // contract management roles
-    'contracts administrator',  // 7 hits — contract admin roles (defense, enterprise)
-    'contract administrator',   // 10 hits — singular form
-    'general counsel',          // 30 hits — in-house legal counsel
-    'legal engineer',           // 4 hits — legal/product specialist roles (Thomson Reuters)
-    'contracts analyst',        // 2 hits — contract analysis/management
-    'legal intern',             // 4 gen — legal internship roles
-    'contract specialist',      // 1 gen — contract management specialists
-    'contracts coordinator',    // 1 gen — contract coordination
-    'government affairs',       // 4 gen — government affairs/relations
-    'law clerk',                // 2 gen — legal clerks (CACI defense)
-    'content policy',           // 1 gen, 0 FP — content policy/moderation (Netflix)
-    'case reviewer',            // 1 gen, 0 FP — case review (CACI defense)
-    'federal affairs',          // 1 gen, 0 FP — government/federal affairs
-    'grc team',                 // 2 gen, 0 FP — governance risk compliance
-    'patent agent',             // 1 gen, 0 FP — patent agent
-    'tax litigation',            // 1 gen, 0 FP — tax litigation reporter
-    'legal reporter',            // 1 gen, 0 FP — legal reporter
-    'tax law analyst',           // 1 gen, 0 FP — tax law analyst
-    'claims law firm',          // 1 gen, 0 FP — claims law firm analyst (AIG)
-    'regulatory policy',        // 1 gen, 0 FP — regulatory policy (Coinbase)
-    'license compliance',       // 1 gen, 0 FP — license compliance (Autodesk)
-    'federal defense lobbyist',      // 1 gen, 0 FP — defense lobbying
-    'business affairs',             // 1 gen, 0 FP — Business Affairs Analyst (Disney media)
-    'rights management',            // 1 gen, 0 FP — Analyst Rights Management (Disney DTC)
-    'e-discovery project',          // 1 gen, 0 FP — E-Discovery Project Supervisor (CACI, ATS: Project Mgmt)
-    'coordinator, contracts',       // 1 gen, 0 FP — Coordinator, Contracts (NBCUniversal; contracts compliance/invoice processing)
-    // TAG-INTERN-1 (B45): legal internship keyword gaps
-    'intern – gas compliance',                 // 1 gen — BHE Gas Compliance Intern
-    'legal & compliance summer intern',        // 1 gen — Blockchain.com Legal & Compliance Intern
-    'intern - revenue cycle, payer provider',  // 1 gen — Guidehouse Revenue Cycle Intern (legal/compliance)
-    // TAG-INTERN-1 cycle 2 (B52): legal keyword gaps
-    'contracts management',                    // 3 gen — contract management (Comcast)
-    'political compliance',                    // 1 gen — political compliance (Comcast)
-    'legal team',                              // 1 gen — legal team (State Street)
-    'trade compliance',                        // 10 gen — trade compliance (Biogen, etc.)
-  ];
-  // TAG-9: bare 'counsel' uses word-boundary — 'counselor' is a healthcare keyword,
-  // includes('counsel') would match it. \bcounsel\b does not match 'counselor'.
-  const counselRegex = /\bcounsel\b/i;
-  const isComplianceEngineer = /\b(compliance engineer|compliance engineering)\b/i.test(title);
-  if (!isComplianceEngineer && (legalKeywords.some(kw => title.includes(kw)) || counselRegex.test(job.title || ''))) {
-    const legalMatch = findMatch(legalKeywords, title) || (counselRegex.test(job.title || '') ? 'counsel regex' : null);
-    pushTag('legal', legalMatch, 'title');
-  }
-
-  // HR domain (title-only)
-  const hrKeywords = [
-    'recruiting coordinator', 'hr coordinator', 'hr analyst',
-    'people operations', 'talent acquisition', 'human resources coordinator',
-    'hr business partner', 'hris analyst',
- // GENERAL-CLASSIFICATION additions — +125 verified from live pool):
-    'human resources',       // human resources specialist/generalist/manager
-    'recruiter',             // technical recruiter, recruiter, founding recruiter
-    'talent specialist',     // talent management specialist
-    'staffing coordinator',  // staffing/scheduling coordinator
-    // domain-accuracy audit: removed 'executive assistant' and 'administrative assistant'.
-    // 188 jobs (31% of hr domain) were EAs/admins in non-HR departments (People, G&A, Admin).
-    // EA to CEO/CRO is an ops/admin role, not HR. True HR roles classify via 'human resources',
-    // 'recruiting', 'hr coordinator', etc. — those keywords remain and are sufficient.
-    'instructional designer',// 11 hits — L&D/training design (HR function)
-    'hr business partner',   // HR-specific form (bare 'business partner' FPs on 'Finance Business Partner')
-    'training specialist',   // 10 gen — L&D/corporate training
-    'early childhood',       // 2 gen — early childhood education teachers
-    'training coordinator',  // 2 gen — training coordination
-    'learning & development', 'learning and development', // 3 gen — L&D partners
-    'talent attraction',     // 1 gen, 0 FP — talent sourcing/attraction
-    'hr technology',         // 1 gen, 0 FP — HR tech/HRIS roles
-    'accommodations consultant', // 1 gen, 0 FP — ADA/disability accommodations
-    'cyber human capital',       // 1 gen, 0 FP — cyber workforce HR strategy
-    'disability support',        // 1 gen, 0 FP — disability support specialist
-    'hr assistant',              // 1 gen, 0 FP — HR assistant
-  
-    'team effectiveness',            // 1 gen, 0 FP — team effectiveness solutions
-    'hr partner',                    // 1 gen, 0 FP — HR partner
-    'associate relations investigator', // 1 gen, 0 FP — associate relations (Capital One)
-    'hr generalist',                 // 2 gen, 0 FP — HR generalist
-    'leave specialist',              // 2 gen, 0 FP — leave of absence specialist
-    'talent strategy',              // 1 gen, 0 FP — ABC News Talent Strategy & Dev Intern (Disney)
-    'recruitment coordinator',      // 1 gen, 0 FP — Recruitment Coordinator Disney Cruise Line
-    'restrictions & accommodations', // 1 gen, 0 FP — Case Advocate Restrictions & Accommodations (Disney)
-    // B48 Phase 1: talent sourcing
-    'talent sourcer',                // talent sourcing specialist (recruiting function)
-    'hr communications',            // 1 gen, 0 FP — AD HR Communications (AbbVie)
-    'bhr operations',               // 1 gen, 0 FP — AD BHR Operations Acquisitions & Integration (AbbVie business HR)
-    'benefits coordinator',         // 1 gen, 0 FP — Benefits Coordinator (SpaceX)
-    'employee relations',           // 4 gen, 0 FP — Employee Relations Partner (Intuitive ×2), Employee Relations (ER) Specialist (Medtronic), Employee Relations Business Partner (Snap)
-    'people business partner',     // 8 gen, 0 FP — people/HRBP titles
-    'accommodations',               // 2 gen, 0 FP — Specialist, Accommodations (NBCUniversal; reasonable accommodation/ADA process), Global Benefits & Accommodations Intern (Proofpoint)
-    'credit college',               // 1 gen, 0 FP — Principal Associate - Learning Consultant- Credit College (Capital One; enterprise L&D for credit/banking education)
-    'recruiting lead',              // 1 gen, 0 FP — Principal Associate Recruiting Lead - Students And Grads (Capital One; campus/early-career recruiting)
-    'hr delivery',                  // 1 gen, 0 FP — HR Delivery Associate -S&G Analyst Programs (Capital One; HR delivery for students & grads programs)
-    // TAG-11 C54: Disney/cross-company HR
-    'people and culture',           // 5 gen, 0 FP — modern HR dept name (Guidehouse, Rocket Lab, Zayo, Logitech, Morningstar)
-    'people & culture',             // covers ampersand form in titles (Disney, WBD, Baker Hughes)
-    // C58: HR keyword gaps
-    'people partner',             // 2 gen — modern HR business partner title
-    // TAG-INTERN-1 (B45): HR internship keyword gaps
-    'people team intern',                      // 1 gen — Cloudflare People Team Intern
-    'hr intern',                               // 1 gen — Generac HR Intern
-    'intern sourcing',                         // 1 gen — Generac Intern Sourcing (HR/talent)
-    // TAG-INTERN-1 cycle 2 (B52): HR keyword gaps
-    'hr systems',                              // 2 gen — HR IT systems (Astera Labs)
-    'hr comms',                                // 1 gen — HR communications (Comcast)
-    // NOTE: 'learning specialist' NOT added — IXL "Professional Learning Specialist" is edtech product training, not HR (2 FP)
-    'employee engagement',                     // 3 gen — HR engagement (Comcast)
-    'campus tour ambassador',                  // 1 gen — campus ambassador (Comcast)
-    'comcast communications - impact',         // 1 gen — impact & inclusion HR (Comcast)
-  ];
-  if (hrKeywords.some(kw => title.includes(kw))) {
-    pushTag('hr', findMatch(hrKeywords, title), 'title');
-  }
-
-  // Product domain
-  const productKeywords = [
-    'product manager', 'product designer', 'ux designer',
-    'ui designer', 'user experience', 'product owner', 'product marketing',
-    // INTERN-1a Wave 2:
-    'ux design', 'ux research', 'ux researcher', 'ui/ux',
-    'industrial design', 'content design', 'experience design',
-    'web experience design', 'product analytics', 'technical ux', 'game design',
-    'product design intern',     // 7 hits — product design internship roles
-    'digital product',           // 8 gen, 71% spec — digital product management
-    'technical product',         // 5 gen, 86% spec — technical product management
-    'animator',                  // 5 gen — animation roles (DreamWorks/NBCUniversal)
-    'lighting artist',           // 1 gen — VFX/game lighting artists
-    'compositor',                // 1 gen — VFX compositing artists
-    'product management',        // 20 gen — product management roles
-    'product coordinator',       // 1 gen, 0 FP — product coordinator
-    'cx researcher',             // 1 gen, 0 FP — CX research & info design (Trimble)
-    // TAG-11 C54: Disney product
-    'product mgr',               // 1 gen, 0 FP — Associate Product Mgr (PH) (Disney WDI; abbreviation of 'product manager')
-    // TAG-INTERN-1 (B45): product internship keyword gaps
-    'product line management intern',          // 1 gen — Kioxia Product Line Management Intern
-    'product & program management intern',     // 2 gen — KION Product & Program Management Intern
-    'product strategist intern',               // 3 gen — TikTok Product Strategist Intern
-    'product strategist project intern',       // 1 gen — TikTok Product Strategist Project Intern
-    'product development internship',          // 1 gen — Globus Medical Product Development Internship
-    'offering management intern',              // 1 gen — Honeywell Offering Management Intern
-    // TAG-INTERN-1 cycle 2 (B52): product keyword gaps
-    'technology product analyst',              // 3 gen — product analyst (Copart)
-    'commercialization product',               // 1 gen — product commercialization (Trane)
-    'product operations project',              // 3 gen — product ops (TikTok)
-  ];
-  if (productKeywords.some(kw => title.includes(kw))) {
-    pushTag('product', findMatch(productKeywords, title), 'title');
-  }
-
- // Retail domain (title-only — GENERAL-CLASSIFICATION new domain,
-  // ~1,241 US+general jobs verified from live pool.
-  // 'team member' is very broad but in-scope: Walmart/Target/DashMart crew roles are correctly retail.
-  // 'seasonal:' with colon catches Target "Seasonal: General Merchandise (Stocking)" format.
-  // Guard: isRetailBanking excludes "Retail Personal Banker", "Retail Loan Originator" — those are finance.
-  const retailKeywords = [
-    'cashier',               // #1 retail job title (~300+ hits)
-    'store associate',       // big box retail associate
-    'retail',                // retail specialist, retail sales, retail associate
-    'merchandis',            // merchandiser, merchandising (prefix match)
-    'stocker',               // grocery/retail stocker
-    'loader',                // Lowe's/HD loader/cart associate
-    'cart associate',        // cart retrieval crew
-    'stocking',              // overnight stocking, inbound stocking
-    'crew member',           // fast food/restaurant crew
-    'team member',           // Walmart/Target/Sam's Club team member
-    'barista',               // Starbucks/coffee shop
-    'seasonal:',             // Target seasonal format "Seasonal: [role] (Stocking)"
-    'backroom associate',    // Target/Walmart backroom
-    'overnight inbound',     // Target overnight inbound freight
- // TAG-1 G1 expansion: 347+90 T-Mobile retail roles
-    'mobile associate',      // T-Mobile in-store retail (347 hits)
-    'specialty representative', // T-Mobile in-store specialty (90 hits)
-    'personal shopper',      // 22 hits — Walmart/Target personal shopper
-    'member specialist',     // 30 hits — Sam's Club/Walmart member specialist
-    'sales floor',           // 43 hits — Lowe's department supervisors
-    'asset protection',      // 17 hits — Lowe's/Walmart loss prevention
-    'back-end dept supervisor', // 2 gen, 0 FP — store department supervision (Lowe's)
-    'seasonal summer hiring',   // 1 gen, 0 FP — seasonal retail hiring (WBD Harry Potter)
-    'back end clerk',            // 4 gen — Lowe's back-end store clerks
-    'margaritaville',            // 1 gen, 0 FP — Assistant GM - Margaritaville (NBCUniversal)
-  ];
-  const isRetailBanking = /\b(banker|banking|loan originator|mortgage|lender)\b/i.test(title);
-  if (!isRetailBanking && retailKeywords.some(kw => title.includes(kw))) {
-    pushTag('retail', findMatch(retailKeywords, title), 'title');
-  }
-
- // Manufacturing domain (title-only — GENERAL-CLASSIFICATION new domain,
-  // ~1,004 US+general jobs verified from live pool.
-  // Was causing 132 hardware-only misroutes. Manufacturing engineers → manufacturing domain.
-  // 'assembly' is safe: all hits are assembly tech/technician/operator titles, no legislative false positives.
-  const manufacturingKeywords = [
- 'manufacturing engineer', 'manufacturing engineering', //: moved from hardware — 132 misroutes fixed
-    'machine operator',          // CNC/machine operator
-    'production operator',       // production floor operator
-    'assembler',                 // assembly line worker
-    'assembly',                  // assembly technician, electronics assembly
-    'welder',                    // welding/weld technician
-    'machinist',                 // CNC machinist
-    'production associate',      // production floor associate
-    'production technician',     // production tech
-    'material handler',          // materials/warehouse handling on production floor
- 'maintenance technician', // TAXONOMY-AUDIT-1: 203 jobs in general
- // TAG-1 G1 expansion: test/engineering technician roles on production floor
-    'test technician',           // 68 hits — RF/optical/production test (FLIR, RTX, GE)
-    'engineering technician',    // 47 hits — manufacturing/production engineering
-    'manufacturing operator',    // 35 hits — factory floor operators
-    'manufacturing technician',  // 50 hits — manufacturing production techs
-    'quality inspection/final test', // 5 gen, 0 FP — Vertiv quality/final test floor roles
-    'manager, external manufacturing', // 1 gen, 0 FP — J&J external manufacturing leadership
-    'fabricat',                  // 38 hits — fabricator/fabrication (prefix match)
-    'wastewater',                // 20 hits — wastewater operator/technician (Veolia, SpaceX)
-    'manufacturing supervisor',  // 16 hits — production floor supervisors
-    'production supervisor',     // 43 hits — production floor supervisors
-    'painter',                   // 18 hits — industrial/automotive/facility painters
-    'production planner',        // 10 hits — production planning/scheduling
-    'cnc programmer',            // 5 hits — CNC machine programming
-    'mold designer',             // 1 hit — injection mold design
-    'metrologist',               // 2 hits — precision measurement roles
-    // B48 Phase 1: manufacturing intern/support keywords
-    'technician student intern',     // manufacturing technician intern roles
-    'mfg ops support',               // mfg operations support (abbreviation)
-    'logistics teardown',            // logistics teardown technician (defense mfg)
-    'industrial maintenance',    // 3 hits — industrial maintenance technicians
-    'cycle counter',             // 3 hits — inventory cycle counting (manufacturing floor)
-    'quality technician',        // 5 hits — QC/QA floor technicians
-    'production specialist',     // 4 hits — production floor specialists
-    'maintenance mechanic',      // 4 gen — compound form safe (bare 'mechanic' rejected Phase 1)
-    'maintenance supervisor',    // 5 gen — maintenance floor supervisors
-    'cnc operator',              // 4 gen — CNC machine operators
-    'materials planner',         // 4 gen — materials/production planning
-    'product acceptance',        // 4 gen — product acceptance/QA
-    'material support',          // 4 gen — material handling support
-    'peripheral operator',       // 5 gen — peripheral/auxiliary equipment operators
-    'paint prep',                // 3 gen — paint preparation (Oshkosh)
-    'paint tech',                // 3 gen — paint technician
-    'industrial hygienist',      // 2 gen — workplace safety/hygiene
-    'production coach',          // 2 gen — production floor supervisors (Moog)
-    'production equipment',      // 8 gen — production equipment technicians (Broadridge)
-    'manufacturing associate',     // 4 gen, 0 FP — manufacturing associate I/II/III/IV
-    'quality assurance',         // 12 gen — QA supervisors/reviewers (Abbott, Biogen)
-    'mechanical repair',         // 2 gen — mechanical repair technicians
-    'deburr',                    // 6 gen — deburring technicians (Jabil)
-    'iron technician',           // 2 gen — iron/metalwork technicians
-    'generator tester',          // 2 gen — generator testing
-    'apprentice',                // 11 gen — trade apprenticeships
-    'finisher',                  // 2 gen — manufacturing finishers
-    'ndt technician',            // 4 gen — non-destructive testing techs (was desc phrase only)
-    'tool & die', 'tool and die', // 2 gen — tool & die engineering/making
-    'ndt tech',                  // 1 gen — short form of NDT technician
-    'nc programmer',             // 1 gen — NC machine programming
-    'smt technician',            // 3 gen — surface mount technology
-    'insulator',                 // 1 gen — insulation installers
-    'production support',        // 2 gen — production support technicians
-    'production coordinator',    // 6 gen — production coordination
-    'maintenance tech',          // 6 gen — short form of maintenance technician
-    'automotive detailer',       // 12 gen — vehicle detailing (Copart)
-    'mechanical associate',      // 12 gen — mechanical repair associates (Copart)
-    'modification mechanic',     // 3 gen, 0 FP — aircraft modification mechanics (Boeing)
-    'wrapper',                   // 2 gen, 0 FP — packaging/wrapping roles (JCI)
-    'glass seal plater',         // 1 gen, 0 FP — glass seal plating (FLIR)
-    'launch pad technician',     // 1 gen, 0 FP — launch pad ground ops (SpaceX)
-    'tester i',                  // 3 gen, 0 FP — manufacturing tester level I
-    'plumber',                   // 2 gen, 0 FP — plumbing roles (Oshkosh airports)
-    'jetway laborer',            // 1 gen, 0 FP — airport jetway labor (Oshkosh)
-    'bag jammer',                // 1 gen, 0 FP — airport baggage handling (Oshkosh)
-    'paint touch',               // 1 gen, 0 FP — paint touch-up/detailing
-    'graphics application',      // 1 gen, 0 FP — vehicle graphics application
-    'machine tool services',     // 1 gen, 0 FP — machine tool services supervisor
-    'production worker',         // 1 gen, 0 FP — production worker
-    'facilities operator',       // 2 gen, 0 FP — facilities operator
-    'brake component',           // 1 gen, 0 FP — brake component operator
-    'production integration',    // 1 gen, 0 FP — production integration specialist
-    'special process auditor',   // 1 gen, 0 FP — special process auditing
-    'supervisor, installations', // 1 gen, 0 FP — installations supervisor
-    'honing set-up',                // 1 gen, 0 FP — honing setup (Bosch)
-    'electrical journeyperson',     // 2 gen, 0 FP — electrical journeyperson (GM)
-    'mechanical journeyperson',     // 1 gen, 0 FP — millwright journeyperson (GM)
-    'metrology specialist',         // 1 gen, 0 FP — metrology specialist (SpaceX)
-    'pipefitter',                   // 1 gen, 0 FP — pipefitter (FLIR)
-    'component inspection',         // 1 gen, 0 FP — component inspection (FLIR)
-    'lab equipment control',        // 1 gen, 0 FP — lab equipment diagnostics (FLIR)
-    'in house service',             // 1 gen, 0 FP — in-house service/repair (FLIR)
-    'manufacturing program',        // 1 gen, 0 FP — manufacturing program mgr (FLIR)
-
-    'composite rework',          // 1 gen, 0 FP — composite rework/repair
-    'product repair',            // 2 gen, 0 FP — product repair/modification
-    'flight operations mechanic', // 2 gen, 0 FP — flight ops mechanic
-    'numerical control programmer', // 1 gen, 0 FP — NC programming
-    'munitions mechanic',        // 1 gen, 0 FP — munitions mechanic
-    'plating line',              // 1 gen, 0 FP — plating line technician
-    'antisense',                 // 1 gen, 0 FP — antisense oligonucleotide manufacturing
-    'maintenance operator',      // 1 gen, 0 FP — maintenance operator
-    'pyrometry technician',      // 1 gen, 0 FP — pyrometry (Moog)
-    'mfg maint tech',            // 2 gen, 0 FP — mfg maintenance technician
-    'multilayer',                // 1 gen, 0 FP — multilayer process specialist (Northrop)
-    'manufacturing operations trainer', // 1 gen, 0 FP — mfg ops trainer (Generac)
-    'automotive offline',            // 2 gen, 0 FP — automotive offline technician (Oshkosh)
-    'clutch balancer',           // 1 gen, 0 FP — clutch balancer tech (Polaris)
-    'manufacturing excellence',  // 1 gen, 0 FP — manufacturing excellence program
-    'recon mechanic',            // 1 gen, 0 FP — recon mechanic (Copart)
-    'paint hanger',              // 2 gen, 0 FP — paint hanger (Generac)
-    'patternmaker',              // 1 gen, 0 FP — patternmaker (Caterpillar)
-    'material review',           // 1 gen, 0 FP — Quality Production Spclst MRB (Boeing)
-    'quality production spclst', // 1 gen, 0 FP — Quality Production Specialist (Boeing)
-    'support integration specialist', // 1 gen, 0 FP — Support Integration Specialist (Boeing)
-    'supv manufacturing',            // 1 gen, 0 FP — Supv Manufacturing (RTX, abbreviated supervisor)
-    'clinical supply line',          // 1 gen, 0 FP — Operator Clinical Supply Line (AbbVie cGMP packaging)
-    'fill/finish technician',        // 1 gen, 0 FP — Fill/Finish Technician (AbbVie biologics manufacturing)
-    'technical process specialist',  // 1 gen, 0 FP — Technical Process Specialist 3rd shift (Bosch)
-    'case picking',                  // 1 gen, 0 FP — Full Case Picking warehouse (Bosch)
-    'product quality auditor',       // 1 gen, 0 FP — Product Quality Auditor HVAC (Bosch)
-    'material planning',             // 1 gen, 0 FP — Material Planning Intern (Bosch)
-    'coatings technician',           // 1 gen, 0 FP — Paint & Coatings Technician (SpaceX)
-    'foundry operator',              // 2 gen, 0 FP — Heavy Foundry Operator, Experienced Foundry Operators (Caterpillar Mapleton CMO)
-    'molding specialist',            // 1 gen, 0 FP — Molding Specialist 2nd/3rd Shift (Caterpillar Mapleton CMO)
-    'paint team lead',               // 1 gen, 0 FP — Paint Team Lead 1st Shift (Caterpillar) [Career Area: Operations]
-    'industrial repair technician',  // 1 gen, 0 FP — Industrial Repair Technician (Caterpillar) [Career Area: Operations]
-    'inspection quality auditor',    // 1 gen, 0 FP — Inspection Quality Auditor - CMM (Caterpillar) [Career Area: Operations; CMM = coordinate measuring machine]
-    'utilities repair technician',   // 1 gen, 0 FP — Utilities Repair Technician 2nd Shift (Caterpillar) [Career Area: Operations]
-    'mining technical representative', // 1 gen, 0 FP — Seniour Mining Technical Representative (Caterpillar) [mining tech = manufacturing/heavy equipment domain]
-    'advanced manufacturing technical', // 1 gen, 0 FP — Advanced Manufacturing Technical Specialist (Guidehouse)
-    'mes associate',                // 1 gen, 0 FP — MES Associate 2 (Abbott; MES = Manufacturing Execution System)
-    'technical engineering function', // 1 gen, 0 FP — Technical Engineering Function (TEF) Summer Intern (Bosch; manufacturing/engineering rotation program)
-    'engineer process',            // 2 gen, 0 FP — Engineer Process level 2 + Engineer Process 1/2 (NG; inverted WD title format for manufacturing process engineers)
-    'deployable aircraft',         // 1 gen, 0 FP — Deployable Aircraft Low Observable Mechanic 3 (NG; stealth/LO coating mechanics)
-    'welding technician',          // 2 gen, 0 FP — Welding Technician 1st Shift (RTX), Airport Services Welding Technician (Oshkosh) ['welder' kw misses this form]
-    'foundry equipment',           // 1 gen, 0 FP — Foundry Equipment Operator 1st Shift (RTX; casting/foundry operations)
-    // TAG-11 C55: CACI manufacturing roles
-    'cmm technician',              // 1 gen, 0 FP — CMM Technician (CACI; Coordinate Measuring Machine technician for precision manufacturing quality inspection)
-    // TAG-11 C56: Elanco manufacturing roles
-    'specialist - manufacturing operations', // 1 gen, 0 FP — Specialist - Manufacturing Operations (Elanco; pharma manufacturing ops specialist)
-    'advisor-manufacturing',        // 1 gen, 0 FP — Advisor-Manufacturing (Elanco; manufacturing advisory/technical role; dash-separated format)
-    'supervisor - manufacturing operations', // 1 gen, 0 FP — Supervisor - Manufacturing Operations (Elanco; pharma mfg supervisor)
-    'product recovery',             // 1 gen, 0 FP — Process Operator – Product Recovery (Elanco; API product recovery operations)
-    'distribution, packaging',      // 1 gen, 0 FP — Operator - Distribution, Packaging & Labeling (Elanco; vaccine packaging/labeling). Comma-guard avoids 'distribution center' false-positives.
-    'process operator - packaging', // 1 gen, 0 FP — Process Operator - Packaging (Elanco; oral solid dose packaging for companion animal products)
-    // TAG-PRECISION-14: high-impact manufacturing keywords
-    'quality inspector',            // 27 gen — production floor QC inspectors
-    'quality manager',              // 21 gen — QA/QC management
-    'process technician',           // 15 gen — process/production technicians (Applied Materials, etc.)
-    'manufacturing manager',        // 8 gen — manufacturing floor management
-    'facility general laborer',     // 2 gen, 0 FP — plant/facility labor roles at Sherwin
-    'r&d- technician ii',           // 2 gen, 0 FP — Sherwin R&D technician roles
-    // TAG-INTERN-1 (B45): manufacturing internship keyword gaps
-    'metrology automation intern',             // 1 gen — Rolls Royce Metrology Automation Intern
-    'paint shop quality intern',               // 1 gen — Rolls Royce Paint Shop Quality Intern
-    'paint shop digitalization',               // 2 gen — Rolls Royce Paint Shop Digitalization Co-ops
-    'quality and reliability intern',          // 1 gen — onsemi Quality and Reliability Intern
-    'corporate intern - engineering',          // 1 gen — Caterpillar Corporate Intern - Engineering
-    'digitalization co-op',                    // 1 gen — Rolls Royce Digitalization Co-op
-    'intern – engineer operations',            // 1 gen — BHE Engineer Operations Intern (mfg ops)
-    'intern – enterprise analytics',           // 1 gen — BHE Enterprise Analytics Intern (mfg analytics)
-    // TAG-INTERN-1 cycle 2 (B52): manufacturing keyword gaps
-    'quality internship',                      // 1 gen — quality internship (Generac)
-    'product quality intern',                  // 1 gen — product quality (Bosch)
-    'vehicle motion manufacturing',            // 1 gen — vehicle mfg (Bosch)
-    'manufacturing intern',                    // 5 gen — manufacturing interns (Curtiss-Wright, etc.)
-    'student engineering intern',              // 3 gen — student engineering (RE/SPEC)
-    'student mine reclamation',                // 1 gen — mine reclamation engineering (RE/SPEC)
-    'comcast construction tools',              // 1 gen — construction tools (Comcast)
-    'co-op: system test',                      // 1 gen — system test (iRhythm)
-    // TAG-INTERN-1 cycle 5 (B61): manufacturing keyword gaps
-    'drafting intern',                         // 1 G1 — Drafting Intern (Veolia)
-    'chemical technology',                     // 1 G1 — Intern in Chemical Technology (RTX)
-    'intern - packaging',                      // 1 G1 — Intern - Packaging Development (Elanco)
-  ];
-  // EHS uses word-boundary regex — 'ehs' substring appears in 'FranceHS', 'EHSS'
-  const ehsRegex = /\behs\b/i;
-  if (manufacturingKeywords.some(kw => title.includes(kw)) || ehsRegex.test(job.title || '')) {
-    const mfgMatch = findMatch(manufacturingKeywords, title) || (ehsRegex.test(job.title || '') ? 'ehs regex' : null);
-    pushTag('manufacturing', mfgMatch, 'title');
-  }
-
- // Logistics domain (title-only — GENERAL-CLASSIFICATION new domain,
-  // ~426 US+general jobs verified from live pool (409 core + 17 'distribution center' phrase).
-  // NOTE: bare 'distribution' NOT added — "Distribution Engineer" (utility/electrical) is hardware domain.
-  // NOTE: bare 'shipping' NOT added — "Shipping Coordinator" is already ops-adjacent and low volume.
-  // 'logistics' kept here because 'logistics analyst' is already captured by operations domain keywords —
-  //   remaining hits are warehouse/supply-chain workers, not analyst roles.
-  const logisticsKeywords = [
- 'fulfillment associate', //: moved from operationsKeywords — 225 Lowe's/warehouse jobs now correctly logistics
- 'fulfillment team lead', //: moved from operationsKeywords — same reason
-    'warehouse',             // warehouse worker/associate/supervisor
-    'forklift',              // forklift operator/driver
-    'cdl',                   // CDL driver (commercial driver's license)
-    'delivery driver',       // last-mile delivery
-    'freight',               // freight handler/clerk
-    'logistics coordinator', 'logistics specialist', 'logistics clerk',  // specific logistics roles
-    'logistics associate', 'logistics supervisor', 'logistics technician', // (bare 'logistics' NOT added —
-    // 'Logistics Engineer' and 'Logistics Automation Engineer' are hardware/software, not logistics)
-    'truck driver',          // OTR/regional truck driver
-    'distribution center',   // distribution center worker/supervisor (phrase — safe, no hw FP)
- // TAG-1 G1 expansion: supply chain specialist/coordinator
-    'supply chain specialist',   // supply chain roles not caught by operations 'supply chain analyst'
-    'supply chain coordinator',  // coordination roles
-    'inventory associate',       // 17 hits — inventory/warehouse associate
-    'dispatcher',                // 8 hits — logistics/fleet dispatch roles
-    'distribution specialist',   // 2 hits — distribution/logistics specialists
-    'shipping clerk',            // 1 gen — shipping/receiving clerks
-    'loadmaster',                // 1 gen — aircraft loadmasters
-    'logistic coordinator',      // 1 gen — singular form (had 'logistics coordinator')
-    'shipping associate',        // 5 gen — shipping/receiving associates
-    'shuttle driver',            // 2 gen — shuttle/transport drivers
-  
-    'dispatching clerk',             // 1 gen, 0 FP — dispatching clerk
-    'logistics administration',      // 1 gen, 0 FP — logistics administration
-    'material transfer driver',     // 1 gen, 0 FP — material transfer driver
-    // B48 Phase 1: logistics operative
-    'logistics operative',           // logistics operative (warehouse/freight)
-
-    'packaging & shipping',          // 1 gen, 0 FP — packaging/shipping planner
-    'logistics integration cell',    // 1 gen, 0 FP — logistics integration cell (RTX)
-    'ltl/parcel',                    // 1 gen, 0 FP — LTL/Parcel Team Lead (Bosch)
-    'logistics materials',           // 1 gen, 0 FP — Logistics Materials Intern/Co-Op (Bosch)
-    'npi logistics',                 // 1 gen, 0 FP — NPI Logistics Engineer (Caterpillar) [new product introduction logistics]
-    'distribution technician',       // 1 gen, 0 FP — Distribution Technician-1st Shift (Caterpillar)
-    'sca stock',                     // 1 gen, 0 FP — SCA Stock Clerk (NG; govt contract stock/inventory clerk)
-    // TAG-11 C54: Disney/cross-company logistics
-    'expeditor',                     // 2 gen, 0 FP — Expeditor (Disney DCL, NG Manufacturing Expeditor); supply chain coordination
-    'inventory coordinator',         // 2 gen, 0 FP — Administrative & Inventory Coordinator (Disney), Inventory Coordinator (ResMed)
-  ];
-  if (logisticsKeywords.some(kw => title.includes(kw))) {
-    pushTag('logistics', findMatch(logisticsKeywords, title), 'title');
-  }
-
-  // TAG-SELF-3: Cache keyword arrays for per-keyword health monitoring.
-  if (!_keywordMap) {
-    _keywordMap = {
-      software: softwareKeywords,
-      ai: aiKeywords,
-      data_science: dataScienceKeywords,
-      hardware: hardwareKeywords,
-      healthcare: healthcareExact,
-      finance: financeKeywords,
-      sales: salesKeywords,
-      marketing: marketingKeywords,
-      operations: operationsKeywords,
-      legal: legalKeywords,
-      hr: hrKeywords,
-      product: productKeywords,
-      retail: retailKeywords,
-      manufacturing: manufacturingKeywords,
-      logistics: logisticsKeywords,
-    };
-  }
-
-  // TAG-LAYER4-BUG-1: Count jobs that skip Layer 4 (already tagged)
-  if (_layer4Stats && tags.length > 0) { _layer4Stats.total_reached++; } // tagged by keywords
-  if (_layer4Stats && tags.length === 0 && description.length <= 100) { _layer4Stats.total_reached++; _layer4Stats.short_desc++; } // desc too short
-  // TAG-7: Description fallback for general-tagged jobs.
-  // WD/SR descriptions injected by aggregator Step 4c (from enrichment sidecar).
-  // GH/Lever/Ashby have inline descriptions from their API responses.
-  // Only fires when: (1) no title keyword/O*NET match, (2) description non-empty.
-  // Tier 1 (highPrecision): phrases with >80% precision — 1 match suffices.
-  // Tier 2 (standard): phrases with <80% precision — 2+ matches required.
-  // Precision = % of US classified jobs containing the phrase that are in the intended domain.
- // Measured across 22,513 US jobs with descriptions analysis).
-  if (tags.length === 0 && description.length > 100) {
-    // TAG-LAYER4-BUG-1: Track Layer 4 diagnostic
-    if (_layer4Stats) {
-      _layer4Stats.total_reached++;
-      _layer4Stats.has_desc++;
-      const src = (job.source || "unknown");
-      if (!_layer4Stats.by_source[src]) _layer4Stats.by_source[src] = { reached: 0, hp: 0, std: 0, no_match: 0 };
-      _layer4Stats.by_source[src].reached++;
-    }
-    const cleanDesc = description.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').toLowerCase();
-
-    // Tier 1: High-precision phrases (>80% precision). 1 match = classify.
-    const highPrecision = [
-      { domain: 'hardware', phrases: ['thermal design', 'circuit design', 'fpga', 'pcb', 'signal integrity', 'oscilloscope', 'mechanical design'] },
-      { domain: 'software', phrases: ['code review', 'ci/cd', 'api design', 'microservice', 'deployment pipeline', 'kubernetes', 'docker', 'terraform', 'containerization', 'pull request', 'load balancer', 'codebase', 'automated testing', 'encryption'] },
-      { domain: 'data_science', phrases: ['feature engineering'] },
-      { domain: 'finance', phrases: ['financial statements', 'fund administration', 'gaap', 'ifrs', 'general ledger', 'journal entry', 'month-end close', 'fund accounting', 'balance sheet', 'income statement', 'wealth management'] },
-      { domain: 'healthcare', phrases: ['drug safety', 'vital signs', 'informed consent', 'blood draw', 'nursing assessment', 'clinical operations', 'medical affairs'] },
-      { domain: 'manufacturing', phrases: ['machine operation'] },
-      { domain: 'sales', phrases: ['sales quota', 'sales pipeline', 'revenue target'] },
-      { domain: 'legal', phrases: ['bar admission', 'legal counsel'] },
-      { domain: 'retail', phrases: ['store operations'] },
-    ];
-
-    // Tier 2: Standard phrases (<80% precision). 2+ matches required.
-    const standardPhrases = [
-      { domain: 'hardware', phrases: ['simulation', 'commissioning', 'equipment calibration', 'test systems', 'embedded system', 'power supply', 'schematic',
-        'solidworks', 'autocad', 'electrical engineering', 'failure analysis', 'bill of materials', 'prototyping', 'wiring diagram',
-        'semiconductor', 'wafer', 'silicon', 'plc'] },
-      { domain: 'software', phrases: ['source code', 'database design', 'incident response', 'version control', 'agile development', 'sprint planning', 'unit test',
-        'programming language', 'technical debt',
-        'endpoint', 'virtualization', 'firewall', 'test automation', 'regression test', 'dns'] },
-      { domain: 'data_science', phrases: ['machine learning', 'statistical model', 'data pipeline', 'model training', 'a/b test', 'data warehouse', 'etl process', 'predictive model'] },
-      { domain: 'finance', phrases: ['treasury', 'portfolio management', 'credit risk', 'financial reporting',
-        'reconciliation', 'accounts payable', 'accounts receivable', 'internal controls',
-        'investment management', 'asset management', 'fixed income', 'capital markets',
-        'real estate', 'shareholder', 'budgeting', 'money laundering'] },
-      { domain: 'healthcare', phrases: ['patient care', 'clinical trial', 'hipaa', 'therapeutic area', 'medical device', 'pharma', 'clinical research', 'fda', 'healthcare provider',
-        'triage', 'infection control', 'sterile', 'specimen', 'inpatient', 'outpatient',
-        'patient outcomes', 'regulatory affairs', 'drug development', 'therapeutics'] },
-      { domain: 'manufacturing', phrases: ['production floor', 'assembly line', 'quality control', 'manufacturing process', 'cnc', 'lean manufacturing', 'production schedule', 'material handling',
-        'work instruction', 'tooling', 'fixtures', 'preventive maintenance', 'iso 9001',
-        'production line', 'clean room', 'gmp', 'good manufacturing',
-        'cleanroom', 'machining', 'ndt', 'defect analysis'] },
-      { domain: 'operations', phrases: ['project management', 'inventory management', 'operational efficiency', 'process improvement', 'vendor management', 'supply chain', 'fulfillment', 'service level',
-        'facility security', 'classified information', 'industrial security',
-        'procurement', 'property management', 'compliance program'] },
-      { domain: 'sales', phrases: ['territory management', 'customer acquisition', 'business development', 'account management', 'product demonstration',
-        'field-based'] },
-      { domain: 'hr', phrases: ['employee relations', 'talent management', 'onboarding', 'performance review', 'compensation and benefits', 'workforce planning', 'learning and development'] },
-      { domain: 'legal', phrases: ['litigation', 'regulatory compliance', 'contract negotiation', 'intellectual property', 'corporate governance'] },
-      { domain: 'marketing', phrases: ['brand strategy', 'content marketing', 'digital marketing', 'market research', 'campaign management', 'social media strategy', 'marketing analytics'] },
-      { domain: 'retail', phrases: ['merchandising', 'product categories', 'store manager'] },
-    ];
-
-    // Tier 1: single high-precision match
-    for (const { domain, phrases } of highPrecision) {
-      const match = phrases.find(p => cleanDesc.includes(p));
-      if (match) {
-        pushTag(domain, '(desc-hp: ' + match + ')', 'description-fallback');
-        if (_layer4Stats) { _layer4Stats.hp_hits++; _layer4Stats.by_source[job.source || "unknown"].hp++; }
-        break;
-      }
-    }
-
-    // Tier 2: 2+ standard phrase matches (only if Tier 1 didn't match)
-    if (tags.length === 0) {
-      for (const { domain, phrases } of standardPhrases) {
-        const matches = phrases.filter(p => cleanDesc.includes(p));
-        if (matches.length >= 2) {
-          pushTag(domain, '(desc: ' + matches.slice(0, 2).join(' + ') + ')', 'description-fallback');
-        if (_layer4Stats) { _layer4Stats.std_hits++; _layer4Stats.by_source[job.source || "unknown"].std++; }
-          break;
-        }
-      }
-    }
-    // TAG-LAYER4-BUG-1: Track no-match (had desc but no phrase matched)
-    if (_layer4Stats && tags.length === 0) { _layer4Stats.by_source[job.source || "unknown"].no_match++; }
-  }
-
-  // TAG-11 C47: Pre-O*NET civil engineering guard.
-  // Titles with 'project engineer' + civil modifier were blocked from sw (isGuardedSwOnly) but
-  // then fell through to O*NET which matched 'project engineer' -> hardware.
-  // These are civil/structural/water resources project engineers (RE/SPEC, Veolia) — should be general.
-  // Guard: 'project engineer' as title anchor + civil-domain modifier → push general, skip O*NET,
-  // unless an exact company override intentionally claims the title.
-  const overrideKeys = [];
-  if (job.company_name) overrideKeys.push(job.company_name.toLowerCase());
-  if (job.company_slug) overrideKeys.push(job.company_slug.toLowerCase());
-  const seenOverrideKeys = new Set();
-  const matchingCompanyDomainOverride = (() => {
-    if (DOMAIN_TITLE_OVERRIDES.size === 0) return null;
-    for (const key of overrideKeys) {
-      if (!key || seenOverrideKeys.has(key)) continue;
-      seenOverrideKeys.add(key);
-      const rules = DOMAIN_TITLE_OVERRIDES.get(key);
-      if (!rules) continue;
-      const matchedRule = rules.find(rule => rule.regex.test(job.title || ''));
-      if (matchedRule) return { key, result: matchedRule.result };
-    }
-    return null;
-  })();
-  if (tags.length === 0 && title.includes('project engineer') && isCivilProjectEngineer) {
-    if (matchingCompanyDomainOverride) {
-      pushTag(matchingCompanyDomainOverride.result, `(company-domain: ${matchingCompanyDomainOverride.key})`, 'company-domain-override');
-    } else {
-      pushTag('general', null, null);
-    }
-  }
-
-  // O*NET maps executive/administrative assistants to office/admin SOCs that can
-  // leak into domain routing. Keep them general by default, but allow an exact
-  // company override to opt specific clinic/support titles into a domain later.
-  const isExecAdminAssistant = /\b(executive assistant|administrative assistant|admin assistant)\b/i.test(title);
-  if (tags.length === 0 && isExecAdminAssistant) {
-    if (matchingCompanyDomainOverride) {
-      pushTag(matchingCompanyDomainOverride.result, `(company-domain: ${matchingCompanyDomainOverride.key})`, 'company-domain-override');
-    } else {
-      pushTag('general', null, null);
-    }
-  }
-  // ENR-8: Pre-O*NET Intuitive Surgical clinical/QC guard.
-  // 'Clinical Application Engineer' (singular) misses the hw keyword 'applications engineer'
-  // but O*NET matches 'application engineer' → hardware. These are clinical training/support
-  // roles, not hardware engineering. Guard fires before O*NET to push general instead.
-  if (tags.length === 0 && isIntuitiveClinicalFP) {
-    pushTag('general', null, null);
-  }
-
-  // TAG-PRECISION-8: Pre-O*NET systems analyst guard.
-  // 'systems analyst' blocked by isGuardedSwOnly for business/HRIS/financial context,
-  // but O*NET maps 'systems analyst' → software (SOC 15-1299.08). O*NET overrides the guard.
-  // Same pattern as TAG-11 C47 civil engineering guard.
-  if (tags.length === 0 && title.includes('systems analyst') && isNonSwSystemsAnalyst) {
-    pushTag('general', null, null);
-  }
-
-  // O*NET taxonomy fallback (unified): 28,486 title variants from O*NET v29.1.
-  // 3+ word titles: substring matching (safe — long titles have few collisions).
-  // 2-word titles: word-boundary regex (prevents "air technician" ← "Repair Technician").
-  // Both word-indexed for fast candidate filtering.
-  // Source: O*NET v29.1 (public domain, CC BY 4.0). See TAG_CLASSIFICATION_RESEARCH_.md.
-  // Guard: if software was guard-blocked at keyword or dept level, O*NET must not re-add it.
-  // O*NET's software domain classifications often conflict with our keyword guards (e.g.,
-  // "it support specialist" → software in O*NET, but we classify IT support as non-SWE).
-  // Skip software domain from O*NET entirely — our 298 software keywords cover it well.
-  // O*NET's real value is in under-covered domains: operations, manufacturing, logistics, etc.
-  if (tags.length === 0) {
-    // TAG-PRECISION-11: Pre-O*NET technician guard — "Technician" is never a hardware engineering
-    // role. O*NET maps many technician titles to hardware (SOC 17-3024 "Electro-Mechanical and
-    // Mechatronics Technologists and Technicians"). Block O*NET HW domain for technician-only titles.
-    const isOnetTechFP = /\btechnicians?\b/i.test(title) &&
-      !/\bengineer/i.test(title) && !/\bscientist\b/i.test(title);
-    // TAG-KEYWORD-10: Pre-O*NET guard for removed keywords — O*NET maps "network engineer",
-    // "systems administrator", and "service desk" to software. These are now handled by
-    // title keywords (TAG-PRECISION-13) with appropriate guards, so this guard only blocks
-    // O*NET fallback for titles that don't match any keyword.
-    // TAG-KEYWORD-11: Extended to cover 'it service' and 'it systems' admin/AV/ops/engineer variants.
-    const isOnetSwFP = (
-      /\b(network engineer|systems? administrator|service desk|it services? (?:technician|manager|level|delivery|desk))\b/i.test(title) ||
-      (/\bit systems\b/i.test(title) && /\b(administrator|a\/v|ops|operations|manager|supervisor|engineer)\b/i.test(title))
-    ) && !/\b(software|developer|cloud|platform|site reliability|devops)\b/i.test(title);
-    const titleClean = ONET.STRIP_PARENS(title);
-    const titleWords = titleClean.split(/\s+/).filter(w => w.length >= 4);
-
-    // Pass 1: 3+ word substring matches using cleaned titles (stripped parentheticals)
-    if (ONET.substringEntries.length > 0) {
-      const candidates = new Set();
-      for (const word of titleWords) {
-        const indices = ONET.substringWordIndex.get(word);
-        if (indices) indices.forEach(i => candidates.add(i));
-      }
-      for (const idx of [...candidates].sort((a, b) => a - b)) {
-        const [onetTitle, domain] = ONET.substringEntries[idx];
-        const cleaned = ONET.cleanedSubstringTitles[idx];
-        if (cleaned.length >= 5 && titleClean.includes(cleaned)) {
-          if (domain === 'software') continue;
-          if (isOnetTechFP && domain === 'hardware') continue;
-          if (isOnetSwFP && domain === 'software') continue;
-          pushTag(domain, '(onet: ' + cleaned + ')', 'onet-fallback');
-          break;
-        }
-      }
-    }
-
-    // Pass 2: 2-word regex matches on cleaned title (only if pass 1 didn't match)
-    if (tags.length === 0 && ONET.regexEntries.length > 0) {
-      for (const word of titleWords) {
-        const indices = ONET.regexWordIndex.get(word);
-        if (!indices) continue;
-        for (const idx of indices) {
-          const entry = ONET.regexEntries[idx];
-          if (entry.re.test(titleClean)) {
-            if (entry.domain === 'software') continue;
-            if (isOnetTechFP && entry.domain === 'hardware') continue;
-            if (isOnetSwFP && entry.domain === 'software') continue;
-            pushTag(entry.domain, '(onet: ' + entry.title + ')', 'onet-fallback');
-            break;
-          }
-        }
-        if (tags.length > 0) break;
-      }
-    }
-  }
-
-
-  // Layer 5a: Per-company domain title overrides.
-  // Fires only when the generic layers produce no match; more specific than tenant default.
-  if (tags.length === 0 && matchingCompanyDomainOverride) {
-    pushTag(matchingCompanyDomainOverride.result, `(company-domain: ${matchingCompanyDomainOverride.key})`, 'company-domain-override');
-  }
-
-
-
- // Layer 5: Tenant-context fallback (TAG-10)
-  // Claude-researched per-tenant defaults for verified single-domain companies.
-  // Only fires when ALL other layers (dept, keywords, O*NET, desc-fallback) produce no match.
-  if (tags.length === 0 && TENANT_DEFAULTS.size > 0) {
-    // TAG-2026-06-21: resolve via overrideKeys (company_name + company_slug) so Oracle rows
-    // (company_name only, no company_slug) match — consistent with company-domain overrides above.
-    let defaultDomain = null;
-    for (const key of overrideKeys) {
-      if (TENANT_DEFAULTS.has(key)) { defaultDomain = TENANT_DEFAULTS.get(key); break; }
-    }
-    if (defaultDomain) {
-      // TAG-LEVELDOMAIN-FIX(c1): tenant-default non-tech guard.
-      // Layer 5 only fires when no keyword/dept/O*NET/desc layer matched, so a real
-      // tech job ("Software Engineer", "Data Scientist") already exited via a keyword
-      // layer and never reaches here. Among the leftovers, route clearly-non-tech
-      // operator/floor/warehouse/clerk/technician titles to their excluded domain
-      // instead of the tech tenant default, dropping them off the tech board
-      // (manufacturing/logistics/operations/retail are not in TECH_DOMAINS).
-      // Scoped: only overrides a TECH tenant default (software/data_science/hardware/ai);
-      // a non-tech default (e.g. Oscar healthcare) is already off-board and left as-is.
-      // Belt-and-suspenders: also require no tech keyword in the title.
-      const NON_TECH_TENANT_RE = /\b(operator|assembler|assembly|connector|connecting|winder|stacker|receiver|handler|packer|picker|forklift|warehouse|clerk|custodian|cashier|stocker|merchandiser|delivery\s+driver|inspector|technician|specialist)\b/i;
-      const t5 = (job.title || '').toLowerCase();
-      if (TECH_DOMAINS_SET.has(defaultDomain) && NON_TECH_TENANT_RE.test(t5) && !TECH_KEYWORD_RE.test(t5)) {
-        let ntd = 'operations';
-        if (/\b(operator|assembler|assembly|connector|connecting|winder|stacker|inspector|technician)\b/.test(t5)) ntd = 'manufacturing';
-        else if (/\b(receiver|handler|packer|picker|forklift|warehouse|stocker)\b/.test(t5)) ntd = 'logistics';
-        else if (/\b(cashier|merchandiser)\b/.test(t5)) ntd = 'retail';
-        pushTag(ntd, '(tenant-non-tech-guard: ' + (job.company_slug || job.company_name || '') + ')', 'tenant-context');
-      } else {
-        pushTag(defaultDomain, '(tenant: ' + (job.company_slug || job.company_name || '') + ')', 'tenant-context');
-      }
-    }
-  }
-
-  // Default to general if still no matches
-  if (tags.length === 0) {
-    pushTag('general', null, null);
-  }
-
-  // Deduplicate domains — a job can match the same domain from multiple layers
-  // (e.g., department rule + title keyword both → software). Debug matches
-  // retain all records for traceability; only the domain array is deduped.
-  const uniqueTags = [...new Set(tags)];
-
-  if (debug) return { domains: uniqueTags, matches };
-  return uniqueTags;
-}
-
-/**
- * US-only company slugs for Layer 2b location fallback.
- * Applied when no us tag yet AND job is not explicitly non-US.
- * NO bare-string restriction — fires for any location string (facility names, campus names, etc.).
- * ONLY slugs with ZERO confirmed non-US offices. NON_US blocklist still runs first.
- * Do NOT add any company with offices outside the US — use US_HQ_SLUGS instead.
- */
-const US_HQ_ONLY_SLUGS = new Set([
-  'wvu-medicine',            // WV health system — all WV/adjacent US facilities
-  'banner-health',           // AZ health system — US-only
-  'geisinger-health',        // PA health system — US-only
-  "nationwide-children's",   // OH children's hospital — US-only
-]);
-
-/**
- * US-headquartered company slugs used for Layer 2 location fallback.
- * Only applied when Layer 1 (explicit location string) returns no US signal AND
- * the location string is an ambiguous bare value ('In-Office', 'Remote', 'N Locations').
- * These are companies where ANY office posting is plausibly US — US-only or near-US-only footprint.
- * Do NOT add multinational companies whose non-US offices post with bare location strings.
- */
-const US_HQ_SLUGS = new Set([
-  // Original entries
-  'cloudflare',        // In-Office (37 interns, US-only HQ pattern)
-  'geisinger-health',  // Work from Home (9 interns, US healthcare system)
-  'caci',              // Remote (2 interns, US defense contractor)
-  'voltus',            // Remote (2 interns, US energy startup)
-  'supabase',          // Remote (1 intern, US startup)
-  'safariai',          // Remote (1 intern, US startup)
-  'f5',                // N Locations (4 interns, US networking company)
-  'leidos',            // Remote/Teleworker US (5 interns, US defense contractor)
- // LOC-AUDIT-1 additions (2026-03-15 — verified US-only N-Location posters
-  'wvu-medicine',           // N Locations — US health system (West Virginia)
-  'banner-health',          // N Locations — US health system (Arizona)
-  'pnc-financial',          // N Locations — US bank (Pittsburgh-HQ)
-  'fidelity-investments',   // N Locations — US financial services
-  'allstate',               // N Locations — US insurer (Northbrook IL)
-  'general-motors',         // N Locations — US automaker (Detroit)
-  'snap',                   // N Locations — US tech (Santa Monica)
-  'ncino',                  // N Locations — US fintech (Wilmington NC)
-  'workiva',                // N Locations — US SaaS (Ames IA)
-  "nationwide-children's",  // N Locations — US children's hospital (Columbus OH)
-  'elevance-health',        // N Locations — US health insurer (Indianapolis)
-  'northrop-grumman',       // N Locations — US defense (Falls Church VA)
-  'coreweave',              // N Locations — US cloud (Roseland NJ)
-  'at&t',                   // N Locations — US telecom (Dallas)
-  'draftkings',             // N Locations — US sports betting (Boston)
-  'boeing',                 // N Locations — US aerospace (Arlington VA)
-]);
-
-/**
- * Non-US location indicators (city names, countries, regions)
- * Used to detect ATS jobs with non-US locations (ATS normalizer sets job.location
- * as a string but doesn't populate job.job_country, so is_us_only is unreliable for ATS)
- */
-const NON_US_LOCATIONS = [
-  // Countries
-  'canada', 'mexico', 'ireland', 'united kingdom', 'uk', 'germany', 'france',
-  'netherlands', 'india', 'singapore', 'japan', 'australia', 'brazil', 'spain',
-  'sweden', 'denmark', 'norway', 'finland', 'switzerland', 'poland', 'czechia',
-  'romania', 'argentina', 'chile', 'colombia', 'peru', 'israel', 'morocco', 'turkey',
-  'south korea', 'china', 'taiwan', 'new zealand', 'south africa', 'portugal',
-  'costa rica', 'saudi arabia', 'hungary', 'ukraine', 'egypt', 'nigeria',
-  'pakistan', 'bangladesh', 'vietnam', 'indonesia', 'thailand', 'malaysia',
-  'philippines', 'greece', 'italy', 'belgium', 'austria', 'czech republic',
-  // Common non-US cities that appear in ATS feeds
-  'toronto', 'vancouver', 'montreal', 'ottawa', 'calgary', // Canada
-  'london', 'manchester', 'edinburgh', // UK
-  'dublin', 'cork', // Ireland
-  'berlin', 'munich', 'hamburg', // Germany
-  'amsterdam', 'rotterdam', // Netherlands
-  'bengaluru', 'bangalore', 'mumbai', 'hyderabad', 'pune', 'chennai', 'delhi', // India
-  'heredia', // Costa Rica
-  'singapore',
-  'sydney', 'melbourne', 'brisbane', // Australia
-  'tokyo', 'osaka', // Japan
-  'mexico city', 'guadalajara', 'monterrey', // Mexico
-  'paris', 'lyon', // France
-  'stockholm', 'gothenburg', // Sweden
-  'tel aviv', 'jerusalem', 'petah tikva', // Israel
-  'casablanca', 'rabat', // Morocco
-  'zurich', 'geneva', // Switzerland
-  'warsaw', 'krakow', // Poland
-  'prague', // Czechia
-  'bucharest', // Romania
-  'madrid', 'barcelona', // Spain
-  'lisbon', 'porto', // Portugal
-  'budapest', 'debrecen', // Hungary
-  'haifa', 'tel aviv', 'jerusalem', // Israel (tel aviv already above, kept for clarity)
-  'beijing', 'shanghai', 'shenzhen', 'guangzhou', 'chengdu', 'hangzhou', // China
-  'dubai', 'abu dhabi', // UAE
-  'moscow', 'saint petersburg', // Russia
-  'cairo', // Egypt
-  'nairobi', // Kenya
-  'lagos', // Nigeria
-  'johannesburg', 'cape town', // South Africa
-  'bogota', // Colombia
-  'lima', // Peru
-  'santiago', // Chile
-  'buenos aires', // Argentina
-  'ho chi minh', 'hanoi', // Vietnam
-  'jakarta', // Indonesia
-  'bangkok', // Thailand
-  'kuala lumpur', // Malaysia
-  'manila', // Philippines
-  'athens', // Greece
-  'rome', 'milan', // Italy
-  'brussels', 'antwerp', // Belgium
-  'vienna', 'graz', // Austria
-  'oslo', // Norway
-  'helsinki', // Finland
-  'copenhagen', // Denmark
-  'tijuana', 'baja california', // Mexico (prevents 'california' usKeyword false match)
-];
-
-const CANADA_PROVINCE_ABBR = new Set([
-  'on', 'bc', 'qc', 'ab', 'ns', 'mb', 'sk', 'nb', 'nl', 'pe', 'yt', 'nt', 'nu',
-]);
-
-function hasCanadaLocation(locationStr) {
-  if (!locationStr) return false;
-
-  if (/\bla canada\b/i.test(locationStr) && /(\bcalifornia\b|\bunited states\b|,\s*ca\b)/i.test(locationStr)) {
-    return false;
-  }
-
-  if (/\b(remote canada|virtual canada)\b/i.test(locationStr) || /\b(canada|canadian)\b(?!\s+square)\b/i.test(locationStr)) {
-    return true;
-  }
-
-  const wdCountryProv = locationStr.match(/^ca[\s-]([a-z]{2})\b/i);
-  if (wdCountryProv && CANADA_PROVINCE_ABBR.has(wdCountryProv[1].toLowerCase())) {
-    return true;
-  }
-  const provCountry = locationStr.match(/^([a-z]{2}),\s*ca\b/i);
-  if (provCountry && CANADA_PROVINCE_ABBR.has(provCountry[1].toLowerCase())) {
-    return true;
-  }
-
-  // AGG-CANADACONTAM-FIX-1: Before province matching, check if a 2-letter code at the
-  // end of the string is actually a country code (NL=Netherlands, PE=Peru, SK=Slovakia).
-  // These overlap with Canadian province abbreviations (NL=Newfoundland, PE=PEI, SK=Saskatchewan).
-  // Only exclude if the location does NOT otherwise mention Canada (so "St. John's, NL, Canada" still passes).
-  const trailingCountryCode = /,\s*(nl|pe|sk)\s*$/i.test(locationStr);
-  if (trailingCountryCode && !/canada|canadian/i.test(locationStr)) {
-    return false;
-  }
-
-  // Any 2-letter province code after comma
-  const commaProvRe = /,\s*([a-z]{2})\b/gi;
-  let commaProv;
-  while ((commaProv = commaProvRe.exec(locationStr)) !== null) {
-    const code = commaProv[1].toLowerCase();
-    if (CANADA_PROVINCE_ABBR.has(code)) return true;
-  }
-  // AGG-CANADAFIX-1: city-name fallback. Exclude when location has a strong non-Canadian
-  // country indicator. Fixes: "Melbourne, Victoria, Australia" was tagged canada because
-  // "Victoria" is in the city list (Victoria, BC) — but here it's an Australian state.
-  const nonCaCountry = /\b(australia|new zealand|united kingdom|\buk\b|england|scotland|wales|northern ireland|ireland|germany|france|japan|china|india|brazil|south africa|netherlands|sweden|norway|denmark|finland|spain|italy|portugal|switzerland|austria|belgium|czech|romania|turkey|greece|russia|ukraine|poland|hungary|mexico|argentina|chile|colombia|saudi arabia|singapore|malaysia|thailand|vietnam|philippines|indonesia|south korea|taiwan|hong kong|pakistan|bangladesh|israel|lebanon|jordan|kuwait|qatar|uae|oman|bahrain|costa rica|panama|ecuador|peru|morocco|egypt|kenya|nigeria|ghana)\b/i;
-  if (nonCaCountry.test(locationStr)) return false;
-  // OUT-CANADACONTAM-2: non-Canadian city indicator. When the country name is stripped
-  // from the location string (e.g. WD normalizer stores "Melbourne, Victoria" without
-  // "Australia"), nonCaCountry above can't fire. These unambiguous non-Canadian cities
-  // close the gap. "Victoria" alone is ambiguous (Victoria BC vs Victoria AU state) but
-  // Melbourne/Scoresby/Brisbane/etc. only appear in non-Canadian locations.
-  const nonCaCity = /\b(melbourne|scoresby|brisbane|adelaide|canberra|hobart|darwin|geelong|ballarat|wollongong|auckland|wellington)\b/i;
-  if (nonCaCity.test(locationStr)) return false;
-
-  return /\b(toronto|vancouver|montreal|montréal|ottawa|calgary|edmonton|mississauga|markham|burnaby|victoria|halifax|kitchener)\b/i.test(locationStr);
-}
-
-/**
- * Tag locations (multi-select)
- * Handles both legacy format (job.is_us_only, job.is_remote)
- * and ATS format (job.location as string, no job_country field)
- */
-function tagLocations(job) {
-  const tags = [];
-
-  // ATS-provided workplace type (Lever: workplaceType, Ashby: is_remote).
-  // More reliable than inferring from location string.
-  const workplaceType = (job.workplace_type || '').toLowerCase();
-  if (workplaceType === 'remote') tags.push('remote');
-  else if (workplaceType === 'hybrid') tags.push('hybrid');
-
-  // Combine all location fields for checking.
-  // Normalize en-dash (–) and em-dash (—) to hyphen for consistent keyword matching.
-  const locationStr = (
-    job.location || job.job_city || job.job_location || job.job_country || ''
-  ).toLowerCase().replace(/[\u2013\u2014]/g, '-');
-  const hasCanada = hasCanadaLocation(locationStr);
-
-  // OUT-FILTER-1: Detect Workday international format (COUNTRY-STATE-City) to prevent
-  // false US tagging. WD locations like "IN-TN-CHENNAI" (India-TamilNadu-Chennai) get
-  // stored as job_city with spaces: "IN TN CHENNAI". The "TN" state code matches
-  // Tennessee in US_STATE_ABBR, and "IN" could match Indiana. This pattern catches
-  // the format explicitly: 2-letter country (NOT "us") + space/hyphen + 2-letter state.
-  // Pattern: starts with 2-letter country code (not "us" or "usa"), then delimiter,
-  // then 2-letter state code. Examples: "IN TN CHENNAI", "CA-ON-Toronto", "GB-LON".
-  const wdIntlPattern = /^([a-z]{2})[\s-]([a-z]{2})\b/;
-  const wdIntlMatch = locationStr.match(wdIntlPattern);
-  if (wdIntlMatch && wdIntlMatch[1] !== 'us' && wdIntlMatch[1] !== 'usa') {
-    // Confirmed international WD format (non-US country + state code).
-    // Skip US tagging entirely. The NON_US_LOCATIONS check below will still
-    // catch countries like "india", "canada" etc., but this prevents false
-    // matches on state codes like "TN" (Tamil Nadu != Tennessee).
-    if (wdIntlMatch[1] === 'ca' && hasCanada && !tags.includes('canada')) {
-      tags.push('canada');
-    }
-    return tags; // Empty locations array = filtered out by consumers
-  }
-
-  // is_us_only takes priority over all location string analysis.
-  // Must be checked FIRST — hospital campus names like "Indian River Hospital" contain
-  // NON_US_LOCATIONS substrings ("india") that would otherwise falsely block the us tag.
-  const hasNonUS = job.is_us_only !== true &&
-    NON_US_LOCATIONS.some(place => locationStr.includes(place));
-
-  if (job.is_us_only === true) {
-    tags.push('us');
-  } else if (locationStr) {
-    // AGG-8: Check US indicators BEFORE applying non-US blocklist.
-    // Multi-country listings ("Canada; United States", "Remote (Canada / USA)")
-    // contain both non-US and US signals. Previous logic blocked US detection
-    // if ANY non-US location was present. Now: US signal wins over non-US blocklist,
-    // because the job IS available in the US regardless of other countries.
-    // ATS jobs with a location that didn't match non-US list: check for US indicators
-    const usKeywords = [
-      // Full state names
-      'alabama','alaska','arizona','arkansas','california','colorado','connecticut',
-      'delaware','florida','georgia','hawaii','idaho','illinois','indiana','iowa',
-      'kansas','kentucky','louisiana','maine','maryland','massachusetts','michigan',
-      'minnesota','mississippi','missouri','montana','nebraska','nevada',
-      'new hampshire','new jersey','new mexico','new york','north carolina',
-      'north dakota','ohio','oklahoma','oregon','pennsylvania','rhode island',
-      'south carolina','south dakota','tennessee','texas','utah','vermont',
-      'virginia','washington','west virginia','wisconsin','wyoming','district of columbia',
-      // Common US cities (synced with US_CITIES_SLUG in workday.js — WD-F7 fix)
-      'san francisco', 'los angeles', 'chicago', 'seattle', 'austin',
-      'boston', 'denver', 'atlanta', 'miami', 'dallas', 'houston', 'phoenix',
-      'cleveland', 'kansas city', 'philadelphia', 'san diego', 'minneapolis',
-      'detroit', 'portland', 'las vegas', 'baltimore', 'nashville', 'memphis',
-      'louisville', 'milwaukee', 'albuquerque', 'tucson', 'sacramento',
-      'salt lake city', 'raleigh', 'richmond', 'pittsburgh', 'cincinnati',
-      'indianapolis', 'columbus', 'charlotte', 'jacksonville', 'san antonio',
-      // Additional US cities from US_CITIES_SLUG (Workday slug parser) — WD-F7
-      'san jose', 'fort worth', 'fresno', 'mesa', 'omaha', 'colorado springs',
-      'long beach', 'virginia beach', 'tampa', 'new orleans', 'arlington',
-      'wichita', 'bakersfield', 'aurora', 'anaheim', 'santa ana', 'corpus christi',
-      'riverside', 'st. louis', 'st louis', 'saint louis', 'lexington', 'stockton',
-      'st. paul', 'st paul', 'saint paul', 'greensboro', 'toledo', 'newark', 'plano',
-      'henderson', 'lincoln', 'buffalo', 'fort wayne', 'jersey city', 'chula vista',
-      'orlando', 'st. petersburg', 'st petersburg', 'norfolk', 'chandler', 'laredo',
-      'madison', 'durham', 'lubbock', 'winston-salem', 'garland', 'glendale',
-      'hialeah', 'reno', 'baton rouge', 'irvine', 'chesapeake', 'scottsdale',
-      'fremont', 'gilbert', 'san bernardino', 'birmingham', 'rochester', 'spokane',
-      'des moines', 'montgomery',
-      // AGG-BENCHMARK-COUNT-1 fix (2026-06-26): recover GlobalFoundries (Essex Junction VT, ~10 rows) + Ambarella (US Headquarters, ~9 rows) internships — impact-matrix verified (19 rows / ~12 internships / 2 companies, no other matches)
-      'essex junction', 'us headquarters',
-      // Tech hubs / defense corridors
-      'mclean', 'tysons', 'bethesda', 'herndon', 'reston', 'redmond', 'bellevue',
-      'mountain view', 'sunnyvale', 'santa clara', 'cupertino', 'menlo park',
-      'palo alto', 'brooklyn', 'manhattan', 'cambridge', 'ann arbor', 'boulder',
-      'san ramon', 'foster city', 'santa monica', 'el segundo', 'torrance',
-      'thousand oaks', 'princeton', 'parsippany', 'hackensack', 'morristown',
-      // Additional Workday tenant cities
-      'lehi', 'waltham', 'irving',
-      // Explicit US remote indicators — bare "Remote" alone is NOT sufficient
-      'united states', '- usa', ', usa', '(usa)', 'u.s.a', '- us', ', us',
- // AGG-8: patterns missed by audit (Mozilla "Remote US", DataCamp multi-country, etc.)
-      'remote us',       // "Remote US" — no prefix before "us"
-      '/ usa',           // "Remote (Canada / USA)" — slash-separated
-      '/ us',            // alternative slash format
-      // AGG-LOC-2: Missing US location patterns
-      'nyc',             // "NYC" — Suno, Replit, GPTZero
-      'u.s.',            // "Remote U.S." — Vanta
-      '(us)',            // "Remote(US)" — HighLevel
-      'north america',   // "Remote (North America)" — Hightouch (implies US presence)
-      'teleworker us',   // "6314 Remote/Teleworker US" — Leidos defense contractor
-    ];
-    // All 50 state abbreviations: match after comma only (comma-delimited, e.g. "Boise, ID").
-    // Previous regex matched after space/pipe too — caused "Vaci ut 47" to match 'ut' as Utah.
-    // Comma-only is stricter and matches the "City, ST" convention used by all major ATS systems.
-    const US_STATE_ABBR = new Set([
-      'al','ak','az','ar','ca','co','ct','de','fl','ga','hi','id','il','in','ia',
-      'ks','ky','la','me','md','ma','mi','mn','ms','mo','mt','ne','nv','nh','nj',
-      'nm','ny','nc','nd','oh','ok','or','pa','ri','sc','sd','tn','tx','ut','vt',
-      'va','wa','wv','wi','wy','dc'
-    ]);
-    const stateAbbrRe = /,\s*([a-z]{2})\b/g;
-    let stateAbbrM;
-    let hasStateAbbr = false;
-    while ((stateAbbrM = stateAbbrRe.exec(locationStr)) !== null) {
-      const code = stateAbbrM[1].toLowerCase();
-      if (code === 'ca' && hasCanada) continue;
-      if (US_STATE_ABBR.has(code)) { hasStateAbbr = true; break; }
-    }
-
-    // that aren't caught by delimiter-prefixed patterns ('- usa', ', usa')
-    const hasUsaWord = /\busa\b/i.test(locationStr);
-    const companyStr = `${job.company_name || ''} ${job.company || ''} ${job.company_slug || ''}`.toLowerCase();
-    const geBareUsCity = /(^|[^a-z])(dayton|evendale|grand rapids)([^a-z]|$)/i.test(locationStr) &&
-      /\+\s*\d+\s+more\b/i.test(locationStr) &&
-      /ge aerospace/.test(companyStr);
-    const hasUsKeyword = usKeywords.some(s => locationStr.includes(s)) || hasStateAbbr || hasUsaWord || geBareUsCity;
-
-    if (hasUsKeyword) {
-      // signal is a real country match or just a substring collision.
-      // "Indianapolis, IN" contains "india" (substring). "Cambridge, United Kingdom"
-      // contains "cambridge" (US city). The non-US signal is reliable only when
-      // it's a full country/city name NOT embedded in a US place name.
-      if (hasNonUS) {
-        // Explicit non-US country that can't be a US substring
-        // Mexico needs special handling: "New Mexico" is a US state, but bare "Mexico" is non-US
-        const hasMexico = /\bmexico\b/i.test(locationStr) && !/\bnew mexico\b/i.test(locationStr);
-        const hasCanadaCountry = /\bcanada\b/i.test(locationStr) && !(/\bla canada\b/i.test(locationStr) && /(\bcalifornia\b|\bunited states\b|,\s*ca\b)/i.test(locationStr));
-        const hasStrongNonUS = hasMexico || hasCanadaCountry || /\buk\b|\bunited kingdom\b|\baustralia\b|\bgermany\b|\bfrance\b|\bjapan\b|\bswitzerland\b|\bsweden\b|\bnetherlands\b|\bireland\b|\bsingapore\b|\bbrazil\b|\bcolombia\b|\bspain\b|\bisrael\b|\bsouth korea\b|\bnew zealand\b|\bsouth africa\b|\bpoland\b|\bczech\b|\bdenmark\b|\bnorway\b|\bfinland\b|\bbelgium\b|\baustria\b|\bitaly\b|\bportugal\b|\bhungary\b|\bromania\b|\bturkey\b|\btaiwan\b|\bindia\b|\bcosta rica\b|\bsaudi arabia\b|\bukraine\b|\begypt\b|\bnigeria\b|\bpakistan\b|\bbangladesh\b|\bvietnam\b|\bindonesia\b|\bthailand\b|\bmalaysia\b|\bphilippines\b|\bgreece\b|\bheredia\b|\bbengaluru\b|\bbangalore\b|\bmumbai\b|\bhyderabad\b|\bcasablanca\b|\brabat\b|\btel aviv\b|\bjerusalem\b|\bhaifa\b|\bpetah tikva\b/i.test(locationStr);
-        // Non-US countries whose names collide with US places — only block if NOT in a US context
-        // 'india' → "Indianapolis, IN" is US. "Bangalore, India" is not.
-        // 'mexico' → "New Mexico" is US. "Mexico City" is not.
-        // 'canada' → "Remote US & Canada" is multi-country.
-        // 'georgia' → US state. "Georgia (country)" would need explicit signal.
-        const hasCollisionNonUS = !hasStrongNonUS && hasNonUS;
-
-        if (hasStrongNonUS) {
-          // Real non-US signal present. Only keep US if there is explicit US country evidence
-          // or a trusted US state code like "Greece, NY". Country-code tails ", IN/DE/MA/IL/CA"
-          // (India/Germany/Morocco/Israel/Canada) are NOT trusted — they collide with US states
-          // (IN/DE/MA/IL/CA) when Workday emits foreign jobs as "City, CC". AGG-USTAG-LEAK-1.
-          const hasTrustedStateAbbr = hasStateAbbr && !/,\s*(in|de|ma|il|ca)\b/i.test(locationStr);
-          const hasExplicitUSSignal = hasTrustedStateAbbr || /\bunited states\b|\busa\b|\bus\s*[&;\/]|\b(?:remote|hybrid)\s+us\b|,\s*us\b|[&;\/]\s*us(?:a)?\b/i.test(locationStr);
-          if (hasExplicitUSSignal) {
-            tags.push('us'); // Multi-country or explicit US state evidence
-          }
-          // else: non-US country wins over city/state match
-        } else {
-          // Non-US signal is a substring collision (india/mexico/canada/georgia) —
-          // US keyword is more specific, tag US
-          tags.push('us');
-        }
-      } else {
-        tags.push('us');
-      }
-    } else if (hasNonUS) {
-      // Non-US location detected and NO US signal found — skip US tag.
-    }
-
-    if (hasCanada && !tags.includes('canada')) {
-      tags.push('canada');
-    }
-
-    // Layer 2: company-slug fallback for ambiguous bare location strings.
-    // Only fires when Layer 1 returned no 'us' signal. Applies to known US-HQ companies
-    // that post with bare strings ('In-Office', 'Remote', 'N Locations') with no city/state.
-    // Multinational companies are deliberately excluded — their bare-string posts could be anywhere.
-    if (!tags.includes('us')) {
-      const isAmbiguousBare = /^(in-office|remote|work from home|hybrid|\d+\s+locations?)$/i.test(locationStr.trim());
-      if (isAmbiguousBare && US_HQ_SLUGS.has(job.company_slug)) {
-        tags.push('us');
-      }
-    }
-
-    // Layer 2b: US-only health systems — post with facility names as location strings.
-    // No bare-string restriction. NON_US blocklist ran first (hasNonUS check above).
-    // Only slugs with ZERO confirmed non-US offices — see US_HQ_ONLY_SLUGS definition.
-    if (!tags.includes('us') && !hasNonUS && US_HQ_ONLY_SLUGS.has(job.company_slug)) {
-      tags.push('us');
-    }
-
-    // Layer 3: explicit US pattern strings not caught by Layer 1 keywords.
-    // 'USA - Remote', 'USA Remote' — reversed order vs '- usa' keyword.
-    // 'US-XX-...' — Workday dash-separated site codes (US-CT-EAST HARTFORD-...).
-    // 'US XX City' — Workday space-separated site codes (US VA Sterling, US NC Cary).
-    // 'US - Remote', 'US - CO, Westminster' — Workday US-dash format (LOC-AUDIT-2).
-    // 'XX - City' — Workday ST-City format (LOC-AUDIT-2): CT - Hartford, FL - Miami.
-    if (!tags.includes('us')) {
-      if (/^usa[\s\-:]/i.test(locationStr) ||
-          /^us-[a-z]{2}-/i.test(locationStr) ||
-          /^us [a-z]{2} /i.test(locationStr) ||
-          /^us\s*-\s*/i.test(locationStr)) {
-        tags.push('us');
-      }
-    }
-
-    // ST-City format: 'XX - CityName' used by PNC, Travelers, SoFi, etc.
-    // Only match codes that are unambiguously US state abbreviations.
-    // Excluded: IN (India collision), CA (Canada collision), and all ISO country codes.
-    // LOC-AUDIT-2 data (2026-03-15): 286 recoverable jobs across FL/PA/NJ/DE/OH/TX/IL/CT etc.
-    if (!tags.includes('us')) {
-      const ST_CITY_US_CODES = new Set([
-        'al','ak','az','ar','co','ct','de','fl','ga','hi','id','il','ia',
-        'ks','ky','la','me','md','ma','mi','mn','ms','mo','mt','ne','nv','nh','nj',
-        'nm','ny','nc','nd','oh','ok','or','pa','ri','sc','sd','tn','tx','ut','vt',
-        'va','wa','wv','wi','wy','dc'
-        // 'in' excluded — collides with India (Stripe: 'IN - Bengaluru')
-        // 'ca' excluded — collides with Canada (RTX: 'CA-QC-LONGUEUIL')
-      ]);
-      const stCityM = locationStr.match(/^([a-z]{2})\s*-\s*\S/i);
-      if (stCityM && ST_CITY_US_CODES.has(stCityM[1].toLowerCase()) && !hasNonUS) {
-        tags.push('us');
-      }
-    }
-
-    // If location exists but doesn't match US or non-US list, don't assume US
-  }
-
-  // Check for remote (deduplicate — workplace_type may have already added it)
-  if (!tags.includes('remote')) {
-    if (job.is_remote === true) {
-      tags.push('remote');
-    } else if (locationStr.includes('remote') && !hasNonUS) {
-      tags.push('remote');
-    }
-  }
-
-  // Check for hybrid (deduplicate)
-  if (!tags.includes('hybrid') && locationStr.includes('hybrid')) {
-    tags.push('hybrid');
-  }
-
-  // Check for on-site (not remote, not hybrid)
-  if (job.is_remote === false && !tags.includes('remote') && !tags.includes('hybrid')) {
-    tags.push('on_site');
-  }
-
-  return tags;
-}
-
-/**
- * Tag experience level based on year requirements in the job description.
- * Values align with tags.employment vocabulary: entry_level / mid_level / senior_level / unknown.
- *
- * Classification thresholds (minimum years mentioned):
- *   0–1 years  → entry_level
- *   2–3 years  → mid_level
- *   4+ years   → senior_level
- *   no match   → unknown
- *
- * Note: ~8.8% of entry_level-tagged jobs state 4+ year requirements — this reflects
- * real tension in the data (companies posting "entry-level" but requiring experience).
- * This is exposed honestly here, not corrected. The scoring engine should weight accordingly.
- */
-function tagExperience(job) {
-  const raw = (job.description || '') + ' ' + (job.title || '');
-
-  // Strip HTML tags and decode common entities before pattern matching
-  const text = raw
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
-    .replace(/&nbsp;/g, ' ').replace(/&[a-z]+;/g, ' ')
-    .toLowerCase();
-
-  // Match "X+ years", "X years of/experience", "X-Y years" — extract the minimum number
-  // Covers dominant ATS patterns: "1+ years of experience", "3+ years", "2-4 years"
-  const YEAR_RE = /(\d+)\s*\+?\s*(?:to|-|–)?\s*\d*\s*years?\s*(?:of\s+)?(?:professional\s+)?(?:relevant\s+)?(?:work\s+)?(?:exp(?:erience)?|professional)/gi;
-  const YEAR_SIMPLE = /(\d+)\s*\+\s*years?|(\d+)\s+years?\s+of/gi;
-
-  const years = [];
-  let m;
-  while ((m = YEAR_RE.exec(text)) !== null) {
-    const y = parseInt(m[1], 10);
-    if (y > 0 && y <= 20) years.push(y);
-  }
-  if (years.length === 0) {
-    while ((m = YEAR_SIMPLE.exec(text)) !== null) {
-      const y = parseInt(m[1] || m[2], 10);
-      if (y > 0 && y <= 20) years.push(y);
-    }
-  }
-
-  if (years.length === 0) return 'unknown';
-
-  const minYears = Math.min(...years);
-  if (minYears <= 1) return 'entry_level';
-  if (minYears <= 3) return 'mid_level';
-  return 'senior_level';
-}
-
-/**
- * Tag special companies (multi-select)
- * NOTE: No downstream consumer currently reads tags.special for routing or filtering.
- * These tags are informational only — used for potential future features (search filters, badges).
- * Lists are representative, not comprehensive.
- */
-function tagSpecial(job) {
-  const tags = [];
-  const companyName = (job.company_name || '').toLowerCase();
-
-  // FAANG+ (Big Tech companies with high applicant interest)
-  const faangCompanies = [
-    'meta', 'amazon', 'apple', 'netflix', 'google',
-    'alphabet', 'microsoft', 'nvidia'
-  ];
-  if (faangCompanies.some(company => companyName.includes(company))) {
-    tags.push('faang');
-  }
-
-  // Unicorn startups (private companies valued >$1B, high applicant interest)
-  const unicornCompanies = [
-    'stripe', 'plaid', 'databricks', 'snowflake', 'airbnb',
-    'robinhood', 'doordash', 'instacart', 'coinbase',
-    'chime', 'rippling', 'epic games',
-  ];
-  if (unicornCompanies.some(company => companyName.includes(company))) {
-    tags.push('unicorn');
-  }
-
-  // Fortune 500 (representative subset — not comprehensive)
-  const fortune500Companies = [
-    'walmart', 'amazon', 'apple', 'cvs health', 'unitedhealth',
-    'mckesson', 'cardinal health', 'exxon', 'at&t', 'costco'
-  ];
-  if (fortune500Companies.some(company => companyName.includes(company))) {
-    tags.push('fortune500');
-  }
-
-  // University/research institutions (TAG-UNIVERSITY-1)
-  // Matches: PennState University, Pennsylvania State University, University of Texas at Austin, Carnegie Mellon University
-  // Excludes: WD sub-board suffixes like "Cadence (University)", "HPE (University)"
-  if (companyName.includes('university') && !/\(university\)$/.test(companyName)) {
-    tags.push('university');
-  }
-
-  return tags;
-}
-
-/**
- * Generate tag statistics for a batch of jobs
- * @param {Array} jobs - Tagged jobs
- * @returns {Object} - Tag statistics
- */
-function generateTagStats(jobs) {
-  const TECH_DOMAINS = new Set(['software', 'data_science', 'hardware', 'ai']);
-  const stats = {
-    employment: {},
-    domains: {},
-    locations: {},
-    experience: {},
-    special: {},
-    total: jobs.length
-  };
-
-  // G1 metric counters: US non-senior general rate
-  let usNonSeniorTotal = 0, usNonSeniorGeneral = 0, usNonSeniorTech = 0;
-
-  // TAG-DRIFT-3: G1 by source — disentangle classification quality from pool composition
-  const g1BySource = {};
-
-  jobs.forEach(job => {
-    if (!job.tags) return;
-
-    const isUS = job.tags.locations?.includes('us');
-    const isSenior = job.tags.employment === 'senior';
-    const domains = job.tags.domains || [];
-    const isGeneral = domains.length === 1 && domains[0] === 'general';
-    const hasTech = domains.some(d => TECH_DOMAINS.has(d));
-
-    // G1: US non-senior only
-    if (isUS && !isSenior) {
-      usNonSeniorTotal++;
-      if (isGeneral) usNonSeniorGeneral++;
-      if (hasTech) usNonSeniorTech++;
-
-      // TAG-DRIFT-3: G1 by source
-      const source = job.source || 'unknown';
-      if (!g1BySource[source]) g1BySource[source] = { total: 0, general: 0 };
-      g1BySource[source].total++;
-      if (isGeneral) g1BySource[source].general++;
-    }
-
-    // Count employment tags (mutually exclusive)
-    if (job.tags.employment) {
-      stats.employment[job.tags.employment] = (stats.employment[job.tags.employment] || 0) + 1;
-    }
-
-    // Count domain tags (multi-select)
-    if (job.tags.domains && Array.isArray(job.tags.domains)) {
-      job.tags.domains.forEach(domain => {
-        stats.domains[domain] = (stats.domains[domain] || 0) + 1;
-      });
-    }
-
-    // Count location tags (multi-select)
-    if (job.tags.locations && Array.isArray(job.tags.locations)) {
-      job.tags.locations.forEach(location => {
-        stats.locations[location] = (stats.locations[location] || 0) + 1;
-      });
-    }
-
-    // Count experience tags (mutually exclusive)
-    if (job.tags.experience) {
-      stats.experience[job.tags.experience] = (stats.experience[job.tags.experience] || 0) + 1;
-    }
-
-    // Count special tags (multi-select)
-    if (job.tags.special && Array.isArray(job.tags.special)) {
-      job.tags.special.forEach(special => {
-        stats.special[special] = (stats.special[special] || 0) + 1;
-      });
-    }
-  });
-
-  // G1 metric: general rate among US non-senior jobs
-  const techPool = usNonSeniorTech + usNonSeniorGeneral;
-  const techScopeGeneralRatePct = techPool > 0 ? Math.round((usNonSeniorGeneral / techPool) * 1000) / 10 : null;
-  stats.g1 = usNonSeniorTotal > 0 ? {
-    us_total: usNonSeniorTotal,
-    us_general: usNonSeniorGeneral,
-    us_general_rate_pct: Math.round((usNonSeniorGeneral / usNonSeniorTotal) * 1000) / 10,
-    tech_us_total: usNonSeniorTech,
-    tech_scope_general_rate_pct: techScopeGeneralRatePct,
-    tech_us_general_rate_pct: techScopeGeneralRatePct,
-    g1_by_source: Object.fromEntries(Object.entries(g1BySource).map(([s, d]) => [s, { total: d.total, general: d.general, rate_pct: Math.round((d.general / d.total) * 1000) / 10 }])),
-  } : null;
-
-  // Layer 4 stats output (L4DEBUG confirmed working — run 26043352672)
-  if (_layer4Stats) {
-    stats.layer4 = {
-      total_reached: _layer4Stats.total_reached,
-      has_desc: _layer4Stats.has_desc,
-      hp_hits: _layer4Stats.hp_hits,
-      std_hits: _layer4Stats.std_hits,
-      no_match: _layer4Stats.has_desc - _layer4Stats.hp_hits - _layer4Stats.std_hits,
-      short_desc: _layer4Stats.short_desc,
-      by_source: _layer4Stats.by_source,
-    };
-  }
-
-  return stats;
-}
-
-// TAG-SELF-3: Expose keyword arrays for per-keyword health monitoring.
-// Initialized lazily on first call to tagDomains(), then cached.
-let _keywordMap = null;
-
-// TAG-LAYER4-BUG-1: Layer 4 description fallback diagnostic counters.
-let _layer4Stats = null;
-function getKeywordMap() {
-  return _keywordMap || {};
-}
-
-module.exports = {
-  tagJob,
-  tagJobs,
-  tagEmployment,
-  tagDomains,
-  tagLocations,
-  tagExperience,
-  tagSpecial,
-  generateTagStats,
-  setCompanyOverrideMap,
-  TAG_ENGINE_VERSION,
-  getKeywordMap,
-};
+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
+jWKMmRUNBTdnmAuCnP1Fqw==

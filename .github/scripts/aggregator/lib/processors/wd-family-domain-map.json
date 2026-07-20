@@ -1,1506 +1,1329 @@
-{
-  "ADM-Administrative": "general",
-  "ADM-Administrative Services": "general",
-  "AI & Data": "data_science",
-  "AIx Engineering": "hardware",
-  "AS - Administrative Support": "general",
-  "Academic, Research and Library Program Administration": "general",
-  "Account Executive": "general",
-  "Account Management": "finance",
-  "Account Management Group": "finance",
-  "Account Underwriter": "finance",
-  "Accounting": "finance",
-  "Accounting & Finance": "finance",
-  "Accounting and Finance Family Group": "finance",
-  "Accounting and Finance Group": "finance",
-  "Accounting/Finance": "finance",
-  "Accounts Payable/Receivable": "finance",
-  "Actuarial & Underwriting": "finance",
-  "Actuarial Services - LJFG (Inactive)": "operations",
-  "Actuarial and Analytics": "data_science",
-  "Adjusters/Adjuster Support Group": "general",
-  "Admin": "general",
-  "Admin & Support": "general",
-  "Admin Services": "operations",
-  "Administration": "general",
-  "Administration & Business Support": "general",
-  "Administration & Facilities": "general",
-  "Administration & Facilities Group": "general",
-  "Administration Group": "general",
-  "Administration Services Group": "general",
-  "Administration and Secretarial Services (Inactive)": "general",
-  "Administration, Facilities & Secretarial": "general",
-  "Administration/Business Support Jobs": "general",
-  "Administrative": "general",
-  "Administrative / Backoffice": "general",
-  "Administrative Family Group": "general",
-  "Administrative Group": "general",
-  "Administrative JFG": "general",
-  "Administrative Services": "general",
-  "Administrative Services (ADS)": "general",
-  "Administrative Services Function": "general",
-  "Administrative Support": "general",
-  "Administrative Support & Services": "general",
-  "Administrative Support (Group)": "general",
-  "Administrative Support Services": "general",
-  "Administrative/General": "general",
-  "Advanced Technology (BB)": "software",
-  "Advice": "finance",
-  "After-Sales Service": "operations",
-  "Aftermarket": "operations",
-  "Aftermarket & Service": "operations",
-  "Airline Operations": "operations",
-  "Airport Operations": "operations",
-  "All Business Units": "general",
-  "All Hourly Unions": "general",
-  "Alternative Operations": "operations",
-  "Analysis": "data_science",
-  "Analytics": "data_science",
-  "Analytics & AI": "data_science",
-  "Analytics & Data Science": "data_science",
-  "Analytics Family Group": "data_science",
-  "Analytics, Insights, & Artificial Intelligence": "ai",
-  "Application Development": "software",
-  "Application Engineering": "hardware",
-  "Applications": "software",
-  "Applications Engineering": "hardware",
-  "Applications/Systems Engineering": "hardware",
-  "Apprentice & Intern": "general",
-  "Architecture": "software",
-  "Architecture and Design Group": "software",
-  "Artificial Intelligence": "ai",
-  "Artificial Intelligence & Machine Learning": "ai",
-  "Asset Management": "general",
-  "Asset Management & Alternatives Operations": "operations",
-  "Associates": "general",
-  "Audit": "finance",
-  "Audit (NA)": "finance",
-  "Audit and Assurance": "finance",
-  "B - Governance": "general",
-  "BD-Business Development Group": "sales",
-  "BPC-Business Process Consulting": "general",
-  "BUSINESS MANAGEMENT & ADMINISTRATION GROUP": "general",
-  "Banking": "finance",
-  "Bids, Marketing & Business Development": "sales",
-  "Branch Distribution": "operations",
-  "Brand": "marketing",
-  "Brand Management, Marketing & Communications": "marketing",
-  "Brand Management, Marketing and Sales": "marketing",
-  "Brokerage Operations": "operations",
-  "Building Operations Group": "operations",
-  "Building, Construction and Facilities Group": "operations",
-  "Business": "general",
-  "Business & Administrative Support Function": "general",
-  "Business Acquisition": "general",
-  "Business Administration": "general",
-  "Business Administration (Job Family Group)": "general",
-  "Business Analytics & Consulting": "data_science",
-  "Business Analytics and Insights": "data_science",
-  "Business Application Consulting": "general",
-  "Business Banking": "finance",
-  "Business Center Management": "general",
-  "Business Consulting": "general",
-  "Business Dev Mktg and Sales": "sales",
-  "Business Development": "sales",
-  "Business Development & Sales": "sales",
-  "Business Development & Strategy": "sales",
-  "Business Development (FG)": "sales",
-  "Business Development / Alliances": "sales",
-  "Business Development Function": "sales",
-  "Business Development Group": "sales",
-  "Business Development and Marketing": "sales",
-  "Business Development and Strategy": "sales",
-  "Business Development, Sales & Marketing": "sales",
-  "Business Engagement, Insights & Strategy​": "general",
-  "Business Intelligence Management": "operations",
-  "Business Intelligence and Planning Function": "operations",
-  "Business Leadership Programs": "general",
-  "Business Management": "general",
-  "Business Management & Strategy": "general",
-  "Business Management & Support": "general",
-  "Business Management & Support- IM": "general",
-  "Business Management, Strategy & Support": "general",
-  "Business Operation Services": "operations",
-  "Business Operations": "operations",
-  "Business Operations & Project Management": "operations",
-  "Business Operations Group": "operations",
-  "Business Planning & Operations": "operations",
-  "Business Process & Analytics": "data_science",
-  "Business Process & Operations": "operations",
-  "Business Services": "operations",
-  "Business Services and Support": "operations",
-  "Business Strategy": "general",
-  "Business Strategy and Development Group": "general",
-  "Business Strategy and Enablement": "general",
-  "Business Strategy and Operations Group": "operations",
-  "Business Strategy, Management & Administration": "general",
-  "Business Support": "general",
-  "Business Support & Operations": "operations",
-  "Business Support Services": "operations",
-  "Business Support Services (UA)": "operations",
-  "Business Technology": "software",
-  "Business Unit Leadership": "software",
-  "Business Units": "software",
-  "C - Corporate Planning": "general",
-  "CAO/COO/Business Strategy": "general",
-  "CDE": "general",
-  "CFS-Facilities and Security": "operations",
-  "CL - Claims": "general",
-  "CLM-Claim": "finance",
-  "CM Clinical Affairs": "healthcare",
-  "CM Clinical Science": "healthcare",
-  "CP - Compliance": "finance",
-  "CPS-Contracts and Proposal Services": "operations",
-  "CPS/Flavor Manufacturing": "manufacturing",
-  "CS - Corporate Services": "general",
-  "CSO (Customer Support)": "operations",
-  "Capacity Building Group": "software",
-  "Capital Asset Management": "finance",
-  "Capital Markets": "finance",
-  "Capital Markets Accounting Advisory Services - LJFG (Inactive)": "finance",
-  "Capital Markets Prime": "finance",
-  "Capital Markets/Investment Banking": "finance",
-  "Care Management": "general",
-  "Career Programs": "general",
-  "Central Services/Facilities": "operations",
-  "Chemistry Manufacturing and Controls Operations": "manufacturing",
-  "Claim Handling": "general",
-  "Claim Operations": "operations",
-  "Clerical": "general",
-  "Client Contact Management": "general",
-  "Client Experience": "sales",
-  "Client Management & Sales": "sales",
-  "Client Management - IM": "general",
-  "Client Operations Family Group": "operations",
-  "Client Relationship Management": "general",
-  "Client Service": "operations",
-  "Client Service & Reporting": "operations",
-  "Client Service & Sales Support": "operations",
-  "Client Service Operations": "operations",
-  "Client Services": "operations",
-  "Client Services & Support": "operations",
-  "Client Services Group": "operations",
-  "Client Services Management (New)": "operations",
-  "Client-Development": "sales",
-  "Clinical": "healthcare",
-  "Clinical & Medical Affairs": "healthcare",
-  "Clinical Care Delivery Function": "healthcare",
-  "Clinical Development": "healthcare",
-  "Clinical Development Group": "healthcare",
-  "Clinical Labs (LAB)": "healthcare",
-  "Clinical Operations Function": "operations",
-  "Clinical Operations Group": "operations",
-  "Clinical Pharmacists": "healthcare",
-  "Clinical Quality (QUA)": "healthcare",
-  "Clinical Research": "healthcare",
-  "Clinical Science - M.D.": "healthcare",
-  "Clinical Sciences": "healthcare",
-  "Clinical Services": "healthcare",
-  "Clinical Study Startup": "healthcare",
-  "Clinical Trials (CTR)": "healthcare",
-  "Commercial": "sales",
-  "Commercial Bank": "finance",
-  "Commercial Operations": "operations",
-  "Commercial Operations Group": "operations",
-  "Commercial Sales": "sales",
-  "Commercial Technologies Function": "software",
-  "Commercial and Business Sales": "sales",
-  "Commercial and Customers": "operations",
-  "Communication": "marketing",
-  "Communications": "marketing",
-  "Communications & Corp Affairs": "marketing",
-  "Communications & Corporate Affairs": "marketing",
-  "Communications & Corporate/External Affairs": "marketing",
-  "Communications & External Affairs Job Family Group": "marketing",
-  "Communications & Public Affairs": "general",
-  "Communications (4A)": "marketing",
-  "Communications (COM)": "marketing",
-  "Communications / Marketing": "marketing",
-  "Communications Function": "marketing",
-  "Communications Group": "marketing",
-  "Communications Jobs": "marketing",
-  "Communications and Corporate Affairs": "marketing",
-  "Communications and External Relations": "marketing",
-  "Communications and Marketing": "marketing",
-  "Communications.": "marketing",
-  "Communications/Corporate Affairs": "marketing",
-  "Compliance": "finance",
-  "Compliance & Regulatory Group": "finance",
-  "Compliance & Risk": "finance",
-  "Compliance Ethics and Legal": "finance",
-  "Compliance, AML & Control": "finance",
-  "Compliance, AML, & Control": "finance",
-  "Computer Engineering (Job Family Group)": "hardware",
-  "Construction": "operations",
-  "Construction Services": "operations",
-  "Construction and Corporate Services": "general",
-  "Consulting": "general",
-  "Consulting & Mission Operations": "operations",
-  "Consulting Emp": "general",
-  "Consumer & Commercial Banking": "finance",
-  "Consumer Bank": "finance",
-  "Consumer Operations Family Group": "operations",
-  "Consumer Sales": "sales",
-  "Content": "general",
-  "Contingent": "general",
-  "Contingent Support": "general",
-  "Contingent Worker": "general",
-  "Contingent Worker Group": "general",
-  "Contingent Workers Group": "general",
-  "Contingent Workforce": "general",
-  "Contingent Workforce - LJFG (Inactive)": "general",
-  "Contract Employee": "general",
-  "Contracts Purchasing and Procurement": "operations",
-  "Controls Governance & Oversight": "general",
-  "Core Finance": "finance",
-  "Core Technology Group": "software",
-  "Corp Operations": "operations",
-  "Corp Strategy & Comm": "general",
-  "Corporate": "general",
-  "Corporate & Business Administration": "general",
-  "Corporate & Business Development": "sales",
-  "Corporate & Business Services": "general",
-  "Corporate & Business Services Job Family Group": "general",
-  "Corporate Access": "general",
-  "Corporate Administration": "general",
-  "Corporate Affairs": "general",
-  "Corporate Affairs & Communications": "marketing",
-  "Corporate Affairs Group": "general",
-  "Corporate Affairs and Communication": "general",
-  "Corporate Banking": "general",
-  "Corporate Communications (Job Family Group)": "marketing",
-  "Corporate Development": "general",
-  "Corporate Development & Business Transformation": "general",
-  "Corporate Development Function": "general",
-  "Corporate Development Group": "general",
-  "Corporate Functions": "general",
-  "Corporate Marketing": "marketing",
-  "Corporate Marketing & Communications": "marketing",
-  "Corporate Security": "general",
-  "Corporate Services": "general",
-  "Corporate Services & Administration": "general",
-  "Corporate Services (JA)": "general",
-  "Corporate Services Group": "general",
-  "Corporate Strategy & Dev": "general",
-  "Corporate Strategy & Development (CSD)": "general",
-  "Corporate Strategy, Development, and Planning Group": "general",
-  "Corporate Tax": "general",
-  "Corporate Tax - JFG (Inactive)": "general",
-  "Corporate and Business Strategy - LJFG (Inactive)": "general",
-  "Creative & Design": "marketing",
-  "Creative Communication Group": "marketing",
-  "Creative Design Group": "marketing",
-  "Credit": "finance",
-  "Credit Management": "finance",
-  "Customer & Product Delivery": "software",
-  "Customer & Technical Support": "operations",
-  "Customer Advocacy": "operations",
-  "Customer Care": "operations",
-  "Customer Care Group": "operations",
-  "Customer Consulting": "operations",
-  "Customer Engineering & Support Function": "general",
-  "Customer Experience": "general",
-  "Customer Experience & Customer Service Group": "operations",
-  "Customer Experience & Design": "operations",
-  "Customer Experience (CX)": "operations",
-  "Customer Experience Group": "operations",
-  "Customer Facing": "operations",
-  "Customer Management": "general",
-  "Customer Operations": "operations",
-  "Customer Service": "operations",
-  "Customer Service & Contact Center Operations": "operations",
-  "Customer Service & Sales": "operations",
-  "Customer Service & Support": "operations",
-  "Customer Service / Support": "operations",
-  "Customer Service Function": "operations",
-  "Customer Service Group": "operations",
-  "Customer Service Jobs": "operations",
-  "Customer Service Operations": "operations",
-  "Customer Service, Technical Function": "operations",
-  "Customer Service.": "operations",
-  "Customer Services": "operations",
-  "Customer Solutions Center": "operations",
-  "Customer Success": "operations",
-  "Customer Success & Professional Services": "operations",
-  "Customer Success & Support Group": "operations",
-  "Customer Support": "operations",
-  "Customer Support (CUS)": "operations",
-  "Customer Support (FG)": "operations",
-  "Customer Support Group": "operations",
-  "Customer Support and Training": "operations",
-  "Customer Training (GG)": "operations",
-  "Customer Training and Support": "operations",
-  "Customer and Member Services": "operations",
-  "Cyber Risk Control": "finance",
-  "Cyber Security (3A)": "software",
-  "Cybersecurity": "software",
-  "Cybersecurity Consulting Function": "software",
-  "Cybersecurity and Privacy (Inactive)": "software",
-  "DT - Data": "data_science",
-  "DTA-Data & Analytics": "data_science",
-  "Data": "data_science",
-  "Data & Analytics": "data_science",
-  "Data & Analytics (JA)": "data_science",
-  "Data & Analytics Function": "data_science",
-  "Data & Analytics Group": "data_science",
-  "Data & Information Technology": "software",
-  "Data & Insights": "data_science",
-  "Data & Intelligence": "operations",
-  "Data & Services": "operations",
-  "Data Analysis": "data_science",
-  "Data Analytics": "data_science",
-  "Data Analytics & Computational Sciences": "data_science",
-  "Data Analytics & Insights": "data_science",
-  "Data Analytics & Management": "data_science",
-  "Data Analytics (Group)": "data_science",
-  "Data Analytics and Business Intelligence": "data_science",
-  "Data Analytics and Insights": "data_science",
-  "Data Analytics and Management": "data_science",
-  "Data Analytics/Warehousing, & Business Intelligence": "data_science",
-  "Data Governance": "data_science",
-  "Data Governance and Stewardship": "data_science",
-  "Data Management": "data_science",
-  "Data Management & Analytics": "data_science",
-  "Data Management Family Group": "data_science",
-  "Data Management and Analytics Group": "data_science",
-  "Data Science & Analytics": "data_science",
-  "Data Science & Analytics (BE)": "data_science",
-  "Data Science & Business Intelligence": "data_science",
-  "Data Science Group": "data_science",
-  "Data Science and Analytics Group": "data_science",
-  "Data Science and Business Intelligence": "data_science",
-  "Data Science, Business Intelligence and Analytics": "data_science",
-  "Data and Analytics": "data_science",
-  "Data and Analytics - LJFG (Inactive)": "data_science",
-  "Data and Analytics Engineering": "data_science",
-  "Data, Technology and Engineering": "hardware",
-  "Data, UX, and Ecosystem Sciences": "data_science",
-  "Deals Capital Projects and Infrastructure (Inactive)": "finance",
-  "Deals Corporate Finance (Inactive)": "general",
-  "Deals Transaction Services (Inactive)": "operations",
-  "Decision Management": "general",
-  "Defense Intel Geopoltcl": "operations",
-  "Delegated Authority": "software",
-  "Design": "hardware",
-  "Design & Creative": "marketing",
-  "Design (DG)/Game Art Design (GAD)": "hardware",
-  "Design Engineering": "hardware",
-  "Design Engineering and Architecture": "hardware",
-  "Design Group": "hardware",
-  "Design Services": "operations",
-  "Development": "software",
-  "Development & Strategy": "general",
-  "Development Engineering": "hardware",
-  "Development Group": "software",
-  "Development Programs": "software",
-  "Digital": "software",
-  "Digital Accelerator": "software",
-  "Digital Change and Learning": "software",
-  "Digital Insights and Analytics": "data_science",
-  "Digital Marketing": "marketing",
-  "Digital Product Management": "software",
-  "Digital Products Development": "software",
-  "Digital Technology": "software",
-  "Direct Sales Function": "sales",
-  "Direct Sales Support": "sales",
-  "Discovery & Pre-Clinical/Clinical Development": "healthcare",
-  "Distribution & Logistics": "operations",
-  "Driver Jobs": "logistics",
-  "Drug Development Group": "software",
-  "EA Administrative Services": "general",
-  "EA Environment, Health and Safety": "general",
-  "EA Trainees, Interns and Apprentices": "general",
-  "EH&S": "general",
-  "EHS": "general",
-  "ENG-Engineering and Support Services": "hardware",
-  "ETS (Enterprise Technology Services)": "software",
-  "ETS Engineering": "hardware",
-  "ETS Tech Operations": "operations",
-  "Early Career": "general",
-  "Editorial Group": "software",
-  "Education and Training Group": "general",
-  "Electronic & Electrical Engineering (6B)": "hardware",
-  "Eng/Prod Development": "software",
-  "Engineer-Facilities": "operations",
-  "Engineer-ProdRelated": "hardware",
-  "Engineering": "general",
-  "Engineering  Multi-Skill Leadership (6C)": "hardware",
-  "Engineering & Design": "hardware",
-  "Engineering & Development": "hardware",
-  "Engineering & Science": "hardware",
-  "Engineering & Science Professional": "hardware",
-  "Engineering & Sciences": "hardware",
-  "Engineering & Systems Support Analysis (GB)": "hardware",
-  "Engineering & Technicians": "hardware",
-  "Engineering & Technology": "hardware",
-  "Engineering (Group)": "hardware",
-  "Engineering (Job Family Group)": "hardware",
-  "Engineering Development (USA) JFG": "hardware",
-  "Engineering Function": "hardware",
-  "Engineering Group": "hardware",
-  "Engineering Integration (Job Family Group)": "hardware",
-  "Engineering JFG": "hardware",
-  "Engineering Operations": "hardware",
-  "Engineering Operations and Services": "hardware",
-  "Engineering Product Lifecycle Management (6D)": "hardware",
-  "Engineering Services": "hardware",
-  "Engineering Support": "hardware",
-  "Engineering Support Group": "hardware",
-  "Engineering Tools, Services & Support": "hardware",
-  "Engineering and Design": "hardware",
-  "Engineering and Product Development": "software",
-  "Engineering and Technical Support": "hardware",
-  "Engineering, Technology, & Science": "hardware",
-  "Engineering/Technical Service": "hardware",
-  "Engineering/Technology": "hardware",
-  "Enterprise Analytics & Data Intelligence": "operations",
-  "Enterprise Management": "general",
-  "Enterprise Security": "software",
-  "Enterprise Services & Support": "operations",
-  "Enterprise Technology & Infrastructure": "software",
-  "Entry Level Careers": "general",
-  "Environment, Health & Safety": "general",
-  "Environment, Health & Safety (7A)": "general",
-  "Environmental Health & Safety": "general",
-  "Environmental Health & Safety Function": "general",
-  "Environmental Health, Safety": "general",
-  "Environmental Health, Safety (EH&S) and Facilities Services (FS)": "general",
-  "Environmental and Employee Health & Safety Group": "general",
-  "Environmental and Energy": "general",
-  "Environmental, Health & Safety": "general",
-  "Environmental, Health and Safety Group": "general",
-  "Equity Financing / Fund Services": "operations",
-  "Exec/Admin": "general",
-  "Executive": "general",
-  "Executive & General Management": "general",
-  "Executive & Operations Management": "operations",
-  "Executive Group": "general",
-  "Executive Management": "general",
-  "Executives": "general",
-  "Executives Group": "general",
-  "Experience Consulting": "general",
-  "Experience Design": "hardware",
-  "Experience Design & Research": "software",
-  "External Audit (Inactive)": "finance",
-  "FA - Finance": "finance",
-  "FI Accounting, Internal Controls and Finance Operations": "operations",
-  "FI Finance Business Partnering": "finance",
-  "FIN-Finance": "finance",
-  "Fabrication (DC)": "manufacturing",
-  "Fac & Corp RE Management": "general",
-  "Facilities": "operations",
-  "Facilities & Maintenance": "operations",
-  "Facilities & Operations Group": "operations",
-  "Facilities & Real Estate": "general",
-  "Facilities & Real Estate Function": "general",
-  "Facilities & Security": "operations",
-  "Facilities (8A)": "operations",
-  "Facilities (Job Family Group)": "operations",
-  "Facilities Family Group": "operations",
-  "Facilities Function": "operations",
-  "Facilities Group": "operations",
-  "Facilities JFG": "operations",
-  "Facilities Management": "operations",
-  "Facilities and Real Estate": "general",
-  "Facilities and Real Estate Group": "general",
-  "Facilities and Safety Services": "operations",
-  "Facilities/Real Estate (FRE)": "general",
-  "Field (DE)": "operations",
-  "Field Application Engineering": "general",
-  "Field Management": "operations",
-  "Field Operations": "operations",
-  "Field Sales": "sales",
-  "Field Sales Group": "sales",
-  "Field Service Group": "operations",
-  "Field Services": "operations",
-  "Field Services (FLS)": "operations",
-  "Field Services (GE)": "operations",
-  "Field Underwriting Support": "finance",
-  "Finance": "finance",
-  "Finance & Accounting": "finance",
-  "Finance & Accounting Group": "finance",
-  "Finance & Operations": "operations",
-  "Finance (9A)": "finance",
-  "Finance (FNC)": "finance",
-  "Finance (Group)": "finance",
-  "Finance (JA)": "finance",
-  "Finance (Job Family Group)": "finance",
-  "Finance - LJFG (Inactive)": "finance",
-  "Finance Consulting": "finance",
-  "Finance Consulting - LJFG (Inactive)": "finance",
-  "Finance Function": "finance",
-  "Finance Group": "finance",
-  "Finance JFG": "finance",
-  "Finance Job Family Group": "finance",
-  "Finance Jobs": "finance",
-  "Finance Operations": "operations",
-  "Finance and Accounting": "finance",
-  "Finance and Accounting Group": "finance",
-  "Finance and Business Services": "operations",
-  "Finance/Accounting": "finance",
-  "Financial Advisors / Investment Reps": "finance",
-  "Financial Analysis": "finance",
-  "Financial Crime Risk Management": "finance",
-  "Financial Crimes & Fraud Mgmt": "finance",
-  "Financial Technology": "software",
-  "Financial Wellness": "finance",
-  "Firm Management": "general",
-  "Fixed Term & Temporary": "general",
-  "Flight Engineering (6E)": "hardware",
-  "Forensic Services": "operations",
-  "Foundry Technology": "software",
-  "Fraud, Investigations and Regulatory Enforcement (FIRE) (Inactive)": "finance",
-  "Frontline Retail & Attractions": "general",
-  "Frontline Supply Chain": "operations",
-  "Functional Operations": "operations",
-  "Functional Operations Group": "operations",
-  "Fund Operations": "operations",
-  "Fund Services": "operations",
-  "G&A > Administration": "general",
-  "G&A > Facilities": "operations",
-  "G&A > Finance": "finance",
-  "G&A > G&A Temporary (JFG)": "general",
-  "G&A > Human Resources": "general",
-  "G&A > Information Technology": "software",
-  "G&A > Legal": "general",
-  "GBSC - HR": "general",
-  "GM Integrated Product Management": "software",
-  "General  Management": "general",
-  "General & Administration": "general",
-  "General & Administrative": "general",
-  "General & Regional Management": "general",
-  "General & Top Management": "general",
-  "General Business/Operations Group": "operations",
-  "General Consulting (Inactive)": "general",
-  "General Management": "general",
-  "General Management & Administration": "general",
-  "General Management & Operations": "general",
-  "General Management (GMT)": "general",
-  "General Management Group": "general",
-  "General Management, Administration & Operations": "general",
-  "General Management.": "general",
-  "General Management/Administrative": "general",
-  "General Operations": "operations",
-  "General Operations Group": "operations",
-  "General Process Development": "software",
-  "General Regulatory Affairs": "general",
-  "General and Administration": "general",
-  "General and Retail Management": "general",
-  "Global Business Services": "operations",
-  "Global Comms & Corp Marketing": "marketing",
-  "Global Customer Care (Group)": "operations",
-  "Global Design": "hardware",
-  "Global Marketing": "marketing",
-  "Global Policy/Communications": "marketing",
-  "Global Procurement": "operations",
-  "Global Procurement & Supply Management (GPSM)": "operations",
-  "Global Procurement Supply Chain": "operations",
-  "Global Product Management": "software",
-  "Global Quality": "manufacturing",
-  "Global Regulatory Leads": "general",
-  "Global Sales Operations": "operations",
-  "Global Services (Group)": "operations",
-  "Global Sourcing": "operations",
-  "Global Sourcing Function": "operations",
-  "Global Trade Controls (5B)": "finance",
-  "Global Trade Function": "finance",
-  "Global Workplace Services": "operations",
-  "Go To Market Operations": "operations",
-  "Governance": "general",
-  "Governance & Control": "general",
-  "Governance & Proxy": "general",
-  "Government Relations": "general",
-  "Government and Corporate Communications/Relations": "marketing",
-  "Graduate Program": "general",
-  "Graphic Design Group": "marketing",
-  "Growth and Innovation Group": "general",
-  "HR": "general",
-  "HR - Human Resources": "general",
-  "HR Centers of Excellence": "general",
-  "HR Operations": "operations",
-  "HR-Human Resources": "general",
-  "HRS-Human Resources": "general",
-  "HSE, Security & Sustainability": "general",
-  "Hardware": "hardware",
-  "Hardware & Product Engineering": "hardware",
-  "Hardware Engineering": "hardware",
-  "Health Econ, Policy & Reimbursement": "healthcare",
-  "Health Insurance Operations": "operations",
-  "Health Services": "operations",
-  "Health Services Group": "operations",
-  "Health and Science Group": "data_science",
-  "Healthcare": "healthcare",
-  "High Net Worth": "finance",
-  "Hourly Manufacturing Group": "manufacturing",
-  "Hourly Operations Support Group": "operations",
-  "Hourly Warehousing Group": "operations",
-  "Human Capital": "hr",
-  "Human Resources": "general",
-  "Human Resources (FA)": "general",
-  "Human Resources (HRS)": "general",
-  "Human Resources (Inactive)": "general",
-  "Human Resources (JA)": "general",
-  "Human Resources (Job Family Group)": "general",
-  "Human Resources Family Group": "general",
-  "Human Resources Function": "general",
-  "Human Resources Group": "general",
-  "Human Resources JFG": "general",
-  "Human Resources Job Family Group": "general",
-  "I - Manufacturing": "manufacturing",
-  "IA - Internal Audit": "general",
-  "ICS Engineering": "hardware",
-  "IN - Investment": "finance",
-  "IND-Finance": "finance",
-  "IND-HR": "general",
-  "IND-Legal": "general",
-  "IND-Marketing": "marketing",
-  "IND-Stores": "general",
-  "IND-Supply Chain": "operations",
-  "IND_Digital": "software",
-  "INV-Investment Management": "finance",
-  "IT": "software",
-  "IT & Telecommunications": "marketing",
-  "IT (Group)": "software",
-  "IT (ITC)": "software",
-  "IT - Information Technology": "software",
-  "IT - Infrastructure": "software",
-  "IT Data and AI": "software",
-  "IT Platforms": "software",
-  "IT Services and Support Group": "operations",
-  "IT, Telecom & Internet": "general",
-  "IT-Information Technology": "software",
-  "Industrial Design": "hardware",
-  "Industrial Engineering": "hardware",
-  "Industrial Engineering (6N)": "hardware",
-  "Industrial Operations": "operations",
-  "Industry & Business Development": "sales",
-  "Information Governance, Technology Risk, and Compliance": "operations",
-  "Information Security Family Group": "software",
-  "Information Security Function": "software",
-  "Information Security Governance, Risk & Compliance Function": "operations",
-  "Information Security, Risk & Compliance": "operations",
-  "Information Systems": "software",
-  "Information Systems & Technology": "software",
-  "Information Technologies JFG": "software",
-  "Information Technology": "software",
-  "Information Technology (BA)": "software",
-  "Information Technology (Inactive)": "software",
-  "Information Technology (Job Family Group)": "software",
-  "Information Technology Family Group": "software",
-  "Information Technology Function": "software",
-  "Information Technology Group": "software",
-  "Information Technology Jobs": "software",
-  "Information Technology Operations": "operations",
-  "Information Technology Risk Assurance (Inactive)": "software",
-  "Information Technology, Engineering, Science and Data Analysis": "software",
-  "Innovation": "general",
-  "Innovation & Technology": "software",
-  "Inside Sales": "sales",
-  "Institutional": "software",
-  "Institutional Banking": "finance",
-  "Institutional Sales": "sales",
-  "Institutional Trading": "software",
-  "Integrated Marketing": "marketing",
-  "Integrated Supply Chain": "operations",
-  "Integration Management": "general",
-  "Integration and Platform Architecture": "software",
-  "Intelligence": "operations",
-  "Intelligence Group": "operations",
-  "Interim & Interns": "general",
-  "Intern": "general",
-  "Intern (Group)": "general",
-  "Intern FG": "general",
-  "Intern Function": "general",
-  "Intern Group": "general",
-  "Intern JFG": "general",
-  "Intern Program (INP)": "general",
-  "Intern, trainee, apprentice": "general",
-  "Intern/Co-op": "general",
-  "Intern/Student": "general",
-  "Intern/Student/Trainee": "general",
-  "Intern_": "general",
-  "Intern_Group": "general",
-  "Internal Audit": "general",
-  "Internal Audit (JA)": "general",
-  "Internal Audit - LJFG (Inactive)": "general",
-  "Interns": "general",
-  "Interns and Trainees": "general",
-  "Internship": "general",
-  "Internship Programs Function": "general",
-  "Internships": "general",
-  "Internships and Devlpmt Pgms": "general",
-  "Inventory Control": "operations",
-  "Investigation": "finance",
-  "Investigations and Security": "software",
-  "Investigative Services": "operations",
-  "Investment Banking": "finance",
-  "Investment Management": "finance",
-  "Investment Management - Alternatives": "finance",
-  "Investment Operations": "operations",
-  "Investment Product Management & Strategy": "finance",
-  "Investment Professional- IM": "finance",
-  "Investment Professionals": "finance",
-  "Investment Research": "finance",
-  "Investment Specialists": "finance",
-  "Investments": "finance",
-  "Investments & Cap Mkts": "finance",
-  "Investments Group": "finance",
-  "Investments Operations": "operations",
-  "Investments Strategic Support": "finance",
-  "Investor Relations & Communications": "marketing",
-  "J - Quality & Customer Satisfaction": "manufacturing",
-  "Job Family Group": "general",
-  "K - Supply Chain Management / Production Control": "operations",
-  "Key Account Management": "finance",
-  "Key Technology, Operations & Services": "software",
-  "L - Sales & Marketing": "marketing",
-  "LA Legal Counsel": "general",
-  "LEG-Legal": "general",
-  "LG - Legal, Regulatory & Gov't Affairs": "general",
-  "LGC-Law-Govt Affrs-Compl": "general",
-  "LOG-Logistics and Supply Chain": "operations",
-  "Lab & Scientific Services": "operations",
-  "Laboratory": "healthcare",
-  "Laboratory Research (Job Family Group)": "healthcare",
-  "Laboratory Support (Job Family Group)": "healthcare",
-  "Language Services": "operations",
-  "Law": "general",
-  "Law (CA)": "general",
-  "Learning & Development": "software",
-  "Learning and Development (Inactive)": "software",
-  "Learning and Knowledge Management": "general",
-  "Legal": "general",
-  "Legal & Audit (Job Family Group)": "finance",
-  "Legal & Compliance": "finance",
-  "Legal & Compliance (JA)": "finance",
-  "Legal & Compliance (LCP)": "finance",
-  "Legal & Integrity": "general",
-  "Legal & Regulatory": "general",
-  "Legal & Regulatory Affairs": "general",
-  "Legal (Group)": "general",
-  "Legal (New)": "general",
-  "Legal Administration": "general",
-  "Legal Affairs": "general",
-  "Legal Function": "general",
-  "Legal Group": "general",
-  "Legal JFG": "general",
-  "Legal Job Family Group": "general",
-  "Legal Services": "operations",
-  "Legal Services - LJFG (Inactive)": "operations",
-  "Legal Support": "general",
-  "Legal and Business Affairs Group": "general",
-  "Legal and Compliance": "finance",
-  "Legal and Contracts Group": "general",
-  "Legal and Government Affairs Group": "general",
-  "Legal and Regulatory Family Group": "general",
-  "Legal, Compliance & Audit": "finance",
-  "Legal, Compliance, Risk and Assurance": "finance",
-  "Legal, Government Affairs, & Public Policy": "general",
-  "Legal, Regulatory, & Internal Controls Group": "general",
-  "Legal, Risk & Compliance": "finance",
-  "Legal, Trade and Government Affairs": "general",
-  "Legal/Compliance": "finance",
-  "Life & Health": "healthcare",
-  "Life Science & Medical Device": "healthcare",
-  "LoS Operations (Inactive)": "operations",
-  "Logistics": "operations",
-  "Logistics & Government Services": "operations",
-  "Logistics Services": "operations",
-  "Logistics, Procurement, and Supply Chain Management Group": "operations",
-  "Lowe's Corporate": "general",
-  "M - Sales Finance": "finance",
-  "MA Brand, Media and Communications": "marketing",
-  "MA Digital Marketing and E-Commerce": "marketing",
-  "MA Product Lifecycle Management": "software",
-  "MF Maintenance": "operations",
-  "MF Manufacturing Engineering": "manufacturing",
-  "MF Manufacturing Operations": "manufacturing",
-  "MIS-Information Technology": "software",
-  "MKC-Mktg-Communications": "marketing",
-  "MKT-Marketing, Business Development, and Sales": "sales",
-  "MNF-Manufacturing and Operations": "manufacturing",
-  "Maintenance": "operations",
-  "Maintenance, Facilities and Utilities": "operations",
-  "Maintenance/Facilities": "operations",
-  "Managed Services": "operations",
-  "Management": "general",
-  "Management Consulting": "general",
-  "Management Development Programs": "software",
-  "Management Support": "general",
-  "Manufacturing": "manufacturing",
-  "Manufacturing & Operations": "manufacturing",
-  "Manufacturing & Quality - High - NL ONLY": "manufacturing",
-  "Manufacturing & Quality - Mid - NL ONLY": "manufacturing",
-  "Manufacturing & Supply Chain": "manufacturing",
-  "Manufacturing & Supply Chain (Inactive)": "manufacturing",
-  "Manufacturing (DA)": "manufacturing",
-  "Manufacturing Engineering": "manufacturing",
-  "Manufacturing Engineering Group": "manufacturing",
-  "Manufacturing Function": "manufacturing",
-  "Manufacturing Group": "manufacturing",
-  "Manufacturing JFG": "manufacturing",
-  "Manufacturing Jobs": "manufacturing",
-  "Manufacturing Operations": "manufacturing",
-  "Manufacturing Operations & Supply Chain": "manufacturing",
-  "Manufacturing and Operations": "manufacturing",
-  "Manufacturing and Printing": "manufacturing",
-  "Manufacturing and Process Development": "manufacturing",
-  "Manufacturing ": "manufacturing",
-  "Maritime and Cruise Operations Group": "operations",
-  "Market (MA)/Investment Merger & Acquisition (IMA)": "finance",
-  "Market (MA)/Marketing (MA)": "marketing",
-  "Market (MA)/Sales (SA)": "sales",
-  "Market (MA)/Strategy (ST)": "general",
-  "Market Access": "marketing",
-  "Market Access & Value": "marketing",
-  "Market Access.": "marketing",
-  "Market Development": "software",
-  "Market Intelligence and Analytics": "operations",
-  "Marketing": "marketing",
-  "Marketing & Branding": "marketing",
-  "Marketing & Business Development": "sales",
-  "Marketing & Communications": "marketing",
-  "Marketing & Product Management": "software",
-  "Marketing & Sales (KA)": "marketing",
-  "Marketing (FG)": "marketing",
-  "Marketing (Group)": "marketing",
-  "Marketing (MKT)": "marketing",
-  "Marketing - Advertising & Promotions": "marketing",
-  "Marketing - Creative": "marketing",
-  "Marketing - Product": "marketing",
-  "Marketing > Customer Experience": "marketing",
-  "Marketing > Marketing (JFG)": "marketing",
-  "Marketing > Marketing and Brand/Content": "marketing",
-  "Marketing Communications Family Group": "marketing",
-  "Marketing Function": "marketing",
-  "Marketing Generalist": "marketing",
-  "Marketing Group": "marketing",
-  "Marketing JFG": "marketing",
-  "Marketing Job Family Group": "marketing",
-  "Marketing Operations": "operations",
-  "Marketing and Communications": "marketing",
-  "Marketing and Digital Media Group": "marketing",
-  "Marketing, Communications & Public Relations": "marketing",
-  "Marketing, Sales & Product Management": "marketing",
-  "Marketing, Sales, and Service Group": "marketing",
-  "Marketing/Communications": "marketing",
-  "Marketing/Product Management": "software",
-  "Marketing/Public Relations": "marketing",
-  "Material/Purchasing": "operations",
-  "Materials": "operations",
-  "Materials & Procurement": "operations",
-  "Materials Management": "general",
-  "Materials Management & Transportation (EA)": "general",
-  "Materials Management (EB)": "general",
-  "Mechanical & Structural Engineering (6G)": "hardware",
-  "MedTech Sales": "sales",
-  "Medical": "healthcare",
-  "Medical Affairs": "healthcare",
-  "Medical Affairs (MAF)": "healthcare",
-  "Medical Affairs - non-M.D.": "healthcare",
-  "Medical Affairs Group": "healthcare",
-  "Medical Communications & Scientific Publications": "marketing",
-  "Medical Group": "healthcare",
-  "Medical Management": "healthcare",
-  "Medical Scientific Liaison (MSL)": "healthcare",
-  "Medical Services Group": "operations",
-  "Medical and Clinical Affairs": "healthcare",
-  "Member Services Trust & Safety": "operations",
-  "Mergers, Acquisitions & Alliances, Partnerships": "software",
-  "Mfg Assembly": "manufacturing",
-  "Mfg Eng/Quality": "manufacturing",
-  "Mfg Machine Operation": "operations",
-  "Mfg Maintenance": "operations",
-  "Mfg Operations": "operations",
-  "Mfg Production Coordination": "manufacturing",
-  "Mfg Quality Inspection": "manufacturing",
-  "Mfg Skilled Trades": "finance",
-  "Mission Group": "operations",
-  "Model Development & Data Analytics​": "data_science",
-  "Morgan Stanley Job Family Group": "general",
-  "Mutual Fund Operations": "operations",
-  "N - Information Technologies & Systems": "software",
-  "NGC - Administrative Services": "general",
-  "NGC - Business Development": "sales",
-  "NGC - Business Management": "general",
-  "NGC - Communications": "marketing",
-  "NGC - Engineering": "hardware",
-  "NGC - Environmental, Health & Safety": "general",
-  "NGC - Facilities/Real Estate": "general",
-  "NGC - Flight Operations": "operations",
-  "NGC - Global Supply Chain": "operations",
-  "NGC - Human Resources": "general",
-  "NGC - Information Technology": "software",
-  "NGC - Legal and Regulatory": "general",
-  "NGC - Manufacturing and Production": "manufacturing",
-  "NGC - Mission and Quality Assurance": "manufacturing",
-  "NGC - Non NGJF": "general",
-  "NGC - Program Management": "operations",
-  "NGC - Research and Sciences": "software",
-  "NGC - Security": "software",
-  "NGC - Technical Support": "operations",
-  "Network Engineering": "hardware",
-  "Non-Represented": "general",
-  "Nuclear Operations Group": "operations",
-  "Nurse": "healthcare",
-  "Nursing Function": "healthcare",
-  "O - Finance & Control": "finance",
-  "OP - Operations": "operations",
-  "Office and Administration Group": "general",
-  "Office, Administrative and Academic Support": "general",
-  "Omnichannel/Digital": "software",
-  "Operational Excellence Function": "operations",
-  "Operational Technology": "manufacturing",
-  "Operations": "operations",
-  "Operations & Call Center": "operations",
-  "Operations & Services Group": "operations",
-  "Operations & Supply Chain": "operations",
-  "Operations (JA)": "operations",
-  "Operations (OPS)": "operations",
-  "Operations - Collections Default": "operations",
-  "Operations - Core": "operations",
-  "Operations - Management Operations": "operations",
-  "Operations - Services": "operations",
-  "Operations - Transaction Services": "operations",
-  "Operations > Manufacturing Engineering": "manufacturing",
-  "Operations > Manufacturing Operations": "manufacturing",
-  "Operations > Quality": "operations",
-  "Operations > Supply Chain": "operations",
-  "Operations Consulting": "operations",
-  "Operations Function": "operations",
-  "Operations Group": "operations",
-  "Operations Support Group": "operations",
-  "Operations_Group": "operations",
-  "Other": "general",
-  "Other Business Administration": "general",
-  "Outsourcing & Global Capability Centers": "operations",
-  "Owned Brand Product Design & Management": "software",
-  "P - Human Resources": "general",
-  "PF People Business Partnership": "general",
-  "PF People Solutions and Digitalization": "software",
-  "PM Business Project and Program Management": "operations",
-  "PM Specialized Project and Program Management": "operations",
-  "PMO": "operations",
-  "PRG-Project and Program Management": "operations",
-  "PSO (Professional Services)": "operations",
-  "PT Category Management": "general",
-  "PT Procurement Engineering": "hardware",
-  "Partner Sales": "sales",
-  "Patient & Market Access": "healthcare",
-  "Patient Safety Group": "general",
-  "Patient Services": "operations",
-  "People": "general",
-  "People & Communities": "general",
-  "People & Culture": "general",
-  "People Business Partnership": "general",
-  "People Experience": "general",
-  "People Office (New)": "general",
-  "People Operations": "operations",
-  "People Strategy": "general",
-  "People Strategy & Services": "general",
-  "People Team": "general",
-  "Personal & Commercial Banking": "finance",
-  "Personal Services Group": "operations",
-  "Pharmaceutical Process Group": "healthcare",
-  "Pharmaceutical Sales": "sales",
-  "Pharmacy Operations Function": "operations",
-  "Pharmacy Services": "healthcare",
-  "Physical Design & Layout": "hardware",
-  "Placeholder": "general",
-  "Plan Operations": "operations",
-  "Planning and Project Management": "operations",
-  "Plant and Process Engineering": "hardware",
-  "Plasma Center Management": "general",
-  "Plasma Center Medical Support": "healthcare",
-  "Plasma Center Quality": "manufacturing",
-  "Plasma Center Technician": "healthcare",
-  "Platform Hardware and Systems Engineering": "hardware",
-  "Portfolio Management": "general",
-  "Portfolio Management Support": "general",
-  "Postal Services Group": "operations",
-  "Practice Operations Management Function": "operations",
-  "Pre-Clinical (PRC)": "healthcare",
-  "Preclinical Development": "healthcare",
-  "Priority Services (Inactive)": "operations",
-  "Private Client Coverage": "finance",
-  "Private Client Product Services": "operations",
-  "Private Financing Solutions": "finance",
-  "Pro & Home Services": "operations",
-  "Process, Innovation & Excellence": "operations",
-  "Process/Project Mgmt": "operations",
-  "Process/Quality Group": "manufacturing",
-  "Procurement": "operations",
-  "Procurement & Supply Chain": "operations",
-  "Prod-Facilities": "operations",
-  "Product": "software",
-  "Product & Design": "software",
-  "Product & Solutions": "software",
-  "Product (JA)": "software",
-  "Product Design & Strategy": "general",
-  "Product Dev & Eng": "software",
-  "Product Development": "software",
-  "Product Development & Innovation": "software",
-  "Product Development (ELSP Pilot)": "software",
-  "Product Development > Data & Analytics": "software",
-  "Product Development > Electronics Design": "software",
-  "Product Development > Products": "software",
-  "Product Development > Research & Fellows": "software",
-  "Product Development > Software & Systems": "software",
-  "Product Development Group": "software",
-  "Product Development and Engineering": "software",
-  "Product Engineering": "hardware",
-  "Product Engineering (Inactive)": "hardware",
-  "Product Job Family Group": "software",
-  "Product Line Management (Group)": "software",
-  "Product Management": "software",
-  "Product Management & Development Family Group": "software",
-  "Product Management & Development Group": "software",
-  "Product Management - Claim": "software",
-  "Product Management / Development": "software",
-  "Product Management Function": "software",
-  "Product Management Group": "software",
-  "Product Management and Development": "software",
-  "Product Management/Underwriting Group": "finance",
-  "Product Marketing": "marketing",
-  "Product Safety": "software",
-  "Product Security Engineering (6M)": "hardware",
-  "Product Solutions": "software",
-  "Product Strategy and Management": "general",
-  "Product Support Leadership (GM)": "software",
-  "Product, Design, and Research": "software",
-  "Product, Marketing, and Advtsg": "marketing",
-  "Product/Brand Marketing": "marketing",
-  "Product/Project (PD)/Content (CT)": "software",
-  "Product/Project (PD)/Game Product (GD)": "software",
-  "Product/Project (PD)/Product Management (PDM)": "software",
-  "Product/Project (PD)/Project Management (PM)": "operations",
-  "Production": "manufacturing",
-  "Production & Skilled Trades": "manufacturing",
-  "Production Control": "manufacturing",
-  "Production Control (EC)": "manufacturing",
-  "Production Engineering (6H)": "hardware",
-  "Production Group": "manufacturing",
-  "Production Operations": "manufacturing",
-  "Production Operations & Support": "manufacturing",
-  "Products": "software",
-  "Professional Development": "software",
-  "Professional Services": "operations",
-  "Professional Services (New)": "operations",
-  "Professional Services / Consulting": "operations",
-  "Professional Services Function": "operations",
-  "Professional Services Group": "operations",
-  "Program & Project Management": "operations",
-  "Program Management": "operations",
-  "Program Management (WA)": "operations",
-  "Program Management Group": "operations",
-  "Program Management JFG": "operations",
-  "Program Manager": "operations",
-  "Program Strategy Leader Group": "general",
-  "Program/Launch Management": "general",
-  "Program/Project": "operations",
-  "Program/Project Management": "operations",
-  "Programs & Projects Group": "operations",
-  "Project & Program Management": "operations",
-  "Project / Program Management and Business Operations": "operations",
-  "Project Execution": "operations",
-  "Project Management": "operations",
-  "Project Management Family Group": "operations",
-  "Project Management Group": "operations",
-  "Project Mgmt": "operations",
-  "Project Portfolio Management": "operations",
-  "Project and Program Management": "operations",
-  "Project, Program & Product Management": "software",
-  "Project/Program Management": "operations",
-  "Project/Program Management (Group)": "operations",
-  "Project/Program Management Group": "operations",
-  "Projects, Programs and Change": "operations",
-  "Property & Casualty": "finance",
-  "Property & Supply Chain": "operations",
-  "Property Management": "general",
-  "Public Affairs, Communication & Sustainability": "general",
-  "Purchasing": "operations",
-  "Purchasing and Supply Chain Group": "operations",
-  "Q - Legal Affairs": "general",
-  "Q&I-Quality and Inspections": "manufacturing",
-  "QA Global Supplier Quality": "manufacturing",
-  "QA Product Safety and Post Market Surveillance": "software",
-  "QA Quality Control": "manufacturing",
-  "QA Quality Engineering": "manufacturing",
-  "QA Quality Management Systems": "manufacturing",
-  "QTY-Quality": "manufacturing",
-  "Quality": "manufacturing",
-  "Quality & Continuous Improv": "manufacturing",
-  "Quality & Continuous Improvement": "manufacturing",
-  "Quality & Regulatory Affairs": "general",
-  "Quality & Reliability Engineering": "hardware",
-  "Quality (Group)": "manufacturing",
-  "Quality (JA)": "manufacturing",
-  "Quality Assurance": "manufacturing",
-  "Quality Assurance (QA)": "manufacturing",
-  "Quality Assurance Group": "manufacturing",
-  "Quality Control": "manufacturing",
-  "Quality Function": "manufacturing",
-  "Quality Group": "manufacturing",
-  "Quality Management": "manufacturing",
-  "Quality and Regulatory Affairs": "general",
-  "Quality, Regulatory & Medical": "manufacturing",
-  "Quality, Safety, & Risk Management": "finance",
-  "Quantitative Sciences": "software",
-  "R & D": "hardware",
-  "R - Communication": "marketing",
-  "R&D": "general",
-  "R&D (RAD)": "general",
-  "R&D Development": "general",
-  "R&D Group": "general",
-  "R&D Operations": "operations",
-  "R&D Product Development": "general",
-  "R&D Services": "operations",
-  "RA Regulatory Affairs Businesses": "general",
-  "RA Regulatory Affairs Global Regulations": "general",
-  "RD Artificial Intelligence": "ai",
-  "RD Experience Design": "hardware",
-  "RD Innovation Project and Program Management": "operations",
-  "RD Innovation and Engineering Leadership": "hardware",
-  "RD Science": "data_science",
-  "RD Software": "software",
-  "RE-Reinsurance": "finance",
-  "RK - Risk": "finance",
-  "RSK-Risk Management": "finance",
-  "Real Estate": "general",
-  "Real Estate & Facilities": "general",
-  "Real Estate & Facilities Administration": "general",
-  "Real Estate & Facility Management": "general",
-  "Real Estate and Facilities Management": "general",
-  "Real Estate, Design & Property Management": "general",
-  "Recent CMU Graduates and Non-CMU Students": "general",
-  "Regulatory": "general",
-  "Regulatory & Compliance": "finance",
-  "Regulatory Affairs": "general",
-  "Regulatory Affairs Group": "general",
-  "Regulatory CMC": "general",
-  "Reinsurance": "finance",
-  "Relationship Management": "general",
-  "Research": "software",
-  "Research & Development": "hardware",
-  "Research & Lab": "software",
-  "Research Group": "software",
-  "Research Science": "software",
-  "Research Science (Job Family Group)": "software",
-  "Research Scientist": "data_science",
-  "Research Support": "software",
-  "Research and Development": "software",
-  "Research and Development Group": "software",
-  "Research and Technology Development": "software",
-  "Research, Development & Technicians": "software",
-  "Research, Development, Test, and Evaluation Group": "software",
-  "Retail": "general",
-  "Retail & E-Commerce": "general",
-  "Retail Operations Group": "operations",
-  "Retail Store & Pharmacy": "healthcare",
-  "Retail Stores": "general",
-  "Retrofit, Repairs, Modifications & Maintenance (GF)": "operations",
-  "Revenue Management Function": "sales",
-  "Revenue Operations & Support": "operations",
-  "Risk": "finance",
-  "Risk & Assurance": "finance",
-  "Risk & Compliance": "finance",
-  "Risk & Compliance Management Job Family Group": "finance",
-  "Risk / Health, Safety & Env": "general",
-  "Risk Assurance Compliance and Analytics (Inactive)": "finance",
-  "Risk Management": "finance",
-  "Risk Management (Inactive)": "finance",
-  "Risk Management (JA)": "finance",
-  "Risk Management (New)": "finance",
-  "Risk and Compliance": "finance",
-  "Risk, Controls & Governance": "finance",
-  "Risk-Management": "finance",
-  "S - General Administration": "general",
-  "SA Account and Partner Management": "finance",
-  "SA Business Development": "sales",
-  "SA Channel Sales": "sales",
-  "SA Clinical and Technical Sales": "healthcare",
-  "SA Sales Strategy and Operations": "operations",
-  "SAL-Sales": "sales",
-  "SAP Consulting (Inactive)": "general",
-  "SC - Sales Commission": "sales",
-  "SC Order Management": "general",
-  "SC Supply Chain Operations": "operations",
-  "SC Supply Chain Planning": "operations",
-  "SC Warehousing and Logistics": "operations",
-  "SCA Group": "operations",
-  "SE Professional and Lifecycle Services": "operations",
-  "SE Service Business and Service Management": "operations",
-  "SE Service Operations and Maintenance Services": "operations",
-  "SE Services Support and Backoffice": "operations",
-  "SM - Sales & Marketing": "marketing",
-  "SME Finance": "finance",
-  "SOP-Service Operations": "operations",
-  "SSP-Sales Support": "sales",
-  "SY Information Security": "software",
-  "Safety & Airworthiness Engineering (6P)": "hardware",
-  "Safety & Security (Job Family Group)": "software",
-  "Safety, Mission, & Quality Assurance": "manufacturing",
-  "Sale": "sales",
-  "Sales": "sales",
-  "Sales & Business Development": "sales",
-  "Sales & Customer Distribution Support": "sales",
-  "Sales & Customer Management": "sales",
-  "Sales & Customer Support": "sales",
-  "Sales & Marketing": "marketing",
-  "Sales & Marketing DNU (Inactive)": "marketing",
-  "Sales & Marketing Jobs": "marketing",
-  "Sales & Marketing Support": "marketing",
-  "Sales & Relationship Management": "sales",
-  "Sales & Sales Excellence": "sales",
-  "Sales (Group)": "sales",
-  "Sales (New)": "sales",
-  "Sales (Old)": "sales",
-  "Sales (SLS)": "sales",
-  "Sales - Account Development Family Group": "sales",
-  "Sales - Account Management Family Group": "sales",
-  "Sales - Commission Eligible": "sales",
-  "Sales - Corporate Group": "general",
-  "Sales - Cybersecurity Consulting Function": "software",
-  "Sales - Field Sales Function": "sales",
-  "Sales - Inside Sales Function": "sales",
-  "Sales - Sales Leadership Family Group": "sales",
-  "Sales - Sales Operations Function": "operations",
-  "Sales - Systems Engineering Function": "general",
-  "Sales / Sales Support": "sales",
-  "Sales / Trading": "sales",
-  "Sales > Customer Facing": "sales",
-  "Sales > Sales Support": "sales",
-  "Sales Administration": "general",
-  "Sales Administration/Operation Function": "general",
-  "Sales Enablement": "sales",
-  "Sales Engineering (Group)": "general",
-  "Sales Force Effectiveness/Training": "sales",
-  "Sales Function": "sales",
-  "Sales Group": "sales",
-  "Sales JFG": "sales",
-  "Sales Job Family Group": "sales",
-  "Sales Marketing & Product Management": "software",
-  "Sales Operations": "operations",
-  "Sales Operations & Support": "operations",
-  "Sales Operations Family Group": "operations",
-  "Sales Strategy and Operations": "operations",
-  "Sales Support": "sales",
-  "Sales Support (Group)": "sales",
-  "Sales Support Function": "sales",
-  "Sales Support and Operations": "operations",
-  "Sales and Account Management": "sales",
-  "Sales and Marketing": "marketing",
-  "Sales and Marketing (Inactive)": "marketing",
-  "Sales and Marketing Group": "marketing",
-  "Sales and Service": "operations",
-  "Sales, Marketing & Product Management": "software",
-  "Sales, Marketing and Business Development": "sales",
-  "Sales, Mktg & Comm": "sales",
-  "Sci/Tech-ProdRelated": "manufacturing",
-  "Science": "data_science",
-  "Science & Engineering": "hardware",
-  "Sciences": "data_science",
-  "Sciences Group": "data_science",
-  "Sciences and Animal Programs Group": "data_science",
-  "Scientist": "data_science",
-  "Security": "software",
-  "Security & Fire Protection Services (LA)": "software",
-  "Security & Risk (JA)": "software",
-  "Security Function": "software",
-  "Security Group": "software",
-  "Security Services": "software",
-  "Security and Information Assurance": "software",
-  "Senior Management Jobs Function": "general",
-  "Service": "operations",
-  "Service & Support": "operations",
-  "Service Contract Act": "operations",
-  "Service Management Group": "operations",
-  "Service and Install": "operations",
-  "Service and Operations": "operations",
-  "Service and Support Group": "operations",
-  "Service/Support": "operations",
-  "Services": "operations",
-  "Services & Operations": "operations",
-  "Services & Support": "operations",
-  "Services & Support Job Family Group": "operations",
-  "Services Consulting": "operations",
-  "Services Groups": "operations",
-  "Shared Services": "operations",
-  "Silicon Hardware Engineering": "hardware",
-  "Social & Environmental Responsibility": "general",
-  "Social Responsibility Group": "software",
-  "Social Sciences": "data_science",
-  "Software": "software",
-  "Software (JA)": "software",
-  "Software / Technology": "software",
-  "Software Development": "software",
-  "Software Engineering": "software",
-  "Software Engineering (6J)": "software",
-  "Software and Product Innovation": "software",
-  "Software and Services Group": "operations",
-  "Software and Services_DNU": "operations",
-  "Sourcing": "operations",
-  "Sourcing and Supply Chain Management": "operations",
-  "Specialist Sales": "sales",
-  "Specialty (SC)/Finance (FN)": "finance",
-  "Specialty (SC)/Human Resources (HR)": "general",
-  "Specialty (SC)/Legal and Public Strategies (LPS)": "general",
-  "Specialty Sales": "sales",
-  "Stage Productions Group": "manufacturing",
-  "Store Operations": "operations",
-  "Stores": "general",
-  "Strategic Initiatives": "software",
-  "Strategic Planning": "general",
-  "Strategic Planning & Development": "software",
-  "Strategic Planning and Operations": "operations",
-  "Strategic Planning/Corp. Dev.": "general",
-  "Strategic Sourcing": "operations",
-  "Strategy": "general",
-  "Strategy & Bus Development": "general",
-  "Strategy & Corporate Development": "general",
-  "Strategy & Development Job Family Group": "general",
-  "Strategy & Marketing": "marketing",
-  "Strategy & Planning": "general",
-  "Strategy Consulting": "general",
-  "Strategy Function": "general",
-  "Strategy Group": "general",
-  "Strategy and Business Development": "sales",
-  "Strategy and Development (KB)": "general",
-  "Strategy and M&A": "general",
-  "Strategy and Planning Family Group": "general",
-  "Strategy, Ops, & Analytics": "data_science",
-  "Structured Finance JFG": "finance",
-  "Student Services": "operations",
-  "Supplier Management & Procurement (HA)": "operations",
-  "Supply & Logistics Jobs": "operations",
-  "Supply Chain": "operations",
-  "Supply Chain & Distribution Centers": "operations",
-  "Supply Chain & Logistics": "operations",
-  "Supply Chain & Operations": "operations",
-  "Supply Chain & Procurement": "operations",
-  "Supply Chain (Group)": "operations",
-  "Supply Chain Deliver": "operations",
-  "Supply Chain Engineering": "operations",
-  "Supply Chain Group": "operations",
-  "Supply Chain JFG": "operations",
-  "Supply Chain Jobs": "operations",
-  "Supply Chain Management": "operations",
-  "Supply Chain Management Group": "operations",
-  "Supply Chain Manufacturing": "manufacturing",
-  "Supply Chain Planning": "operations",
-  "Supply Chain Support (GC)": "operations",
-  "Supply Chain and Logistics": "operations",
-  "Supply Chain ": "operations",
-  "Support": "operations",
-  "Support Engineering (6S)": "hardware",
-  "Support Services": "operations",
-  "Support and Service JFG": "operations",
-  "Sustainability": "general",
-  "System Engineering": "hardware",
-  "Systems Engineering (6K)": "hardware",
-  "T - Research & Development": "hardware",
-  "TD Insurance": "finance",
-  "TD Securities": "software",
-  "TD Wealth": "finance",
-  "TSM Underwriting": "finance",
-  "Talent": "general",
-  "Talent Acquisition": "general",
-  "Talent Group": "general",
-  "Talent and Development": "general",
-  "Tax Services": "operations",
-  "Tax Services - LJFG (Inactive)": "operations",
-  "Tech - Client Support": "sales",
-  "Tech - Cyber Security": "software",
-  "Tech - IT Architecture": "software",
-  "Tech - IT Security": "software",
-  "Tech - Infrastructure Services": "operations",
-  "Tech - Software Engineering": "software",
-  "Tech Engineering": "hardware",
-  "Tech Sales": "sales",
-  "Tech information Security": "software",
-  "Tech-ProdRelated": "manufacturing",
-  "Technical": "software",
-  "Technical (TE)/Quality Control (QC)": "manufacturing",
-  "Technical (TE)/Solutions and Services (SS)": "operations",
-  "Technical (TE)/Technical Operations (TO)": "operations",
-  "Technical (TE)/Technical Research (TRH)": "software",
-  "Technical (TE)/Technical Research and Development (TRD)": "software",
-  "Technical Customer Support": "operations",
-  "Technical Development": "software",
-  "Technical Sales Family Group": "sales",
-  "Technical Service": "operations",
-  "Technical and Trade Group": "manufacturing",
-  "Technological R&D - AH Only": "general",
-  "Technology": "software",
-  "Technology & Innovation": "software",
-  "Technology Architecture": "software",
-  "Technology Design and Development": "software",
-  "Technology Development": "software",
-  "Technology Enablement": "software",
-  "Technology Eng & Quality": "software",
-  "Technology Engineering": "hardware",
-  "Technology Enterprise Strategy & Security": "software",
-  "Technology Group": "software",
-  "Technology Infrastructure & Operations": "operations",
-  "Technology Job Family Group": "software",
-  "Technology Management": "software",
-  "Technology Operations": "operations",
-  "Technology Platform Management": "software",
-  "Technology Product & Platform Management": "software",
-  "Technology Program & Project Management": "operations",
-  "Technology Services": "software",
-  "Technology Solutions": "software",
-  "Technology Support": "software",
-  "Telesales": "sales",
-  "Temporary (TEM)": "general",
-  "Temporary / Limited Services Group": "operations",
-  "Temporary Employee": "general",
-  "Tencent Global/Business Management": "general",
-  "Tencent Global/Design": "hardware",
-  "Tencent Global/Global Communications": "marketing",
-  "Tencent Global/Human Resources": "general",
-  "Tencent Global/Legal": "general",
-  "Tencent Global/Marketing & Operations": "operations",
-  "Tencent Global/Procurement Management": "operations",
-  "Tencent Global/Product Management": "software",
-  "Tencent Global/Programming, Technology & IT": "software",
-  "Tencent Global/Quality Management & Localization": "manufacturing",
-  "Test & Evaluation Engineering (6L)": "hardware",
-  "Test & Product Engineering": "hardware",
-  "Test & Validation Engineering": "hardware",
-  "Test Engineering": "hardware",
-  "Theme Park Operations Group": "operations",
-  "Trade Support": "finance",
-  "Trades Groups": "finance",
-  "Trading": "finance",
-  "Trading & Clearing Services": "operations",
-  "Training & Development": "software",
-  "Training Center Operation": "operations",
-  "Training Development and Delivery": "software",
-  "Training Services": "operations",
-  "Transportation": "operations",
-  "Transportation (ED)": "logistics",
-  "Transportation Group": "operations",
-  "Transportation Services": "operations",
-  "Transportation and Logistics": "operations",
-  "Treasury": "finance",
-  "U - Production Engineering": "hardware",
-  "UW - Underwriting": "finance",
-  "UW Portfolio Management & Leadership": "general",
-  "UW-Underwriting": "finance",
-  "Underwriting": "finance",
-  "University": "general",
-  "University Administration": "general",
-  "University Advancement": "general",
-  "V - Aftersales": "sales",
-  "Vendor Management": "general",
-  "Warehouse Jobs": "operations",
-  "Warehouse/Shipping/Receiving": "operations",
-  "Wealth Management Operations": "operations",
-  "Western Asset Management": "general",
-  "Workforce Consulting": "general",
-  "Workplace Safety Group": "general",
-  "Workplace Services": "operations",
-  "Worldwide Medical": "healthcare",
-  "xLoS Client Service Support (Inactive)": "operations"
-}
+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
+fzuxsHoDVIa4OcIBDrQRKA==

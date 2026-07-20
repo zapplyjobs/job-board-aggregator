@@ -1,137 +1,83 @@
-/**
- * ByteDance Careers API Client
- *
- * Fetches US campus jobs from ByteDance's public careers API at jobs.bytedance.com.
- * No authentication required; browser discovery on 2026-06-18 showed the required
- * website-path and x-tt-env headers used by joinbytedance.com.
- */
-'use strict';
-
-const { postJson, delay } = require('./http-client');
-
-const API_URL = 'https://jobs.bytedance.com/api/v1/public/supplier/search/job/posts';
-const PAGE_SIZE = 100;
-const MAX_JOBS = 2000;
-const DELAY_MS = 200;
-const TIMEOUT_MS = 30000;
-
-const HEADERS = {
-  'Content-Type': 'application/json',
-  'accept-language': 'en-US',
-  'origin': 'https://joinbytedance.com',
-  'referer': 'https://joinbytedance.com/',
-  'website-path': 'en',
-  'x-tt-env': 'boe_epam_api',
-};
-
-// Same US city/location filter family used by the TikTok careers API.
-const US_CITY_CODES = [
-  'CT_75', 'CT_2001643', 'CT_203', 'CT_1103355', 'MDCY00039300',
-  'CT_223', 'MDCY00008115', 'CT_247', 'CT_1103554', 'CT_221',
-  'CT_233', 'CT_157', 'CT_94', 'MDCY00038339', 'CT_1000001', 'CT_114',
-];
-
-function buildLocation(cityInfo) {
-  if (!cityInfo) return { city: '', state: '', location: '' };
-  const city = cityInfo.en_name || '';
-  const state = cityInfo.parent?.en_name || '';
-  return { city, state, location: [city, state].filter(Boolean).join(', ') };
-}
-
-function normalizeByteDanceJob(job) {
-  const { city, state, location } = buildLocation(job.city_info);
-  const desc = [job.description, job.requirement].filter(Boolean).join('\n\n');
-
-  return {
-    id: `bytedance-${job.id}`,
-    source: 'bytedance',
-    source_id: String(job.id),
-
-    title: (job.title || '').trim() || null,
-    company_name: 'ByteDance',
-    company_slug: 'bytedance',
-
-    location,
-    locations: location ? [location] : [],
-    job_city: city,
-    job_state: state,
-
-    url: job.id ? `https://joinbytedance.com/search/${job.id}` : null,
-    apply_url: job.id ? `https://jobs.bytedance.com/en/resume/${job.id}/apply` : null,
-
-    departments: [],
-    employment_type: null,
-
-    posted_at: null,
-    fetched_at: new Date().toISOString(),
-
-    description: desc || null,
-  };
-}
-
-async function fetchAllByteDanceJobs() {
-  console.log('\n🏢 Fetching from ByteDance Careers...');
-  console.log('━'.repeat(60));
-
-  const allJobs = [];
-  const seenIds = new Set();
-  let offset = 0;
-  let totalReported = null;
-
-  while (allJobs.length < MAX_JOBS) {
-    const body = {
-      recruitment_id_list: ['2'],
-      job_category_id_list: [],
-      subject_id_list: [],
-      location_code_list: US_CITY_CODES,
-      limit: PAGE_SIZE,
-      offset,
-    };
-
-    const result = await postJson(API_URL, body, { headers: HEADERS, timeout: TIMEOUT_MS });
-    if (!result || !result.data) {
-      console.log(`  ⚠️ ByteDance: request failed at offset=${offset}`);
-      break;
-    }
-
-    const apiResponse = result.data;
-    if (apiResponse.code !== 0) {
-      console.log(`  ⚠️ ByteDance: API error code=${apiResponse.code}, stopping`);
-      break;
-    }
-
-    const apiData = apiResponse.data;
-    if (!apiData) {
-      console.log('  ⚠️ ByteDance: no data in response, stopping');
-      break;
-    }
-
-    if (totalReported === null) {
-      totalReported = apiData.count || 0;
-      console.log(`  API reports ${totalReported} US campus positions`);
-    }
-
-    const posts = apiData.job_post_list || [];
-    if (posts.length === 0) break;
-
-    for (const post of posts) {
-      const job = normalizeByteDanceJob(post);
-      if (!seenIds.has(job.id)) {
-        seenIds.add(job.id);
-        allJobs.push(job);
-      }
-    }
-
-    if (posts.length < PAGE_SIZE) break;
-    offset += PAGE_SIZE;
-
-    if (offset >= (totalReported || Infinity)) break;
-    await delay(DELAY_MS);
-  }
-
-  const withDesc = allJobs.filter(j => j.description).length;
-  console.log(`  Fetched: ${allJobs.length} jobs (${withDesc} with descriptions)`);
-  return allJobs;
-}
-
-module.exports = { fetchAllByteDanceJobs, normalizeByteDanceJob };
+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
