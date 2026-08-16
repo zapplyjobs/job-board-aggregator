@@ -1,10 +1,10 @@
 {
   "name": "@zapply/job-board-aggregator",
   "version": "1.0.0",
-  "description": "Zapply job pipeline aggregator \u2014 fetchers, tag engine, processors",
+  "description": "Zapply job pipeline aggregator — fetchers, tag engine, processors",
   "main": "lib/aggregator/index.js",
   "scripts": {
-    "test": "node lib/__tests__/tag-engine.test.js && node lib/__tests__/survive-parity.test.js && node lib/__tests__/deployment-parity.test.js && node lib/__tests__/senior-filter.test.js && node lib/__tests__/validator.test.js && node lib/__tests__/workday-sidecar-lifecycle.test.js && node lib/__tests__/workday-desc-concurrency.test.js && node lib/__tests__/smartrecruiters-descriptions.test.js && node lib/__tests__/file-writer-stream.test.js"
+    "test": "node lib/__tests__/tag-engine.test.js && node lib/__tests__/survive-parity.test.js && node lib/__tests__/deployment-parity.test.js && node lib/__tests__/senior-filter.test.js && node lib/__tests__/validator.test.js && node lib/__tests__/workday-sidecar-lifecycle.test.js && node lib/__tests__/workday-desc-concurrency.test.js && node lib/__tests__/smartrecruiters-descriptions.test.js && node lib/__tests__/file-writer-stream.test.js && node lib/__tests__/tag-monitor.test.js"
   },
   "engines": {
     "node": ">=18.0.0"
