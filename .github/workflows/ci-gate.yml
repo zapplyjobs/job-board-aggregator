@@ -37,6 +37,17 @@ jobs:
         env:
           TRANSCRYPT_PASSWORD: ${{ secrets.TRANSCRYPT_PASSWORD }}
 
+      # TAG-CIGATE-IDENT-1 (2026-08-19): runners have NO git identity. Any git op that
+      # WRITES — commits, notes, and notably `git show/diff --textconv` on encrypted files
+      # (transcrypt sets diff.crypt.cachetextconv=true → textconv writes a cache note)
+      # dies with "Author identity unknown". This identity immunizes the whole workflow;
+      # the company-list guard additionally passes -c diff.crypt.cachetextconv=false at
+      # its call site (the cache gains nothing for a single read).
+      - name: Configure git identity (CI has none — required by textconv cache writes)
+        run: |
+          git config user.name "ci-gate"
+          git config user.email "ci-gate@zapplyjobs.com"
+
 
       - uses: actions/setup-node@v5
         with:
