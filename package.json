@@ -4,7 +4,7 @@
   "description": "Zapply job pipeline aggregator — fetchers, tag engine, processors",
   "main": "lib/aggregator/index.js",
   "scripts": {
-    "test": "node lib/__tests__/tag-engine.test.js && node lib/__tests__/survive-parity.test.js && node lib/__tests__/deployment-parity.test.js && node lib/__tests__/senior-filter.test.js && node lib/__tests__/validator.test.js && node lib/__tests__/workday-sidecar-lifecycle.test.js && node lib/__tests__/workday-desc-concurrency.test.js && node lib/__tests__/smartrecruiters-descriptions.test.js && node lib/__tests__/file-writer-stream.test.js && node lib/__tests__/tag-monitor.test.js"
+    "test": "node lib/__tests__/tag-engine.test.js && node lib/__tests__/survive-parity.test.js && node lib/__tests__/deployment-parity.test.js && node lib/__tests__/sanitize-description.test.js && node lib/__tests__/senior-filter.test.js && node lib/__tests__/validator.test.js && node lib/__tests__/workday-sidecar-lifecycle.test.js && node lib/__tests__/workday-desc-concurrency.test.js && node lib/__tests__/smartrecruiters-descriptions.test.js && node lib/__tests__/file-writer-stream.test.js && node lib/__tests__/tag-monitor.test.js"
   },
   "engines": {
     "node": ">=18.0.0"
