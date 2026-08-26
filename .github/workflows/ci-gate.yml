@@ -105,7 +105,7 @@ jobs:
           NODE
 
       - name: Lint GitHub Actions workflows
-        uses: docker://rhysd/actionlint:1.7.12
+        uses: docker://rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667  # pinned 1.7.12 (INF-THIRDPARTY-ACTIONS-AUDIT-1)
         with:
           args: -color
 
