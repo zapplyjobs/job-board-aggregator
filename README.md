@@ -9,3 +9,5 @@ git config core.hooksPath .githooks
 ```
 
 (The `lib/__tests__/deployment-parity.test.js` CI gate remains the reactive backstop if a contributor skips this.)
+
+<!-- 2026-08-27: guard-required-main ruleset verified (staged Phase B enablement, per-repo push proof) -->
