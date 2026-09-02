@@ -1,10 +1,10 @@
 {
   "name": "@zapply/job-board-aggregator",
   "version": "1.0.0",
-  "description": "Zapply job pipeline aggregator \u2014 fetchers, tag engine, processors",
+  "description": "Zapply job pipeline aggregator — fetchers, tag engine, processors",
   "main": "lib/aggregator/index.js",
   "scripts": {
-    "test": "node lib/__tests__/tag-engine.test.js && node lib/__tests__/survive-parity.test.js && node lib/__tests__/deployment-parity.test.js && node lib/__tests__/sanitize-description.test.js && node lib/__tests__/senior-filter.test.js && node lib/__tests__/validator.test.js && node lib/__tests__/workday-sidecar-lifecycle.test.js && node lib/__tests__/workday-bare-country.test.js && node lib/__tests__/workday-desc-concurrency.test.js && node lib/__tests__/smartrecruiters-descriptions.test.js && node lib/__tests__/file-writer-stream.test.js && node lib/__tests__/tag-monitor.test.js && node lib/__tests__/ats-fetcher-health.test.js && node lib/__tests__/ashby-locations.test.js && node lib/__tests__/display-location.test.js  && node lib/__tests__/workday-failed-fetch-preserve.test.js && node lib/__tests__/qualcomm-fetcher.test.js && node lib/__tests__/pcsx-client.test.js && node lib/__tests__/microsoft-fetcher.test.js && node lib/__tests__/bytedance-fetcher.test.js && node lib/__tests__/company-list-guard.test.js && node lib/__tests__/deduplicator-ttl.test.js && node lib/__tests__/google-fetcher.test.js && node lib/__tests__/lever-posted-at.test.js && node lib/__tests__/lever-retry.test.js && node lib/__tests__/salary.test.js && node lib/__tests__/sidecar-transition.test.js && node lib/__tests__/smartrecruiters-posted-at.test.js && node lib/__tests__/workday-429-retry.test.js && node lib/__tests__/workday-identity.test.js && node lib/__tests__/workday-rotate.test.js && node lib/__tests__/greenhouse-active-window.test.js && node lib/__tests__/lever.test.js"
+    "test": "node lib/__tests__/run-all.js"
   },
   "engines": {
     "node": ">=18.0.0"
