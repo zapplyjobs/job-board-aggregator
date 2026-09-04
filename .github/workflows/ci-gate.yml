@@ -104,6 +104,25 @@ jobs:
           console.log(`PASS: tag-engine source/deployment synced at v${sourceVersion}`);
           NODE
 
+      - name: Check company-list source/deployment parity (AGG-COMPANYLIST-TWIN-PARITY-1)
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const sourcePath = 'lib/fetchers/company-list.json';
+          const deployPath = '.github/scripts/aggregator/lib/fetchers/company-list.json';
+          if (!fs.existsSync(sourcePath) || !fs.existsSync(deployPath)) {
+            console.error(`::error::Missing company-list copy. source=${fs.existsSync(sourcePath)} deploy=${fs.existsSync(deployPath)}`);
+            process.exit(1);
+          }
+          const source = fs.readFileSync(sourcePath);
+          const deploy = fs.readFileSync(deployPath);
+          if (!source.equals(deploy)) {
+            console.error(`::error file=${deployPath}::company-list.json drift between lib/ (production-authoritative) and the deployment mirror. Sync via scripts/sync-deployment-parity.sh or commit both copies together.`);
+            process.exit(1);
+          }
+          console.log(`PASS: company-list source/deployment copies byte-identical (${source.length} bytes)`);
+          NODE
+
       - name: Lint GitHub Actions workflows
         uses: docker://rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667  # pinned 1.7.12 (INF-THIRDPARTY-ACTIONS-AUDIT-1)
         with:
