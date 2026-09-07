@@ -58,6 +58,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit production dependencies (INF-SUPPLYCHAIN-HARDENING-1)
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Run company-list removal guard
         id: company_list_guard
         continue-on-error: true
