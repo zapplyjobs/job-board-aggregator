@@ -19,6 +19,13 @@ jobs:
         with:
           fetch-depth: 2
 
+      # AGG-GATE-ENCRYPTEDBLOB-1 (SUP F269 advisory): every filter=crypt blob at HEAD must
+      # carry the OpenSSL-salted ciphertext prefix — catches Git-Data-API/web-UI writes that
+      # store PLAINTEXT at encrypted paths (they smudge to garbage on checkout) and
+      # empty/placeholder files. Runs BEFORE transcrypt install: raw cat-file needs no cipher.
+      - name: Check encrypted blobs are ciphertext
+        run: bash .github/scripts/check-encrypted-blobs.sh HEAD
+
       - name: Install transcrypt
         run: |
           curl -sSL https://raw.githubusercontent.com/elasticdog/transcrypt/5effa13/transcrypt -o /tmp/transcrypt
