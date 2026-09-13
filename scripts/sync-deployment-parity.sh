@@ -2,9 +2,12 @@
 # sync-deployment-parity.sh — proactively copy deployment-parity source files to
 # their committed .github/scripts/aggregator mirrors so the two stay byte-identical.
 #
-# The pair list MUST match lib/__tests__/deployment-parity.test.js PARITY_FILES.
-# That test is the reactive backstop (fails CI on drift); this script is the
-# proactive sync (keeps drift from happening). INF-CI-7.
+# AGG-PARITYSYNC-COVERAGE-1 (2026-09-13): the pair list is DERIVED, not hand-listed —
+# every file in lib/processors/ is parity-critical (the deployment copy runs the
+# pipeline), plus lib/fetchers/company-list.json. Hand-listing is what let
+# tag-monitor.js ship diverged twice (B122). The derived list MUST stay aligned
+# with lib/__tests__/deployment-parity.test.js, which is the reactive CI backstop
+# (fails on drift, including mirror-only extras). INF-CI-7.
 #
 # Used by .githooks/pre-commit (enable once per clone: git config core.hooksPath .githooks).
 set -eu
@@ -23,7 +26,9 @@ sync_pair() {
   fi
 }
 
-# Keep these three pairs in sync with lib/__tests__/deployment-parity.test.js PARITY_FILES.
-sync_pair lib/processors/tag-engine.js .github/scripts/aggregator/lib/processors/tag-engine.js
-sync_pair lib/processors/wd-family-domain-map.json .github/scripts/aggregator/lib/processors/wd-family-domain-map.json
+# Derived: every lib/processors file + the fetcher tenant config.
+for f in "$ROOT"/lib/processors/*; do
+  base="$(basename "$f")"
+  sync_pair "lib/processors/$base" ".github/scripts/aggregator/lib/processors/$base"
+done
 sync_pair lib/fetchers/company-list.json .github/scripts/aggregator/lib/fetchers/company-list.json
