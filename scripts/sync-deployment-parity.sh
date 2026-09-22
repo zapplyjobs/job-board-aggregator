@@ -32,3 +32,15 @@ for f in "$ROOT"/lib/processors/*; do
   sync_pair "lib/processors/$base" ".github/scripts/aggregator/lib/processors/$base"
 done
 sync_pair lib/fetchers/company-list.json .github/scripts/aggregator/lib/fetchers/company-list.json
+
+# AGG-MIRROR-PARITY-DECIDE-1 (2026-09-22): any fetcher file ALREADY mirrored is
+# parity-synced too (bytedance.js shipped diverged because fetchers sat outside
+# the derived scope). Derived from the MIRROR contents - files never mirrored
+# stay unmirrored (fetchers are production-only). Kept aligned with
+# lib/__tests__/deployment-parity.test.js per the AGG-PARITYSYNC-COVERAGE-1 rule.
+if [ -d "$ROOT/.github/scripts/aggregator/lib/fetchers" ]; then
+  for f in "$ROOT"/.github/scripts/aggregator/lib/fetchers/*; do
+    base="$(basename "$f")"
+    sync_pair "lib/fetchers/$base" ".github/scripts/aggregator/lib/fetchers/$base"
+  done
+fi
