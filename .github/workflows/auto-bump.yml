@@ -25,7 +25,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           gh workflow run bump-submodule.yml \
-            --repo zapplyjobs/jobs-aggregator-private \
+            --repo zapplyjobs/jobs-aggregator-engine \
             --field submodule_name=aggregator \
             --field target_sha="${{ steps.sha.outputs.sha }}"
           echo "Dispatched bump-submodule.yml (aggregator) with SHA ${{ steps.sha.outputs.sha }}"
