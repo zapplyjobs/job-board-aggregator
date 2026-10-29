@@ -1,5 +1,5 @@
 # job-board-aggregator
-Zapply job pipeline aggregator logic — fetchers, tag engine, processors
+Part of the Zapply job board infrastructure.
 
 ## Development
 Pre-commit hooks keep the deployment-parity mirror (`.github/scripts/aggregator/...`) byte-identical to its source (`lib/...`) so the two commit together. Enable once per clone:
